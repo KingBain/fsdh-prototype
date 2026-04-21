@@ -51,6 +51,7 @@ using Datahub.Portal.Services;
 using Datahub.Portal.Services.Api;
 using Datahub.Portal.Services.Auth;
 using Datahub.Portal.Services.Offline;
+using Datahub.Portal.Standalone.Services;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.AspNetCore.Localization;
@@ -174,6 +175,8 @@ public class Startup
         services.AddBlazoredSessionStorage();
         services.AddHttpContextAccessor();
         services.AddScoped<ApiTelemetryService>();
+
+        services.AddStandaloneScaffolding();
 
         services.AddUserAchievementServices();
         services.AddSecurityServices();
