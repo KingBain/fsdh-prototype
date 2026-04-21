@@ -1,0 +1,62 @@
+@namespace Datahub.Portal.Scaffold.Pages.Public
+@page "/"
+@page "/home"
+@page "/accueil"
+
+<PageTitle>Federal Science DataHub</PageTitle>
+
+<section class="scaffold-hero">
+    <div class="scaffold-hero-overlay"></div>
+    <MudContainer MaxWidth="MaxWidth.False" Class="scaffold-hero-content">
+        <MudGrid Spacing="4">
+            <MudItem xs="12" md="7">
+                <MudChip T="string" Color="Color.Primary" Variant="Variant.Filled" Size="Size.Small" Class="mb-4">
+                    Runnable Scaffold
+                </MudChip>
+                <MudText Typo="Typo.h1" Class="mb-4">Federal Science DataHub</MudText>
+                <MudText Typo="Typo.h5" Class="mb-6">
+                    A locally runnable shell of the extracted Blazor portal, preserving the original tone and visual identity while backend dependencies are stubbed out.
+                </MudText>
+                <MudStack Row Wrap="Wrap.Wrap" Spacing="2">
+                    <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="@PageRoutes.Login">Local sign in</MudButton>
+                    <MudButton Variant="Variant.Outlined" Color="Color.Primary" Href="@PageRoutes.Explore">Explore placeholders</MudButton>
+                    <MudButton Variant="Variant.Text" Color="Color.Primary" Href="@PageRoutes.Help">Get help</MudButton>
+                </MudStack>
+            </MudItem>
+            <MudItem xs="12" md="5">
+                <MudPaper Class="scaffold-glass-card" Elevation="0">
+                    <MudText Typo="Typo.h6" Class="mb-2">Scaffold status</MudText>
+                    <MudStack Spacing="1">
+                        <MudText Typo="Typo.body2"><MudIcon Icon="@Icons.Material.Filled.CheckCircle" Class="me-2" />Builds without the missing mono-repo projects</MudText>
+                        <MudText Typo="Typo.body2"><MudIcon Icon="@Icons.Material.Filled.CheckCircle" Class="me-2" />Starts locally with cookie-based scaffold auth</MudText>
+                        <MudText Typo="Typo.body2"><MudIcon Icon="@Icons.Material.Filled.CheckCircle" Class="me-2" />Keeps home, announcements, help, account, and workspace routes navigable</MudText>
+                    </MudStack>
+                </MudPaper>
+            </MudItem>
+        </MudGrid>
+    </MudContainer>
+</section>
+
+<MudGrid Spacing="3" Class="mt-6">
+    <MudItem xs="12" md="4">
+        <MudPaper Class="scaffold-card scaffold-feature-card" Elevation="0">
+            <MudImage Src="/img/scientist.png" Alt="Scientist illustration" Class="scaffold-feature-image" />
+            <MudText Typo="Typo.h5" Class="mt-4 mb-2">Data collaboration shell</MudText>
+            <MudText Typo="Typo.body1">Top-level navigation and page flows are preserved so the portal remains demoable while service integrations are rebuilt.</MudText>
+        </MudPaper>
+    </MudItem>
+    <MudItem xs="12" md="4">
+        <MudPaper Class="scaffold-card scaffold-feature-card" Elevation="0">
+            <MudImage Src="/img/support_team.png" Alt="Support team illustration" Class="scaffold-feature-image" />
+            <MudText Typo="Typo.h5" Class="mt-4 mb-2">Clear placeholders</MudText>
+            <MudText Typo="Typo.body1">Missing workspace, account, and provisioning features now render clear scaffold placeholders instead of crashing startup.</MudText>
+        </MudPaper>
+    </MudItem>
+    <MudItem xs="12" md="4">
+        <MudPaper Class="scaffold-card scaffold-feature-card" Elevation="0">
+            <MudImage Src="/img/servers.png" Alt="Server illustration" Class="scaffold-feature-image" />
+            <MudText Typo="Typo.h5" Class="mt-4 mb-2">Local-only auth</MudText>
+            <MudText Typo="Typo.body1">Azure and external identity wiring have been replaced by a small cookie login suitable for development scaffolding.</MudText>
+        </MudPaper>
+    </MudItem>
+</MudGrid>

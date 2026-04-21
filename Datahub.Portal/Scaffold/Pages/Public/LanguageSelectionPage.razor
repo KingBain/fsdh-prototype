@@ -1,0 +1,15 @@
+@namespace Datahub.Portal.Scaffold.Pages.Public
+@page "/language-langue"
+
+<PageTitle>Language selection</PageTitle>
+
+<MudPaper Class="scaffold-card" Elevation="0">
+    <MudText Typo="Typo.h3" GutterBottom="true">Choose a language</MudText>
+    <MudText Typo="Typo.body1" Class="mb-4">
+        The scaffold keeps bilingual route aliases even though full localization infrastructure has been removed for startup simplicity.
+    </MudText>
+    <MudStack Row Spacing="2">
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="@PageRoutes.Home">English</MudButton>
+        <MudButton Variant="Variant.Outlined" Color="Color.Primary" Href="@PageRoutes.HomeFr">Français</MudButton>
+    </MudStack>
+</MudPaper>

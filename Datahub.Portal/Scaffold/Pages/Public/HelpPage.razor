@@ -1,0 +1,33 @@
+@namespace Datahub.Portal.Scaffold.Pages.Public
+@page "/support"
+@page "/assistance"
+
+<PageTitle>Help</PageTitle>
+
+<MudStack Spacing="3">
+    <MudText Typo="Typo.h2">Help and support</MudText>
+    <MudText Typo="Typo.body1">
+        The original support workflows depended on queues, ticketing, and external services. This scaffold keeps the page visible and points people to simple local next steps.
+    </MudText>
+
+    <MudGrid Spacing="3">
+        <MudItem xs="12" md="6">
+            <MudPaper Class="scaffold-card" Elevation="0">
+                <MudText Typo="Typo.h5" Class="mb-2">Scaffold support</MudText>
+                <MudText Typo="Typo.body1" Class="mb-3">
+                    Use this build to validate startup, routing, layout, and presentation while real integrations are offline.
+                </MudText>
+                <MudButton Variant="Variant.Outlined" Color="Color.Primary" Href="mailto:fsdh-scaffold@localhost">Email scaffold owner</MudButton>
+            </MudPaper>
+        </MudItem>
+        <MudItem xs="12" md="6">
+            <MudPaper Class="scaffold-card" Elevation="0">
+                <MudText Typo="Typo.h5" Class="mb-2">Documentation</MudText>
+                <MudText Typo="Typo.body1" Class="mb-3">
+                    The public documentation site still provides context for the original portal workflows even though this local scaffold does not implement them.
+                </MudText>
+                <MudButton Variant="Variant.Text" Color="Color.Primary" Href="https://documentation.sds.canada.ca/" Target="_blank">Open documentation</MudButton>
+            </MudPaper>
+        </MudItem>
+    </MudGrid>
+</MudStack>

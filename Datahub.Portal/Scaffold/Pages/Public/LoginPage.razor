@@ -1,0 +1,44 @@
+@namespace Datahub.Portal.Scaffold.Pages.Public
+@page "/login"
+@page "/connexion"
+@page "/login-entra"
+@page "/connexion-entra"
+
+<PageTitle>Local sign in</PageTitle>
+
+<MudContainer MaxWidth="MaxWidth.Medium">
+    <MudPaper Class="scaffold-login-card" Elevation="0">
+        <MudImage Src="/img/canada-fip.svg" Alt="Government of Canada wordmark" Class="scaffold-wordmark mb-6" />
+        <MudText Typo="Typo.h3" Class="mb-2">Local scaffold sign in</MudText>
+        <MudText Typo="Typo.body1" Class="mb-4">
+            Azure authentication has been temporarily replaced with a simple email-based cookie sign-in so the portal can start locally.
+        </MudText>
+
+        @if (Error == "missing-email")
+        {
+            <MudAlert Severity="Severity.Warning" Dense="true" Variant="Variant.Outlined" Class="mb-4">
+                Enter an email address to continue.
+            </MudAlert>
+        }
+
+        <form method="post" action="/auth/login">
+            <input type="hidden" name="returnUrl" value="@ResolvedReturnUrl" />
+            <label class="scaffold-login-label" for="email">Email</label>
+            <input id="email" name="email" type="email" class="scaffold-login-input mb-4" placeholder="scientist@example.gc.ca" />
+            <MudText Typo="Typo.caption" Class="d-block mb-4">
+                TODO: Restore the real Azure / GCCF authentication options when external identity flows are available again.
+            </MudText>
+            <MudStack Row Spacing="2">
+                <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary">Sign in locally</MudButton>
+                <MudButton Variant="Variant.Text" Color="Color.Primary" Href="@PageRoutes.Home">Return home</MudButton>
+            </MudStack>
+        </form>
+    </MudPaper>
+</MudContainer>
+
+@code {
+    [SupplyParameterFromQuery] public string? ReturnUrl { get; set; }
+    [SupplyParameterFromQuery] public string? Error { get; set; }
+
+    private string ResolvedReturnUrl => string.IsNullOrWhiteSpace(ReturnUrl) ? PageRoutes.Account : ReturnUrl!;
+}

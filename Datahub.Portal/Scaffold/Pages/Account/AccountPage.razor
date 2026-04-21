@@ -1,0 +1,47 @@
+@namespace Datahub.Portal.Scaffold.Pages.Account
+@using System.Security.Claims
+@attribute [Authorize]
+@page "/account"
+@page "/compte"
+@page "/account/{Section}"
+@page "/compte/{Section}"
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+<PageTitle>Account</PageTitle>
+
+<MudStack Spacing="3">
+    <MudText Typo="Typo.h2">Account</MudText>
+    <MudPaper Class="scaffold-card" Elevation="0">
+        <MudGrid Spacing="3">
+            <MudItem xs="12" md="8">
+                <MudText Typo="Typo.h5" GutterBottom="true">Signed in locally</MudText>
+                <MudText Typo="Typo.body1">Email: @Email</MudText>
+                <MudText Typo="Typo.body1">Display name: @DisplayName</MudText>
+                @if (!string.IsNullOrWhiteSpace(Section))
+                {
+                    <MudText Typo="Typo.body1">Requested section: @Section</MudText>
+                }
+            </MudItem>
+            <MudItem xs="12" md="4">
+                <MudAlert Severity="Severity.Info" Variant="Variant.Outlined">
+                    TODO: Restore profile settings, preferences, notifications, and achievements when the original services return.
+                </MudAlert>
+            </MudItem>
+        </MudGrid>
+    </MudPaper>
+</MudStack>
+
+@code {
+    [Parameter] public string? Section { get; set; }
+
+    private string Email { get; set; } = string.Empty;
+    private string DisplayName { get; set; } = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+        Email = user.FindFirst(ClaimTypes.Email)?.Value ?? user.Identity?.Name ?? "scaffold@example.gc.ca";
+        DisplayName = user.FindFirst(ClaimTypes.GivenName)?.Value ?? Email;
+    }
+}

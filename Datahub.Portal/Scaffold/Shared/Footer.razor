@@ -1,0 +1,20 @@
+@namespace Datahub.Portal.Scaffold.Shared
+
+<MudContainer MaxWidth="MaxWidth.False" Class="scaffold-footer">
+    <MudDivider Class="mb-4" />
+    <MudGrid Spacing="3">
+        <MudItem xs="12" md="6">
+            <MudText Typo="Typo.h6">Federal Science DataHub</MudText>
+            <MudText Typo="Typo.body2">
+                Scaffolded local startup build of the extracted portal. Visual assets and core navigation are preserved while backend integrations are intentionally stubbed.
+            </MudText>
+        </MudItem>
+        <MudItem xs="12" md="6">
+            <MudStack Row Wrap="Wrap.Wrap" Spacing="1">
+                <MudButton Variant="Variant.Text" Href="@PageRoutes.News">Announcements</MudButton>
+                <MudButton Variant="Variant.Text" Href="@PageRoutes.Help">Help</MudButton>
+                <MudButton Variant="Variant.Text" Href="https://documentation.sds.canada.ca/" Target="_blank">Documentation</MudButton>
+            </MudStack>
+        </MudItem>
+    </MudGrid>
+</MudContainer>

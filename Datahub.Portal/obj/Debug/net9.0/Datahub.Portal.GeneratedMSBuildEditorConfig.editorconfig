@@ -3,954 +3,118 @@ build_property.MudDebugAnalyzer =
 build_property.MudAllowedAttributePattern = 
 build_property.MudAllowedAttributeList = 
 build_property.TargetFramework = net9.0
-build_property.TargetFramework = net9.0
-build_property.TargetPlatformMinVersion = 
 build_property.TargetPlatformMinVersion = 
 build_property.UsingMicrosoftNETSdkWeb = true
-build_property.UsingMicrosoftNETSdkWeb = true
-build_property.ProjectTypeGuids = 
 build_property.ProjectTypeGuids = 
 build_property.InvariantGlobalization = 
-build_property.InvariantGlobalization = 
-build_property.PlatformNeutralAssembly = 
 build_property.PlatformNeutralAssembly = 
 build_property.EnforceExtendedAnalyzerRules = 
-build_property.EnforceExtendedAnalyzerRules = 
-build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = Datahub.Portal
 build_property.RootNamespace = Datahub.Portal
-build_property.ProjectDir = /workspaces/datahub-portal/Portal/src/Datahub.Portal/
+build_property.ProjectDir = /workspaces/fsdh-prototype/Datahub.Portal/
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 
 build_property.RazorLangVersion = 9.0
 build_property.SupportLocalizedComponentNames = 
 build_property.GenerateRazorMetadataSourceChecksumAttributes = 
-build_property.MSBuildProjectDirectory = /workspaces/datahub-portal/Portal/src/Datahub.Portal
+build_property.MSBuildProjectDirectory = /workspaces/fsdh-prototype/Datahub.Portal
 build_property._RazorSourceGeneratorDebug = 
 build_property.EffectiveAnalysisLevelStyle = 9.0
 build_property.EnableCodeStyleSeverity = 
 
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Components/AcknowledgementConfirmation.razor]
-build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9BY2tub3dsZWRnZW1lbnRDb25maXJtYXRpb24ucmF6b3I=
+[/workspaces/fsdh-prototype/Datahub.Portal/Scaffold/App.razor]
+build_metadata.AdditionalFiles.TargetPath = U2NhZmZvbGQvQXBwLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Components/Announcements/AnnouncementCarousel.razor]
-build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9Bbm5vdW5jZW1lbnRzL0Fubm91bmNlbWVudENhcm91c2VsLnJhem9y
+[/workspaces/fsdh-prototype/Datahub.Portal/Scaffold/Layout/PortalLayout.razor]
+build_metadata.AdditionalFiles.TargetPath = U2NhZmZvbGQvTGF5b3V0L1BvcnRhbExheW91dC5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Components/Buttons/DHButton.razor]
-build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9CdXR0b25zL0RIQnV0dG9uLnJhem9y
+[/workspaces/fsdh-prototype/Datahub.Portal/Scaffold/Layout/PublicLayout.razor]
+build_metadata.AdditionalFiles.TargetPath = U2NhZmZvbGQvTGF5b3V0L1B1YmxpY0xheW91dC5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Components/Buttons/SpinnerButton.razor]
-build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9CdXR0b25zL1NwaW5uZXJCdXR0b24ucmF6b3I=
+[/workspaces/fsdh-prototype/Datahub.Portal/Scaffold/Pages/Account/AccountPage.razor]
+build_metadata.AdditionalFiles.TargetPath = U2NhZmZvbGQvUGFnZXMvQWNjb3VudC9BY2NvdW50UGFnZS5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Components/Buttons/ToolBeingProvisionedButton.razor]
-build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9CdXR0b25zL1Rvb2xCZWluZ1Byb3Zpc2lvbmVkQnV0dG9uLnJhem9y
+[/workspaces/fsdh-prototype/Datahub.Portal/Scaffold/Pages/Explore/ExplorePage.razor]
+build_metadata.AdditionalFiles.TargetPath = U2NhZmZvbGQvUGFnZXMvRXhwbG9yZS9FeHBsb3JlUGFnZS5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Components/DHAlert.razor]
-build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9ESEFsZXJ0LnJhem9y
+[/workspaces/fsdh-prototype/Datahub.Portal/Scaffold/Pages/Public/AccessDeniedPage.razor]
+build_metadata.AdditionalFiles.TargetPath = U2NhZmZvbGQvUGFnZXMvUHVibGljL0FjY2Vzc0RlbmllZFBhZ2UucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Components/DHIcon.razor]
-build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9ESEljb24ucmF6b3I=
+[/workspaces/fsdh-prototype/Datahub.Portal/Scaffold/Pages/Public/AnnouncementsPage.razor]
+build_metadata.AdditionalFiles.TargetPath = U2NhZmZvbGQvUGFnZXMvUHVibGljL0Fubm91bmNlbWVudHNQYWdlLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Components/DHLink.razor]
-build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9ESExpbmsucmF6b3I=
+[/workspaces/fsdh-prototype/Datahub.Portal/Scaffold/Pages/Public/ExternalInvitationSetupPage.razor]
+build_metadata.AdditionalFiles.TargetPath = U2NhZmZvbGQvUGFnZXMvUHVibGljL0V4dGVybmFsSW52aXRhdGlvblNldHVwUGFnZS5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Components/DHMainContentTitle.razor]
-build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9ESE1haW5Db250ZW50VGl0bGUucmF6b3I=
+[/workspaces/fsdh-prototype/Datahub.Portal/Scaffold/Pages/Public/HelpPage.razor]
+build_metadata.AdditionalFiles.TargetPath = U2NhZmZvbGQvUGFnZXMvUHVibGljL0hlbHBQYWdlLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Components/Dialogs/ColumnSelectDialog.razor]
-build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9EaWFsb2dzL0NvbHVtblNlbGVjdERpYWxvZy5yYXpvcg==
+[/workspaces/fsdh-prototype/Datahub.Portal/Scaffold/Pages/Public/HomePage.razor]
+build_metadata.AdditionalFiles.TargetPath = U2NhZmZvbGQvUGFnZXMvUHVibGljL0hvbWVQYWdlLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Components/Dialogs/FilterDialog.razor]
-build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9EaWFsb2dzL0ZpbHRlckRpYWxvZy5yYXpvcg==
+[/workspaces/fsdh-prototype/Datahub.Portal/Scaffold/Pages/Public/LanguageSelectionPage.razor]
+build_metadata.AdditionalFiles.TargetPath = U2NhZmZvbGQvUGFnZXMvUHVibGljL0xhbmd1YWdlU2VsZWN0aW9uUGFnZS5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Components/Dialogs/PresetDialog.razor]
-build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9EaWFsb2dzL1ByZXNldERpYWxvZy5yYXpvcg==
+[/workspaces/fsdh-prototype/Datahub.Portal/Scaffold/Pages/Public/LockedPage.razor]
+build_metadata.AdditionalFiles.TargetPath = U2NhZmZvbGQvUGFnZXMvUHVibGljL0xvY2tlZFBhZ2UucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Components/Dialogs/SimpleChoiceDialog.razor]
-build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9EaWFsb2dzL1NpbXBsZUNob2ljZURpYWxvZy5yYXpvcg==
+[/workspaces/fsdh-prototype/Datahub.Portal/Scaffold/Pages/Public/LoginPage.razor]
+build_metadata.AdditionalFiles.TargetPath = U2NhZmZvbGQvUGFnZXMvUHVibGljL0xvZ2luUGFnZS5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Components/EmbeddedWiki.razor]
-build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9FbWJlZGRlZFdpa2kucmF6b3I=
+[/workspaces/fsdh-prototype/Datahub.Portal/Scaffold/Pages/Public/NotFoundPage.razor]
+build_metadata.AdditionalFiles.TargetPath = U2NhZmZvbGQvUGFnZXMvUHVibGljL05vdEZvdW5kUGFnZS5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Components/EnvironmentVariablesTable.razor]
-build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9FbnZpcm9ubWVudFZhcmlhYmxlc1RhYmxlLnJhem9y
+[/workspaces/fsdh-prototype/Datahub.Portal/Scaffold/Pages/Public/RegisterPage.razor]
+build_metadata.AdditionalFiles.TargetPath = U2NhZmZvbGQvUGFnZXMvUHVibGljL1JlZ2lzdGVyUGFnZS5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Components/FSDHEnvironment.razor]
-build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9GU0RIRW52aXJvbm1lbnQucmF6b3I=
+[/workspaces/fsdh-prototype/Datahub.Portal/Scaffold/Pages/Tools/ToolsPage.razor]
+build_metadata.AdditionalFiles.TargetPath = U2NhZmZvbGQvUGFnZXMvVG9vbHMvVG9vbHNQYWdlLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Components/LanguageToggle.razor]
-build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9MYW5ndWFnZVRvZ2dsZS5yYXpvcg==
+[/workspaces/fsdh-prototype/Datahub.Portal/Scaffold/Pages/Workspace/CreateWorkspacePage.razor]
+build_metadata.AdditionalFiles.TargetPath = U2NhZmZvbGQvUGFnZXMvV29ya3NwYWNlL0NyZWF0ZVdvcmtzcGFjZVBhZ2UucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Components/Markdown/DHMarkdownEditor.razor]
-build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9NYXJrZG93bi9ESE1hcmtkb3duRWRpdG9yLnJhem9y
+[/workspaces/fsdh-prototype/Datahub.Portal/Scaffold/Pages/Workspace/WorkspacePage.razor]
+build_metadata.AdditionalFiles.TargetPath = U2NhZmZvbGQvUGFnZXMvV29ya3NwYWNlL1dvcmtzcGFjZVBhZ2UucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Components/PageAlerts/DHPageAlert.razor]
-build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9QYWdlQWxlcnRzL0RIUGFnZUFsZXJ0LnJhem9y
+[/workspaces/fsdh-prototype/Datahub.Portal/Scaffold/Routes.razor]
+build_metadata.AdditionalFiles.TargetPath = U2NhZmZvbGQvUm91dGVzLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Components/PageAlerts/DHPageAlertDialog.razor]
-build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9QYWdlQWxlcnRzL0RIUGFnZUFsZXJ0RGlhbG9nLnJhem9y
+[/workspaces/fsdh-prototype/Datahub.Portal/Scaffold/Shared/AuthRequired.razor]
+build_metadata.AdditionalFiles.TargetPath = U2NhZmZvbGQvU2hhcmVkL0F1dGhSZXF1aXJlZC5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Components/PageAlerts/NewUserAlert.razor]
-build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9QYWdlQWxlcnRzL05ld1VzZXJBbGVydC5yYXpvcg==
+[/workspaces/fsdh-prototype/Datahub.Portal/Scaffold/Shared/Footer.razor]
+build_metadata.AdditionalFiles.TargetPath = U2NhZmZvbGQvU2hhcmVkL0Zvb3Rlci5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Components/PageAlerts/WorkspaceAlert.razor]
-build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9QYWdlQWxlcnRzL1dvcmtzcGFjZUFsZXJ0LnJhem9y
+[/workspaces/fsdh-prototype/Datahub.Portal/Scaffold/Shared/PlaceholderPanel.razor]
+build_metadata.AdditionalFiles.TargetPath = U2NhZmZvbGQvU2hhcmVkL1BsYWNlaG9sZGVyUGFuZWwucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Components/Projects/FeaturedProjectToggle.razor]
-build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9Qcm9qZWN0cy9GZWF0dXJlZFByb2plY3RUb2dnbGUucmF6b3I=
+[/workspaces/fsdh-prototype/Datahub.Portal/Scaffold/Shared/TopNav.razor]
+build_metadata.AdditionalFiles.TargetPath = U2NhZmZvbGQvU2hhcmVkL1RvcE5hdi5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Components/Projects/ProjectObjectMetadata.razor]
-build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9Qcm9qZWN0cy9Qcm9qZWN0T2JqZWN0TWV0YWRhdGEucmF6b3I=
+[/workspaces/fsdh-prototype/Datahub.Portal/Scaffold/_Imports.razor]
+build_metadata.AdditionalFiles.TargetPath = U2NhZmZvbGQvX0ltcG9ydHMucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Components/Projects/UserProjects.razor]
-build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9Qcm9qZWN0cy9Vc2VyUHJvamVjdHMucmF6b3I=
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Components/Projects/WorkspaceObjectMetadata.razor]
-build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9Qcm9qZWN0cy9Xb3Jrc3BhY2VPYmplY3RNZXRhZGF0YS5yYXpvcg==
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Components/Resources/ResourcesAdminView.razor]
-build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9SZXNvdXJjZXMvUmVzb3VyY2VzQWRtaW5WaWV3LnJhem9y
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Components/Resources/ResourcesListView.razor]
-build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9SZXNvdXJjZXMvUmVzb3VyY2VzTGlzdFZpZXcucmF6b3I=
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Components/Resources/ResourcesMarkdown.razor]
-build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9SZXNvdXJjZXMvUmVzb3VyY2VzTWFya2Rvd24ucmF6b3I=
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Components/Resources/ResourcesPreviewCard.razor]
-build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9SZXNvdXJjZXMvUmVzb3VyY2VzUHJldmlld0NhcmQucmF6b3I=
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Components/Resources/ResourcesTableOfContents.razor]
-build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9SZXNvdXJjZXMvUmVzb3VyY2VzVGFibGVPZkNvbnRlbnRzLnJhem9y
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Components/ScreenReaderNavigation.razor]
-build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9TY3JlZW5SZWFkZXJOYXZpZ2F0aW9uLnJhem9y
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Components/Sidebar/DHSidebarDrawer.razor]
-build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9TaWRlYmFyL0RIU2lkZWJhckRyYXdlci5yYXpvcg==
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Components/SkipLink.razor]
-build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9Ta2lwTGluay5yYXpvcg==
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Components/Tables/DHTable.razor]
-build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9UYWJsZXMvREhUYWJsZS5yYXpvcg==
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Components/Tag.razor]
-build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9UYWcucmF6b3I=
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Components/TermsAndConditionsDate.razor]
-build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9UZXJtc0FuZENvbmRpdGlvbnNEYXRlLnJhem9y
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Components/TZ/LocalDateTime.razor]
-build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9UWi9Mb2NhbERhdGVUaW1lLnJhem9y
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Components/User/ProfileCircle.razor]
-build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9Vc2VyL1Byb2ZpbGVDaXJjbGUucmF6b3I=
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Components/User/UserAvatar.razor]
-build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9Vc2VyL1VzZXJBdmF0YXIucmF6b3I=
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Components/User/UserCard.razor]
-build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9Vc2VyL1VzZXJDYXJkLnJhem9y
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Components/User/UserViewProfileIconButton.razor]
-build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9Vc2VyL1VzZXJWaWV3UHJvZmlsZUljb25CdXR0b24ucmF6b3I=
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Components/WorkspaceAlerts.razor]
-build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9Xb3Jrc3BhY2VBbGVydHMucmF6b3I=
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Layout/BarebonesPublicLayout.razor]
-build_metadata.AdditionalFiles.TargetPath = TGF5b3V0L0JhcmVib25lc1B1YmxpY0xheW91dC5yYXpvcg==
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Layout/CommonMudProviders.razor]
-build_metadata.AdditionalFiles.TargetPath = TGF5b3V0L0NvbW1vbk11ZFByb3ZpZGVycy5yYXpvcg==
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Layout/DatahubAchievementProvider.razor]
-build_metadata.AdditionalFiles.TargetPath = TGF5b3V0L0RhdGFodWJBY2hpZXZlbWVudFByb3ZpZGVyLnJhem9y
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Layout/DHFooter.razor]
-build_metadata.AdditionalFiles.TargetPath = TGF5b3V0L0RIRm9vdGVyLnJhem9y
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Layout/Error.razor]
-build_metadata.AdditionalFiles.TargetPath = TGF5b3V0L0Vycm9yLnJhem9y
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Layout/ExternalLayout.razor]
-build_metadata.AdditionalFiles.TargetPath = TGF5b3V0L0V4dGVybmFsTGF5b3V0LnJhem9y
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Layout/LearnSidebar.razor]
-build_metadata.AdditionalFiles.TargetPath = TGF5b3V0L0xlYXJuU2lkZWJhci5yYXpvcg==
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Layout/MainLayout.razor]
-build_metadata.AdditionalFiles.TargetPath = TGF5b3V0L01haW5MYXlvdXQucmF6b3I=
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Layout/Modal.razor]
-build_metadata.AdditionalFiles.TargetPath = TGF5b3V0L01vZGFsLnJhem9y
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Layout/PersonalSidebar.razor]
-build_metadata.AdditionalFiles.TargetPath = TGF5b3V0L1BlcnNvbmFsU2lkZWJhci5yYXpvcg==
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Layout/PortalContainerLayout.razor]
-build_metadata.AdditionalFiles.TargetPath = TGF5b3V0L1BvcnRhbENvbnRhaW5lckxheW91dC5yYXpvcg==
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Layout/PortalLayout.razor]
-build_metadata.AdditionalFiles.TargetPath = TGF5b3V0L1BvcnRhbExheW91dC5yYXpvcg==
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Layout/PublicLayout.razor]
-build_metadata.AdditionalFiles.TargetPath = TGF5b3V0L1B1YmxpY0xheW91dC5yYXpvcg==
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Layout/PublicTopbarLayout.razor]
-build_metadata.AdditionalFiles.TargetPath = TGF5b3V0L1B1YmxpY1RvcGJhckxheW91dC5yYXpvcg==
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Layout/RightSidebar.razor]
-build_metadata.AdditionalFiles.TargetPath = TGF5b3V0L1JpZ2h0U2lkZWJhci5yYXpvcg==
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Layout/Sidebar.razor]
-build_metadata.AdditionalFiles.TargetPath = TGF5b3V0L1NpZGViYXIucmF6b3I=
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Layout/TooManyTabs.razor]
-build_metadata.AdditionalFiles.TargetPath = TGF5b3V0L1Rvb01hbnlUYWJzLnJhem9y
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Layout/Topbar/EnvironmentTopBar.razor]
-build_metadata.AdditionalFiles.TargetPath = TGF5b3V0L1RvcGJhci9FbnZpcm9ubWVudFRvcEJhci5yYXpvcg==
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Layout/Topbar/PublicTopbar.razor]
-build_metadata.AdditionalFiles.TargetPath = TGF5b3V0L1RvcGJhci9QdWJsaWNUb3BiYXIucmF6b3I=
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Layout/Topbar/Topbar.razor]
-build_metadata.AdditionalFiles.TargetPath = TGF5b3V0L1RvcGJhci9Ub3BiYXIucmF6b3I=
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Layout/Topbar/TopBarProfileButton.razor]
-build_metadata.AdditionalFiles.TargetPath = TGF5b3V0L1RvcGJhci9Ub3BCYXJQcm9maWxlQnV0dG9uLnJhem9y
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Layout/_Imports.razor]
-build_metadata.AdditionalFiles.TargetPath = TGF5b3V0L19JbXBvcnRzLnJhem9y
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Account/AccountPage.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvQWNjb3VudC9BY2NvdW50UGFnZS5yYXpvcg==
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Account/Achievements/AchievementCard.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvQWNjb3VudC9BY2hpZXZlbWVudHMvQWNoaWV2ZW1lbnRDYXJkLnJhem9y
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Account/Achievements/AchievementListItem.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvQWNjb3VudC9BY2hpZXZlbWVudHMvQWNoaWV2ZW1lbnRMaXN0SXRlbS5yYXpvcg==
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Account/Achievements/AchievementsPage.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvQWNjb3VudC9BY2hpZXZlbWVudHMvQWNoaWV2ZW1lbnRzUGFnZS5yYXpvcg==
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Account/Achievements/AchievementToast.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvQWNjb3VudC9BY2hpZXZlbWVudHMvQWNoaWV2ZW1lbnRUb2FzdC5yYXpvcg==
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Account/Appearance/AccountAppearanceSettings.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvQWNjb3VudC9BcHBlYXJhbmNlL0FjY291bnRBcHBlYXJhbmNlU2V0dGluZ3MucmF6b3I=
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Account/ChangePictureDialog.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvQWNjb3VudC9DaGFuZ2VQaWN0dXJlRGlhbG9nLnJhem9y
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Account/DialogImageItem.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvQWNjb3VudC9EaWFsb2dJbWFnZUl0ZW0ucmF6b3I=
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Account/ImageSelectionView.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvQWNjb3VudC9JbWFnZVNlbGVjdGlvblZpZXcucmF6b3I=
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Account/Notifications/AccountNotificationSettings.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvQWNjb3VudC9Ob3RpZmljYXRpb25zL0FjY291bnROb3RpZmljYXRpb25TZXR0aW5ncy5yYXpvcg==
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Account/PublicProfile/AccountPublicProfile.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvQWNjb3VudC9QdWJsaWNQcm9maWxlL0FjY291bnRQdWJsaWNQcm9maWxlLnJhem9y
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Account/PublicProfile/AccountPublicProfileSettings.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvQWNjb3VudC9QdWJsaWNQcm9maWxlL0FjY291bnRQdWJsaWNQcm9maWxlU2V0dGluZ3MucmF6b3I=
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Account/SettingsField.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvQWNjb3VudC9TZXR0aW5nc0ZpZWxkLnJhem9y
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Announcements/AnnouncementAdminControl.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvQW5ub3VuY2VtZW50cy9Bbm5vdW5jZW1lbnRBZG1pbkNvbnRyb2wucmF6b3I=
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Announcements/AnnouncementEditor.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvQW5ub3VuY2VtZW50cy9Bbm5vdW5jZW1lbnRFZGl0b3IucmF6b3I=
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Announcements/AnnouncementItem.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvQW5ub3VuY2VtZW50cy9Bbm5vdW5jZW1lbnRJdGVtLnJhem9y
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Announcements/AnnouncementsPage.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvQW5ub3VuY2VtZW50cy9Bbm5vdW5jZW1lbnRzUGFnZS5yYXpvcg==
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/App.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvQXBwLnJhem9y
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Catalog/DiscoverySearchLanding.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvQ2F0YWxvZy9EaXNjb3ZlcnlTZWFyY2hMYW5kaW5nLnJhem9y
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Catalog/MetadataDefinitionsPage.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvQ2F0YWxvZy9NZXRhZGF0YURlZmluaXRpb25zUGFnZS5yYXpvcg==
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Catalog/MetadataEditDefinitionPage.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvQ2F0YWxvZy9NZXRhZGF0YUVkaXREZWZpbml0aW9uUGFnZS5yYXpvcg==
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Catalog/MetadataPage.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvQ2F0YWxvZy9NZXRhZGF0YVBhZ2UucmF6b3I=
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Catalog/MetadataPageB.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvQ2F0YWxvZy9NZXRhZGF0YVBhZ2VCLnJhem9y
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Catalog/MetadataProfilePage.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvQ2F0YWxvZy9NZXRhZGF0YVByb2ZpbGVQYWdlLnJhem9y
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/ErrorTest.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvRXJyb3JUZXN0LnJhem9y
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Explore/DataProjects.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvRXhwbG9yZS9EYXRhUHJvamVjdHMucmF6b3I=
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Explore/ProjectPreviewCard.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvRXhwbG9yZS9Qcm9qZWN0UHJldmlld0NhcmQucmF6b3I=
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Explore/ProjectPreviewCardIconDetails.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvRXhwbG9yZS9Qcm9qZWN0UHJldmlld0NhcmRJY29uRGV0YWlscy5yYXpvcg==
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Help/HelpPage.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvSGVscC9IZWxwUGFnZS5yYXpvcg==
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Home/HomeNav.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvSG9tZS9Ib21lTmF2LnJhem9y
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Home/HomePage.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvSG9tZS9Ib21lUGFnZS5yYXpvcg==
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Home/HomeWorkspaceCard.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvSG9tZS9Ib21lV29ya3NwYWNlQ2FyZC5yYXpvcg==
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Home/NewWorkspaceCard.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvSG9tZS9OZXdXb3Jrc3BhY2VDYXJkLnJhem9y
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Home/ProfileAchievements.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvSG9tZS9Qcm9maWxlQWNoaWV2ZW1lbnRzLnJhem9y
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Home/ProfileLanding/AchievementAvatar.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvSG9tZS9Qcm9maWxlTGFuZGluZy9BY2hpZXZlbWVudEF2YXRhci5yYXpvcg==
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Home/ResourcesReferenceCard.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvSG9tZS9SZXNvdXJjZXNSZWZlcmVuY2VDYXJkLnJhem9y
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Public/AccessDeniedPage.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvUHVibGljL0FjY2Vzc0RlbmllZFBhZ2UucmF6b3I=
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Public/LanguageSelectionPage.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvUHVibGljL0xhbmd1YWdlU2VsZWN0aW9uUGFnZS5yYXpvcg==
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Public/LockedPage.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvUHVibGljL0xvY2tlZFBhZ2UucmF6b3I=
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Public/Login.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvUHVibGljL0xvZ2luLnJhem9y
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Public/LoginChoicePage.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvUHVibGljL0xvZ2luQ2hvaWNlUGFnZS5yYXpvcg==
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Public/PreRegistration.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvUHVibGljL1ByZVJlZ2lzdHJhdGlvbi5yYXpvcg==
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Public/PublicLandingDescription.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvUHVibGljL1B1YmxpY0xhbmRpbmdEZXNjcmlwdGlvbi5yYXpvcg==
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Public/RegisterPage.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvUHVibGljL1JlZ2lzdGVyUGFnZS5yYXpvcg==
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Public/TermsAndConditionsPage.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvUHVibGljL1Rlcm1zQW5kQ29uZGl0aW9uc1BhZ2UucmF6b3I=
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/RedirectToHome.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvUmVkaXJlY3RUb0hvbWUucmF6b3I=
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Resources/ResourcesPage.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvUmVzb3VyY2VzL1Jlc291cmNlc1BhZ2UucmF6b3I=
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Tools/AzureSubscriptionManagement/AzureSubscriptionsPage.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvVG9vbHMvQXp1cmVTdWJzY3JpcHRpb25NYW5hZ2VtZW50L0F6dXJlU3Vic2NyaXB0aW9uc1BhZ2UucmF6b3I=
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Tools/AzureSubscriptionManagement/CreateAzureSubscription.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvVG9vbHMvQXp1cmVTdWJzY3JpcHRpb25NYW5hZ2VtZW50L0NyZWF0ZUF6dXJlU3Vic2NyaXB0aW9uLnJhem9y
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Tools/Diagnostics/CacheDetails.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvVG9vbHMvRGlhZ25vc3RpY3MvQ2FjaGVEZXRhaWxzLnJhem9y
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Tools/Diagnostics/DiagnosticsPage.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvVG9vbHMvRGlhZ25vc3RpY3MvRGlhZ25vc3RpY3NQYWdlLnJhem9y
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Tools/Diagnostics/PortalDetails.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvVG9vbHMvRGlhZ25vc3RpY3MvUG9ydGFsRGV0YWlscy5yYXpvcg==
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Tools/Diagnostics/UserDetails.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvVG9vbHMvRGlhZ25vc3RpY3MvVXNlckRldGFpbHMucmF6b3I=
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Tools/Diagnostics/YarpDetails.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvVG9vbHMvRGlhZ25vc3RpY3MvWWFycERldGFpbHMucmF6b3I=
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Tools/Email/ComposeEmailPage.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvVG9vbHMvRW1haWwvQ29tcG9zZUVtYWlsUGFnZS5yYXpvcg==
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Tools/Health/FunctionHealth.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvVG9vbHMvSGVhbHRoL0Z1bmN0aW9uSGVhbHRoLnJhem9y
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Tools/Health/InfrastructureHealthPage.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvVG9vbHMvSGVhbHRoL0luZnJhc3RydWN0dXJlSGVhbHRoUGFnZS5yYXpvcg==
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Tools/HostingServices/HostingServicesToolPage.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvVG9vbHMvSG9zdGluZ1NlcnZpY2VzL0hvc3RpbmdTZXJ2aWNlc1Rvb2xQYWdlLnJhem9y
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Tools/Statistics/Charts/AccumulatedStorageArea.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvVG9vbHMvU3RhdGlzdGljcy9DaGFydHMvQWNjdW11bGF0ZWRTdG9yYWdlQXJlYS5yYXpvcg==
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Tools/Statistics/Charts/RegistrationsBar.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvVG9vbHMvU3RhdGlzdGljcy9DaGFydHMvUmVnaXN0cmF0aW9uc0Jhci5yYXpvcg==
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Tools/Statistics/Charts/ResourceTypeDonut.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvVG9vbHMvU3RhdGlzdGljcy9DaGFydHMvUmVzb3VyY2VUeXBlRG9udXQucmF6b3I=
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Tools/Statistics/Charts/UserActivityFunnel.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvVG9vbHMvU3RhdGlzdGljcy9DaGFydHMvVXNlckFjdGl2aXR5RnVubmVsLnJhem9y
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Tools/Statistics/Charts/UsersDomainDonut.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvVG9vbHMvU3RhdGlzdGljcy9DaGFydHMvVXNlcnNEb21haW5Eb251dC5yYXpvcg==
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Tools/Statistics/Charts/WorkspaceCountLineChart.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvVG9vbHMvU3RhdGlzdGljcy9DaGFydHMvV29ya3NwYWNlQ291bnRMaW5lQ2hhcnQucmF6b3I=
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Tools/Statistics/Charts/WorkspaceDepartmentBar.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvVG9vbHMvU3RhdGlzdGljcy9DaGFydHMvV29ya3NwYWNlRGVwYXJ0bWVudEJhci5yYXpvcg==
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Tools/Statistics/Charts/WorkspaceResourceFunnel.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvVG9vbHMvU3RhdGlzdGljcy9DaGFydHMvV29ya3NwYWNlUmVzb3VyY2VGdW5uZWwucmF6b3I=
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Tools/Statistics/HumerousLoader.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvVG9vbHMvU3RhdGlzdGljcy9IdW1lcm91c0xvYWRlci5yYXpvcg==
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Tools/Statistics/StatisticsPage.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvVG9vbHMvU3RhdGlzdGljcy9TdGF0aXN0aWNzUGFnZS5yYXpvcg==
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Tools/Statistics/ValueCard.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvVG9vbHMvU3RhdGlzdGljcy9WYWx1ZUNhcmQucmF6b3I=
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Tools/SupportRequests/SupportRequestPage.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvVG9vbHMvU3VwcG9ydFJlcXVlc3RzL1N1cHBvcnRSZXF1ZXN0UGFnZS5yYXpvcg==
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Tools/ToolsPage.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvVG9vbHMvVG9vbHNQYWdlLnJhem9y
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Tools/Users/UsersTable.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvVG9vbHMvVXNlcnMvVXNlcnNUYWJsZS5yYXpvcg==
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Tools/VersionControl/AddVersionDialog.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvVG9vbHMvVmVyc2lvbkNvbnRyb2wvQWRkVmVyc2lvbkRpYWxvZy5yYXpvcg==
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Tools/VersionControl/VersionControlPage.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvVG9vbHMvVmVyc2lvbkNvbnRyb2wvVmVyc2lvbkNvbnRyb2xQYWdlLnJhem9y
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Workspace/CreateWorkspaceForm.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvV29ya3NwYWNlL0NyZWF0ZVdvcmtzcGFjZUZvcm0ucmF6b3I=
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Workspace/CreateWorkspacePage.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvV29ya3NwYWNlL0NyZWF0ZVdvcmtzcGFjZVBhZ2UucmF6b3I=
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Workspace/Dashboard/ApproverActionsCard.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvV29ya3NwYWNlL0Rhc2hib2FyZC9BcHByb3ZlckFjdGlvbnNDYXJkLnJhem9y
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Workspace/Dashboard/AppServiceCard.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvV29ya3NwYWNlL0Rhc2hib2FyZC9BcHBTZXJ2aWNlQ2FyZC5yYXpvcg==
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Workspace/Dashboard/DatabricksCard.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvV29ya3NwYWNlL0Rhc2hib2FyZC9EYXRhYnJpY2tzQ2FyZC5yYXpvcg==
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Workspace/Dashboard/PostgreSQLCard.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvV29ya3NwYWNlL0Rhc2hib2FyZC9Qb3N0Z3JlU1FMQ2FyZC5yYXpvcg==
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Workspace/Dashboard/StorageCard.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvV29ya3NwYWNlL0Rhc2hib2FyZC9TdG9yYWdlQ2FyZC5yYXpvcg==
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Workspace/Dashboard/WorkspaceDashboard.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvV29ya3NwYWNlL0Rhc2hib2FyZC9Xb3Jrc3BhY2VEYXNoYm9hcmQucmF6b3I=
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Workspace/Dashboard/WorkspaceUserCardList.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvV29ya3NwYWNlL0Rhc2hib2FyZC9Xb3Jrc3BhY2VVc2VyQ2FyZExpc3QucmF6b3I=
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Workspace/Dashboard/WorkspaceVersionCard.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvV29ya3NwYWNlL0Rhc2hib2FyZC9Xb3Jrc3BhY2VWZXJzaW9uQ2FyZC5yYXpvcg==
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Workspace/Database/DatabaseAdminSetupInfo.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvV29ya3NwYWNlL0RhdGFiYXNlL0RhdGFiYXNlQWRtaW5TZXR1cEluZm8ucmF6b3I=
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Workspace/Database/DatabaseInfoTable.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvV29ya3NwYWNlL0RhdGFiYXNlL0RhdGFiYXNlSW5mb1RhYmxlLnJhem9y
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Workspace/Database/DatabaseIpWhitelistTable.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvV29ya3NwYWNlL0RhdGFiYXNlL0RhdGFiYXNlSXBXaGl0ZWxpc3RUYWJsZS5yYXpvcg==
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Workspace/Database/IpAddressDialog.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvV29ya3NwYWNlL0RhdGFiYXNlL0lwQWRkcmVzc0RpYWxvZy5yYXpvcg==
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Workspace/Database/WorkspaceDatabasePage.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvV29ya3NwYWNlL0RhdGFiYXNlL1dvcmtzcGFjZURhdGFiYXNlUGFnZS5yYXpvcg==
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Workspace/Delete/ResourceDeletionPage.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvV29ya3NwYWNlL0RlbGV0ZS9SZXNvdXJjZURlbGV0aW9uUGFnZS5yYXpvcg==
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Workspace/Delete/WorkspaceDeletionPage.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvV29ya3NwYWNlL0RlbGV0ZS9Xb3Jrc3BhY2VEZWxldGlvblBhZ2UucmF6b3I=
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Workspace/Healthcheck/WorkspaceHealthcheckPage.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvV29ya3NwYWNlL0hlYWx0aGNoZWNrL1dvcmtzcGFjZUhlYWx0aGNoZWNrUGFnZS5yYXpvcg==
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Workspace/Metadata/WorkspaceMetadataPage.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvV29ya3NwYWNlL01ldGFkYXRhL1dvcmtzcGFjZU1ldGFkYXRhUGFnZS5yYXpvcg==
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Workspace/Publishing/ApprovalForm.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvV29ya3NwYWNlL1B1Ymxpc2hpbmcvQXBwcm92YWxGb3JtLnJhem9y
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Workspace/Publishing/EditFileInformationDialog.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvV29ya3NwYWNlL1B1Ymxpc2hpbmcvRWRpdEZpbGVJbmZvcm1hdGlvbkRpYWxvZy5yYXpvcg==
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Workspace/Publishing/PublishingDashboard.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvV29ya3NwYWNlL1B1Ymxpc2hpbmcvUHVibGlzaGluZ0Rhc2hib2FyZC5yYXpvcg==
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Workspace/Publishing/PublishingFileControl.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvV29ya3NwYWNlL1B1Ymxpc2hpbmcvUHVibGlzaGluZ0ZpbGVDb250cm9sLnJhem9y
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Workspace/Publishing/PublishingSubmissionPage.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvV29ya3NwYWNlL1B1Ymxpc2hpbmcvUHVibGlzaGluZ1N1Ym1pc3Npb25QYWdlLnJhem9y
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Workspace/Publishing/PublishNewDatasetDialog.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvV29ya3NwYWNlL1B1Ymxpc2hpbmcvUHVibGlzaE5ld0RhdGFzZXREaWFsb2cucmF6b3I=
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Workspace/Publishing/TbsOpenGovPublishPage.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvV29ya3NwYWNlL1B1Ymxpc2hpbmcvVGJzT3BlbkdvdlB1Ymxpc2hQYWdlLnJhem9y
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Workspace/Publishing/TbsOpenGovSubmissionMetadataEditor.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvV29ya3NwYWNlL1B1Ymxpc2hpbmcvVGJzT3BlbkdvdlN1Ym1pc3Npb25NZXRhZGF0YUVkaXRvci5yYXpvcg==
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Workspace/Reports/CbrBudgetCostsTable.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvV29ya3NwYWNlL1JlcG9ydHMvQ2JyQnVkZ2V0Q29zdHNUYWJsZS5yYXpvcg==
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Workspace/Reports/CbrBudgetReport.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvV29ya3NwYWNlL1JlcG9ydHMvQ2JyQnVkZ2V0UmVwb3J0LnJhem9y
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Workspace/Reports/Charts/AccumulatedCostsArea.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvV29ya3NwYWNlL1JlcG9ydHMvQ2hhcnRzL0FjY3VtdWxhdGVkQ29zdHNBcmVhLnJhem9y
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Workspace/Reports/Charts/CbrAllocationUsageBarChart.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvV29ya3NwYWNlL1JlcG9ydHMvQ2hhcnRzL0NickFsbG9jYXRpb25Vc2FnZUJhckNoYXJ0LnJhem9y
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Workspace/Reports/Charts/CbrBudgetAllocationDonut.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvV29ya3NwYWNlL1JlcG9ydHMvQ2hhcnRzL0NickJ1ZGdldEFsbG9jYXRpb25Eb251dC5yYXpvcg==
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Workspace/Reports/Charts/DailyCostsStackBar.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvV29ya3NwYWNlL1JlcG9ydHMvQ2hhcnRzL0RhaWx5Q29zdHNTdGFja0Jhci5yYXpvcg==
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Workspace/Reports/Charts/DailyStorageLine.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvV29ya3NwYWNlL1JlcG9ydHMvQ2hhcnRzL0RhaWx5U3RvcmFnZUxpbmUucmF6b3I=
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Workspace/Reports/Charts/MonthlyCostsStackBar.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvV29ya3NwYWNlL1JlcG9ydHMvQ2hhcnRzL01vbnRobHlDb3N0c1N0YWNrQmFyLnJhem9y
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Workspace/Reports/Charts/ServiceCostsDonut.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvV29ya3NwYWNlL1JlcG9ydHMvQ2hhcnRzL1NlcnZpY2VDb3N0c0RvbnV0LnJhem9y
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Workspace/Reports/WorkspaceCostingReport.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvV29ya3NwYWNlL1JlcG9ydHMvV29ya3NwYWNlQ29zdGluZ1JlcG9ydC5yYXpvcg==
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Workspace/Reports/WorkspaceCostsTable.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvV29ya3NwYWNlL1JlcG9ydHMvV29ya3NwYWNlQ29zdHNUYWJsZS5yYXpvcg==
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Workspace/Reports/WorkspaceReports.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvV29ya3NwYWNlL1JlcG9ydHMvV29ya3NwYWNlUmVwb3J0cy5yYXpvcg==
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Workspace/Reports/WorkspaceStorageReport.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvV29ya3NwYWNlL1JlcG9ydHMvV29ya3NwYWNlU3RvcmFnZVJlcG9ydC5yYXpvcg==
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Workspace/Repositories/RepositoryCard.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvV29ya3NwYWNlL1JlcG9zaXRvcmllcy9SZXBvc2l0b3J5Q2FyZC5yYXpvcg==
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Workspace/Repositories/RepositoryGridItem.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvV29ya3NwYWNlL1JlcG9zaXRvcmllcy9SZXBvc2l0b3J5R3JpZEl0ZW0ucmF6b3I=
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Workspace/Repositories/RepositoryManagementPage.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvV29ya3NwYWNlL1JlcG9zaXRvcmllcy9SZXBvc2l0b3J5TWFuYWdlbWVudFBhZ2UucmF6b3I=
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Workspace/Settings/CBRBudgetManagementPage.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvV29ya3NwYWNlL1NldHRpbmdzL0NCUkJ1ZGdldE1hbmFnZW1lbnRQYWdlLnJhem9y
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Workspace/Settings/WorkspaceBudgetControl.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvV29ya3NwYWNlL1NldHRpbmdzL1dvcmtzcGFjZUJ1ZGdldENvbnRyb2wucmF6b3I=
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Workspace/Settings/WorkspaceCbrSettingsLinkControl.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvV29ya3NwYWNlL1NldHRpbmdzL1dvcmtzcGFjZUNiclNldHRpbmdzTGlua0NvbnRyb2wucmF6b3I=
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Workspace/Settings/WorkspaceDeleteControl.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvV29ya3NwYWNlL1NldHRpbmdzL1dvcmtzcGFjZURlbGV0ZUNvbnRyb2wucmF6b3I=
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Workspace/Settings/WorkspaceGrantSupportAccessControl.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvV29ya3NwYWNlL1NldHRpbmdzL1dvcmtzcGFjZUdyYW50U3VwcG9ydEFjY2Vzc0NvbnRyb2wucmF6b3I=
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Workspace/Settings/WorkspacePreventAutoDeleteControl.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvV29ya3NwYWNlL1NldHRpbmdzL1dvcmtzcGFjZVByZXZlbnRBdXRvRGVsZXRlQ29udHJvbC5yYXpvcg==
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Workspace/Settings/WorkspaceSettingsPage.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvV29ya3NwYWNlL1NldHRpbmdzL1dvcmtzcGFjZVNldHRpbmdzUGFnZS5yYXpvcg==
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Workspace/Settings/WorkspaceSharedKeyAccessControl.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvV29ya3NwYWNlL1NldHRpbmdzL1dvcmtzcGFjZVNoYXJlZEtleUFjY2Vzc0NvbnRyb2wucmF6b3I=
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Workspace/Storage/Container/AWSConnectionDataInput.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvV29ya3NwYWNlL1N0b3JhZ2UvQ29udGFpbmVyL0FXU0Nvbm5lY3Rpb25EYXRhSW5wdXQucmF6b3I=
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Workspace/Storage/Container/AzureConnectionDataInput.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvV29ya3NwYWNlL1N0b3JhZ2UvQ29udGFpbmVyL0F6dXJlQ29ubmVjdGlvbkRhdGFJbnB1dC5yYXpvcg==
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Workspace/Storage/Container/GCPConnectionDataInput.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvV29ya3NwYWNlL1N0b3JhZ2UvQ29udGFpbmVyL0dDUENvbm5lY3Rpb25EYXRhSW5wdXQucmF6b3I=
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Workspace/Storage/Container/StorageConfigurationDialog.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvV29ya3NwYWNlL1N0b3JhZ2UvQ29udGFpbmVyL1N0b3JhZ2VDb25maWd1cmF0aW9uRGlhbG9nLnJhem9y
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Workspace/Storage/Container/StorageContainerSelector.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvV29ya3NwYWNlL1N0b3JhZ2UvQ29udGFpbmVyL1N0b3JhZ2VDb250YWluZXJTZWxlY3Rvci5yYXpvcg==
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Workspace/Storage/FileExplorer.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvV29ya3NwYWNlL1N0b3JhZ2UvRmlsZUV4cGxvcmVyLnJhem9y
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Workspace/Storage/FileExplorerPage.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvV29ya3NwYWNlL1N0b3JhZ2UvRmlsZUV4cGxvcmVyUGFnZS5yYXpvcg==
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Workspace/Storage/FileItem.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvV29ya3NwYWNlL1N0b3JhZ2UvRmlsZUl0ZW0ucmF6b3I=
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Workspace/Storage/FileProperties.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvV29ya3NwYWNlL1N0b3JhZ2UvRmlsZVByb3BlcnRpZXMucmF6b3I=
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Workspace/Storage/HeadingBreadcrumbs.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvV29ya3NwYWNlL1N0b3JhZ2UvSGVhZGluZ0JyZWFkY3J1bWJzLnJhem9y
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Workspace/Storage/LoadingFileList.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvV29ya3NwYWNlL1N0b3JhZ2UvTG9hZGluZ0ZpbGVMaXN0LnJhem9y
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Workspace/Storage/ResourcePages/AzCopy.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvV29ya3NwYWNlL1N0b3JhZ2UvUmVzb3VyY2VQYWdlcy9BekNvcHkucmF6b3I=
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Workspace/Storage/ResourcePages/Databricks.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvV29ya3NwYWNlL1N0b3JhZ2UvUmVzb3VyY2VQYWdlcy9EYXRhYnJpY2tzLnJhem9y
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Workspace/Storage/ResourcePages/ResourcePageRenderer.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvV29ya3NwYWNlL1N0b3JhZ2UvUmVzb3VyY2VQYWdlcy9SZXNvdXJjZVBhZ2VSZW5kZXJlci5yYXpvcg==
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Workspace/Storage/ResourcePages/UploaderCode.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvV29ya3NwYWNlL1N0b3JhZ2UvUmVzb3VyY2VQYWdlcy9VcGxvYWRlckNvZGUucmF6b3I=
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Workspace/Storage/SASTokenButton.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvV29ya3NwYWNlL1N0b3JhZ2UvU0FTVG9rZW5CdXR0b24ucmF6b3I=
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Workspace/Storage/SearchResultsExplorer.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvV29ya3NwYWNlL1N0b3JhZ2UvU2VhcmNoUmVzdWx0c0V4cGxvcmVyLnJhem9y
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Workspace/Storage/StorageHeading.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvV29ya3NwYWNlL1N0b3JhZ2UvU3RvcmFnZUhlYWRpbmcucmF6b3I=
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Workspace/Storage/StorageProperties.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvV29ya3NwYWNlL1N0b3JhZ2UvU3RvcmFnZVByb3BlcnRpZXMucmF6b3I=
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Workspace/Sudo/WorkspaceSudoPage.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvV29ya3NwYWNlL1N1ZG8vV29ya3NwYWNlU3Vkb1BhZ2UucmF6b3I=
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Workspace/Toolbox/ConfigurationForms/DatabricksConfigurationForm.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvV29ya3NwYWNlL1Rvb2xib3gvQ29uZmlndXJhdGlvbkZvcm1zL0RhdGFicmlja3NDb25maWd1cmF0aW9uRm9ybS5yYXpvcg==
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Workspace/Toolbox/ConfigurationForms/PostgresConfigurationForm.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvV29ya3NwYWNlL1Rvb2xib3gvQ29uZmlndXJhdGlvbkZvcm1zL1Bvc3RncmVzQ29uZmlndXJhdGlvbkZvcm0ucmF6b3I=
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Workspace/Toolbox/ConfigurationForms/WorkspaceToolConfigurationForm.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvV29ya3NwYWNlL1Rvb2xib3gvQ29uZmlndXJhdGlvbkZvcm1zL1dvcmtzcGFjZVRvb2xDb25maWd1cmF0aW9uRm9ybS5yYXpvcg==
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Workspace/Toolbox/InfoSheet.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvV29ya3NwYWNlL1Rvb2xib3gvSW5mb1NoZWV0LnJhem9y
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Workspace/Toolbox/ToolboxItem.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvV29ya3NwYWNlL1Rvb2xib3gvVG9vbGJveEl0ZW0ucmF6b3I=
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Workspace/Toolbox/WorkspaceToolboxPage.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvV29ya3NwYWNlL1Rvb2xib3gvV29ya3NwYWNlVG9vbGJveFBhZ2UucmF6b3I=
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Workspace/Users/AddNewEntraUsersToProjectDialog.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvV29ya3NwYWNlL1VzZXJzL0FkZE5ld0VudHJhVXNlcnNUb1Byb2plY3REaWFsb2cucmF6b3I=
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Workspace/Users/ProjectMembersRoleSelect.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvV29ya3NwYWNlL1VzZXJzL1Byb2plY3RNZW1iZXJzUm9sZVNlbGVjdC5yYXpvcg==
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Workspace/Users/WorkspaceUsersPage.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvV29ya3NwYWNlL1VzZXJzL1dvcmtzcGFjZVVzZXJzUGFnZS5yYXpvcg==
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Workspace/WebApp/WorkspaceWebAppInfoTable.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvV29ya3NwYWNlL1dlYkFwcC9Xb3Jrc3BhY2VXZWJBcHBJbmZvVGFibGUucmF6b3I=
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Workspace/WebApp/WorkspaceWebAppPage.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvV29ya3NwYWNlL1dlYkFwcC9Xb3Jrc3BhY2VXZWJBcHBQYWdlLnJhem9y
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Workspace/WebApp/WorkspaceWebAppSharePage.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvV29ya3NwYWNlL1dlYkFwcC9Xb3Jrc3BhY2VXZWJBcHBTaGFyZVBhZ2UucmF6b3I=
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Workspace/WorkspaceAdminInfo.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvV29ya3NwYWNlL1dvcmtzcGFjZUFkbWluSW5mby5yYXpvcg==
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Workspace/WorkspaceBudgetAlert.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvV29ya3NwYWNlL1dvcmtzcGFjZUJ1ZGdldEFsZXJ0LnJhem9y
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Workspace/WorkspaceInfo.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvV29ya3NwYWNlL1dvcmtzcGFjZUluZm8ucmF6b3I=
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Pages/Workspace/WorkspacePage.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvV29ya3NwYWNlL1dvcmtzcGFjZVBhZ2UucmF6b3I=
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Routes.razor]
-build_metadata.AdditionalFiles.TargetPath = Um91dGVzLnJhem9y
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Views/Dialogs/AzureAppServiceConfigurationDialog.razor]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3MvRGlhbG9ncy9BenVyZUFwcFNlcnZpY2VDb25maWd1cmF0aW9uRGlhbG9nLnJhem9y
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Views/Dialogs/UserTermsAndConditionsDialog.razor]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3MvRGlhbG9ncy9Vc2VyVGVybXNBbmRDb25kaXRpb25zRGlhbG9nLnJhem9y
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/_Imports.razor]
-build_metadata.AdditionalFiles.TargetPath = X0ltcG9ydHMucmF6b3I=
-build_metadata.AdditionalFiles.CssScope = 
-
-[/workspaces/datahub-portal/Portal/src/Datahub.Portal/Layout/WorkspaceSidebar.razor]
-build_metadata.AdditionalFiles.TargetPath = TGF5b3V0L1dvcmtzcGFjZVNpZGViYXIucmF6b3I=
-build_metadata.AdditionalFiles.CssScope = b-w96r293c2u

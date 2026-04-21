@@ -1,0 +1,24 @@
+@namespace Datahub.Portal.Scaffold.Shared
+
+<MudPaper Class="scaffold-card" Elevation="0">
+    <MudGrid Spacing="4">
+        <MudItem xs="12" md="8">
+            <MudChip T="string" Color="Color.Info" Variant="Variant.Outlined" Size="Size.Small" Class="mb-3">Scaffold Placeholder</MudChip>
+            <MudText Typo="Typo.h3" GutterBottom="true">@Title</MudText>
+            <MudText Typo="Typo.body1" Class="mb-3">@Summary</MudText>
+            <MudAlert Severity="Severity.Info" Dense="true" Variant="Variant.Outlined">
+                TODO: @TodoNote
+            </MudAlert>
+        </MudItem>
+        <MudItem xs="12" md="4">
+            <MudImage Src="@ImagePath" Alt="@Title" Class="scaffold-illustration" />
+        </MudItem>
+    </MudGrid>
+</MudPaper>
+
+@code {
+    [Parameter, EditorRequired] public string Title { get; set; } = string.Empty;
+    [Parameter, EditorRequired] public string Summary { get; set; } = string.Empty;
+    [Parameter, EditorRequired] public string TodoNote { get; set; } = string.Empty;
+    [Parameter] public string ImagePath { get; set; } = "/img/servers.png";
+}

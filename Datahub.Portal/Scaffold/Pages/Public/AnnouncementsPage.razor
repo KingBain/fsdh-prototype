@@ -1,0 +1,38 @@
+@namespace Datahub.Portal.Scaffold.Pages.Public
+@page "/announcements"
+@page "/annonces"
+
+<PageTitle>Announcements</PageTitle>
+
+<MudStack Spacing="3">
+    <MudText Typo="Typo.h2">Announcements</MudText>
+    <MudText Typo="Typo.body1">
+        This scaffold uses local static announcements so the page still demonstrates the original information architecture.
+    </MudText>
+
+    @foreach (var item in Items)
+    {
+        <MudPaper Class="scaffold-card" Elevation="0">
+            <MudStack Spacing="2">
+                <MudStack Row AlignItems="AlignItems.Center">
+                    <MudChip T="string" Color="Color.Primary" Variant="Variant.Outlined" Size="Size.Small">@item.Tag</MudChip>
+                    <MudSpacer />
+                    <MudText Typo="Typo.caption">@item.Date</MudText>
+                </MudStack>
+                <MudText Typo="Typo.h5">@item.Title</MudText>
+                <MudText Typo="Typo.body1">@item.Body</MudText>
+            </MudStack>
+        </MudPaper>
+    }
+</MudStack>
+
+@code {
+    private static readonly AnnouncementItem[] Items =
+    [
+        new("Scaffold", "Local startup path is active", "The portal now runs without Azure authentication or mono-repo service dependencies. Deep feature flows are intentionally stubbed.", "April 21, 2026"),
+        new("Navigation", "Top-level pages have been preserved", "Home, announcements, help, account, explore, create workspace, and workspace routes now resolve cleanly in the scaffold.", "April 21, 2026"),
+        new("TODO", "Real implementations are deferred", "Placeholder panels mark where real business logic, external APIs, and backend integration should be restored later.", "April 21, 2026")
+    ];
+
+    private sealed record AnnouncementItem(string Tag, string Title, string Body, string Date);
+}

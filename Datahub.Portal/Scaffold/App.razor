@@ -1,0 +1,26 @@
+@namespace Datahub.Portal.Scaffold
+@using System.Reflection
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <base href="/" />
+
+    <link rel="shortcut icon" href="/icons/favicon.ico" />
+    <link rel="icon" type="image/x-icon" sizes="16x16 32x32" href="/icons/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/icons/favicon.ico" />
+    <meta name="theme-color" content="#ffffff" />
+
+    <link href="/css/site.min.css" rel="stylesheet" />
+    <link href="/css/site.dark.css" rel="stylesheet" />
+    <link href="/css/scaffold.css" rel="stylesheet" />
+    <link href="_content/MudBlazor/MudBlazor.min.css" rel="stylesheet" />
+    <link href="@($"{typeof(App).Assembly.GetName().Name}.styles.css")" rel="stylesheet" />
+
+    <HeadOutlet />
+</head>
+<body>
+    <Routes />
+</body>
+</html>

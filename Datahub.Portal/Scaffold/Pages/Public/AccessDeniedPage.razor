@@ -1,0 +1,16 @@
+@namespace Datahub.Portal.Scaffold.Pages.Public
+@page "/access-denied"
+@page "/acces-refuse"
+
+<PageTitle>Access denied</PageTitle>
+
+<MudPaper Class="scaffold-card scaffold-auth-required" Elevation="0">
+    <MudText Typo="Typo.h3" GutterBottom="true">Access denied</MudText>
+    <MudText Typo="Typo.body1" Class="mb-4">
+        This scaffold only models a simple local user session. Role-based authorization and external access rules still need a real implementation.
+    </MudText>
+    <MudStack Row Spacing="2">
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="@PageRoutes.Login">Sign in</MudButton>
+        <MudButton Variant="Variant.Text" Color="Color.Primary" Href="@PageRoutes.Home">Return home</MudButton>
+    </MudStack>
+</MudPaper>

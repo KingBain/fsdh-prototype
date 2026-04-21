@@ -1,0 +1,18 @@
+@namespace Datahub.Portal.Scaffold.Pages.Tools
+@attribute [Authorize]
+@page "/tool"
+@page "/outil"
+@page "/tool/{Section}"
+@page "/outil/{Section}"
+
+<PageTitle>Tools</PageTitle>
+
+<PlaceholderPanel
+    Title="Tools placeholder"
+    Summary="Tooling pages were kept as part of the navigable scaffold but their backing integrations were removed with the mono-repo extraction."
+    TodoNote="Reconnect tool inventories and actions to real application services."
+    ImagePath="/img/business_person.png" />
+
+@code {
+    [Parameter] public string? Section { get; set; }
+}

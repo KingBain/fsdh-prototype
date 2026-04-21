@@ -1,0 +1,13 @@
+@namespace Datahub.Portal.Scaffold.Layout
+@inherits LayoutComponentBase
+
+<MudThemeProvider Theme="@AppTheme.DefaultTheme" />
+<MudLayout Class="scaffold-shell">
+    <TopNav ShowWorkspaceLinks="false" />
+    <MudMainContent Class="scaffold-main">
+        <MudContainer MaxWidth="MaxWidth.False" Class="scaffold-page">
+            @Body
+        </MudContainer>
+        <Footer />
+    </MudMainContent>
+</MudLayout>

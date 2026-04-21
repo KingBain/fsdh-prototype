@@ -1,0 +1,43 @@
+@namespace Datahub.Portal.Scaffold.Shared
+
+<MudAppBar Elevation="1" Dense="false" Class="scaffold-appbar">
+    <MudContainer MaxWidth="MaxWidth.False" Class="scaffold-appbar-inner">
+        <MudStack Row AlignItems="AlignItems.Center" Class="w-100" Spacing="2">
+            <MudLink Href="@PageRoutes.Home" Underline="Underline.None" Class="scaffold-wordmark-link">
+                <MudImage Src="/img/canada-fip.svg" Alt="Government of Canada wordmark" Class="scaffold-wordmark" />
+            </MudLink>
+
+            <MudHidden Breakpoint="Breakpoint.SmAndDown">
+                <MudStack Row AlignItems="AlignItems.Center" Spacing="1">
+                    <MudButton Variant="Variant.Text" Color="Color.Inherit" Href="@PageRoutes.Home">Home</MudButton>
+                    <MudButton Variant="Variant.Text" Color="Color.Inherit" Href="@PageRoutes.News">Announcements</MudButton>
+                    <MudButton Variant="Variant.Text" Color="Color.Inherit" Href="@PageRoutes.Help">Help</MudButton>
+                    @if (ShowWorkspaceLinks)
+                    {
+                        <MudButton Variant="Variant.Text" Color="Color.Inherit" Href="@PageRoutes.Explore">Explore</MudButton>
+                        <MudButton Variant="Variant.Text" Color="Color.Inherit" Href="@PageRoutes.CreateWorkspace">Create workspace</MudButton>
+                    }
+                </MudStack>
+            </MudHidden>
+
+            <MudSpacer />
+
+            <AuthorizeView>
+                <Authorized>
+                    <MudStack Row AlignItems="AlignItems.Center" Spacing="1">
+                        <MudChip T="string" Color="Color.Primary" Variant="Variant.Outlined" Size="Size.Small">@context.User.Identity?.Name</MudChip>
+                        <MudButton Variant="Variant.Text" Color="Color.Primary" Href="@PageRoutes.Account">Account</MudButton>
+                        <MudButton Variant="Variant.Text" Color="Color.Primary" Href="@PageRoutes.Logout">Sign out</MudButton>
+                    </MudStack>
+                </Authorized>
+                <NotAuthorized>
+                    <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="@PageRoutes.Login">Local sign in</MudButton>
+                </NotAuthorized>
+            </AuthorizeView>
+        </MudStack>
+    </MudContainer>
+</MudAppBar>
+
+@code {
+    [Parameter] public bool ShowWorkspaceLinks { get; set; }
+}

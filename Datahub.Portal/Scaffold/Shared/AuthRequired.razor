@@ -1,0 +1,23 @@
+@namespace Datahub.Portal.Scaffold.Shared
+@inject NavigationManager NavigationManager
+
+<MudPaper Class="scaffold-card scaffold-auth-required" Elevation="0">
+    <MudText Typo="Typo.h3" GutterBottom="true">Sign in required</MudText>
+    <MudText Typo="Typo.body1" Class="mb-4">
+        This scaffold keeps a lightweight local sign-in so protected pages still behave like an application shell.
+    </MudText>
+    <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="@LoginHref">Go to local sign in</MudButton>
+</MudPaper>
+
+@code {
+    private string LoginHref => $"{PageRoutes.Login}?returnUrl={Uri.EscapeDataString(CurrentPath)}";
+
+    private string CurrentPath
+    {
+        get
+        {
+            var current = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
+            return string.IsNullOrWhiteSpace(current) ? PageRoutes.Home : $"/{current}";
+        }
+    }
+}

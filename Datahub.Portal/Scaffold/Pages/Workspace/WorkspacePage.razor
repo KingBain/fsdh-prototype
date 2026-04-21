@@ -1,0 +1,25 @@
+@namespace Datahub.Portal.Scaffold.Pages.Workspace
+@attribute [Authorize]
+@page "/w/{WorkspaceAcronym}"
+@page "/w/{WorkspaceAcronym}/{Section}"
+@page "/w/{WorkspaceAcronym}/{Section}/{SubSection}"
+
+<PageTitle>Workspace</PageTitle>
+
+<MudStack Spacing="3">
+    <MudText Typo="Typo.h2">Workspace: @WorkspaceAcronym</MudText>
+    <PlaceholderPanel
+        Title="Workspace route placeholder"
+        Summary="@Summary"
+        TodoNote="Restore workspace dashboards, storage, databases, access controls, and messaging once the missing backend dependencies are available."
+        ImagePath="/img/dash.png" />
+</MudStack>
+
+@code {
+    [Parameter] public string WorkspaceAcronym { get; set; } = string.Empty;
+    [Parameter] public string? Section { get; set; }
+    [Parameter] public string? SubSection { get; set; }
+
+    private string Summary =>
+        $"The scaffold preserved this workspace route so navigation still works. Requested section: {Section ?? "(default)"}; subsection: {SubSection ?? "(none)"}";
+}

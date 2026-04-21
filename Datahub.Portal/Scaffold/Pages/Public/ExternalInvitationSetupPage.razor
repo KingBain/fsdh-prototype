@@ -1,0 +1,17 @@
+@namespace Datahub.Portal.Scaffold.Pages.Public
+@page "/account-setup"
+@page "/configuration-compte"
+@page "/account-setup/{InvitationToken:guid}"
+@page "/configuration-compte/{InvitationToken:guid}"
+
+<PageTitle>Invitation setup placeholder</PageTitle>
+
+<PlaceholderPanel
+    Title="External invitation setup placeholder"
+    Summary="Invitation acceptance depended on backend account bootstrap flows that are not present in this extracted repo."
+    TodoNote="Reconnect invitation token validation and account activation against the real user system."
+    ImagePath="/img/questions.png" />
+
+@code {
+    [Parameter] public Guid? InvitationToken { get; set; }
+}

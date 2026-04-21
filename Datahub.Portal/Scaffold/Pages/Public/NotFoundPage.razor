@@ -1,0 +1,12 @@
+@namespace Datahub.Portal.Scaffold.Pages.Public
+@page "/404"
+
+<PageTitle>Not found</PageTitle>
+
+<MudPaper Class="scaffold-card scaffold-auth-required" Elevation="0">
+    <MudText Typo="Typo.h3" GutterBottom="true">Page not found</MudText>
+    <MudText Typo="Typo.body1" Class="mb-4">
+        The extracted scaffold only preserves the major navigation routes. If you followed an older deep link, that feature likely depends on backend code that has not been restored yet.
+    </MudText>
+    <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="@PageRoutes.Home">Back to home</MudButton>
+</MudPaper>
