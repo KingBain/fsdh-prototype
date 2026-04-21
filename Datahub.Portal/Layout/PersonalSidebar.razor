@@ -1,0 +1,276 @@
+@using Datahub.Application.Services.UserManagement
+@using Datahub.Core.Model.Achievements
+@using Datahub.Core.Model.Projects
+@using Datahub.Core.Model.Users
+@using Datahub.Infrastructure.Services.UserManagement
+@using Datahub.Portal.Components.Sidebar
+@using Datahub.Portal.Components.User
+@using MudBlazor.Utilities
+
+@inject IUserInformationService _userInformationService
+@inject UserLocationManagerService _userLocationManagerService
+@inject IDbContextFactory<DatahubProjectDBContext> _dbContextFactory
+@inject IDialogService _dialogService
+@inject NavigationManager _navigationManager
+@inject ICultureService CultureService
+
+@if (!_isLoaded)
+{
+    return;
+}
+
+<MudStack Class="px-4 mt-6" id="nav">
+    <MudDrawerHeader Dense Style="padding:0">
+        <MudStack Row AlignItems="AlignItems.Center" Justify="Justify.FlexStart">
+            <SkipLink Type="SkipLinkType.Navigation" Anchor>
+                <p class="sr-only">@Localizer["Toggle sidebar open or closed."]</p>
+                <MudIconButton title="@Localizer["Toggle sidebar open or closed."]" Icon="@Icons.Material.Filled.Menu"
+                               Color="Color.Inherit" OnClick="@Drawer.ToggleDrawer" Size="Size.Medium"/>
+            </SkipLink>
+            @if (Drawer.Open)
+            {
+                <div style="text-wrap: nowrap; font-size:1rem">
+                    <UserCard ViewedUser="@_viewedUser" Size="@Size.Small" ShowEmail="false"
+                              Typo="Typo.h2" Style="font-size:1rem"/>
+                </div>
+            }
+        </MudStack>
+    </MudDrawerHeader>
+    <MudDrawerContainer Style="overflow: hidden auto">
+        @if (Drawer.Open)
+        {
+            <MudStack Spacing="2">
+                <MudText Typo="Typo.h2" Class="ml-2" Style="font-size:1rem; text-wrap: nowrap">
+                    <strong>
+                        @Localizer["My account"]
+                    </strong>
+                </MudText>
+                <MudNavMenu Color="Color.Primary" role="navigation">
+                    <ul>
+                        @foreach (var sectionView in _accountItems)
+                        {
+                            <li>
+                                <MudNavLink
+                                    Href="@GetSectionViewUrl(Localizer[PageRoutes.AccountPrefix], Localizer[sectionView])"
+                                    Match="NavLinkMatch.All">
+                                    <MudStack Row AlignItems="AlignItems.Center">
+                                        <DHIcon Icon="@GetIcon(sectionView)" Size="Size.Small" Color="Color.Dark"
+                                                Class="mr-2 ml-n2" Style="font-size:1rem;"/>
+                                        <MudText Style="@_workspaceLinkStyle">
+                                            @GetLabel(sectionView)
+                                        </MudText>
+                                    </MudStack>
+                                </MudNavLink>
+                            </li>
+                        }
+                    </ul>
+                </MudNavMenu>
+            </MudStack>
+            <DatahubAuthView AuthLevel="DatahubAuthView.AuthLevels.DatahubSupport">
+                <MudStack Spacing="2">
+                    <MudText Typo="Typo.h2" Class="ml-2" Style="font-size:1rem; text-wrap: nowrap">
+                        <strong>
+                            @Localizer["Datahub Admin"]
+                        </strong>
+                    </MudText>
+                    <MudNavMenu Color="Color.Primary" role="navigation">
+                        <ul>
+                            @foreach (var sectionView in _datahubAdminItems)
+                            {
+                                <li>
+                                    <MudNavLink
+                                        Href="@GetSectionViewUrl(Localizer[PageRoutes.ToolPrefix], Localizer[sectionView])"
+                                        Match="NavLinkMatch.All">
+                                        <MudStack Row AlignItems="AlignItems.Center">
+                                            <DHIcon Icon="@GetIcon(sectionView)" Size="Size.Small" Color="Color.Dark"
+                                                    Class="mr-2 ml-n2" Style="font-size:1rem;"/>
+                                            <MudText Style="@_workspaceLinkStyle">
+                                                @GetLabel(sectionView)
+                                            </MudText>
+                                        </MudStack>
+                                    </MudNavLink>
+                                </li>
+                            }
+                            <li>
+                                <MudNavLink Href="@PageRoutes.CreateWorkspace" Match="NavLinkMatch.All">
+                                    <MudStack Row AlignItems="AlignItems.Center">
+                                        <DHIcon Icon="@SidebarIcons.CreateNew" Size="Size.Small" Color="Color.Dark" Class="mr-2 ml-n2" Style="font-size:1rem;" />
+                                        <MudText Style="@_workspaceLinkStyle">
+                                            @Localizer["Create Workspace"]
+                                        </MudText>
+                                    </MudStack>
+                                </MudNavLink>
+                            </li>
+                        </ul>
+                    </MudNavMenu>
+                </MudStack>
+            </DatahubAuthView>
+            <DatahubAuthView AuthLevel="DatahubAuthView.AuthLevels.DatahubAdminGuestView">
+                <MudSwitch T="bool"
+                           Color="Color.Primary"
+                           Value="@_isViewAsAdmin"
+                           ValueChanged="@ToggleAdminMode"
+                           Label="@Localizer["Admin Access Enabled"]" Style="text-wrap: nowrap"/>
+            </DatahubAuthView>
+        }
+    </MudDrawerContainer>
+</MudStack>
+
+@code {
+
+    private PortalUser _viewedUser;
+    private bool _isViewAsAdmin;
+    private List<UserRoleLinks> _userRoles;
+    [CascadingParameter] public DHSidebarDrawer Drawer { get; set; }
+
+    private bool _showAllRecentLinks = false;
+    private bool _showAllWorkspaces = false;
+
+    private bool _isLoaded = false;
+
+    private const ushort MaxWorkspaceCount =3;
+
+    public struct SectionViews
+    {
+        public const string Profile = "";
+        public const string Appearance = "appearance";
+        public const string Customization = "customization";
+        public const string Notifications = "notifications";
+        public const string Achievements = "achievements";
+        public const string Profile_FR = "";
+        public const string Appearance_FR = "apparence";
+        public const string Customization_FR = "personnalisation";
+        public const string Notifications_FR = "notifications";
+        public const string Achievements_FR = "realisations";
+        public const string HostingServices = "hosting-services";
+
+        public const string Diagnostics = "diagnostics";
+        public const string Diagnostics_FR = "diagnostiques";
+        public const string Statistics = "statistics";
+        public const string Statistics_FR = "statistiques";
+        public const string HealthCheck = "healthcheck";
+        public const string HealthCheck_FR = "verification-sante";
+        public const string Email = "email";
+        public const string Email_FR = "courriel";
+        public const string SupportRequests = "support-requests";
+        public const string SupportRequests_FR = "demandes-assistance";
+        public const string AzureSubscriptions = "azure-subscriptions";
+        public const string AzureSubscriptions_FR = "abonnements-azure";
+        public const string HostingServices_FR = "services-hebergement";
+        public const string MetadataDefinitions = "metadata/definitions";
+        public const string VersionControl = "version-control";
+        public const string VersionControl_FR = "controle-de-version";
+        public const string PublishingBlocklist = "publishing-blocklist";
+        public const string PublishingBlocklist_FR = "liste-blocage-publication";
+    }
+
+
+    private List<string> _accountItems = new()
+    {
+        SectionViews.Profile,
+        SectionViews.Customization,
+        SectionViews.Appearance,
+        SectionViews.Notifications,
+        SectionViews.Achievements
+    };
+
+    private List<string> _datahubAdminItems = new()
+    {
+        SectionViews.Diagnostics,
+        SectionViews.SupportRequests,
+        SectionViews.Statistics,
+        SectionViews.HealthCheck,
+        SectionViews.Email,
+        SectionViews.AzureSubscriptions,
+        SectionViews.HostingServices,
+        SectionViews.MetadataDefinitions,
+        SectionViews.VersionControl,
+        SectionViews.PublishingBlocklist
+    };
+
+
+    private readonly string _workspaceLinkStyle = new StyleBuilder()
+        .AddStyle("white-space","nowrap")
+        .AddStyle("overflow","hidden")
+        .AddStyle("text-overflow","ellipsis")
+        .Build();
+
+    protected override async Task OnInitializedAsync()
+    {
+        _viewedUser = await _userInformationService.GetCurrentPortalUserAsync() ?? throw new InvalidOperationException("No user identified");
+        _isViewAsAdmin = await _userInformationService.IsAdminModeEnabled();
+
+        await using var dbContext = await _dbContextFactory.CreateDbContextAsync();
+
+        _userRoles = await dbContext.UserRolesLinks
+            .Include(u => u.Role)
+            .Include(u => u.Project)
+            // .ThenInclude(p => p.Users)
+            .Include(u => u.PortalUser)
+            .Where(u => u.PortalUser.Id == _viewedUser.Id)
+            .ToListAsync();
+
+        _isLoaded = true;
+    }
+
+    private string GetSectionViewUrl(string prefix, string sectionView)
+    {
+        return $"/{prefix}/{sectionView}";
+    }
+
+    private string GetIcon(string sectionView)
+    {
+        return sectionView switch
+        {
+            SectionViews.Profile => SidebarIcons.Profile,
+            SectionViews.Customization => SidebarIcons.Customization,
+            SectionViews.Appearance => SidebarIcons.Appearance,
+            SectionViews.Notifications => SidebarIcons.Notifications,
+            SectionViews.Achievements => SidebarIcons.Achievements,
+
+            SectionViews.Diagnostics => SidebarIcons.Diagnostics,
+            SectionViews.Statistics => SidebarIcons.Statistics,
+            SectionViews.HealthCheck => SidebarIcons.HealthCheck,
+            SectionViews.Email => SidebarIcons.Email,
+            SectionViews.AzureSubscriptions => SidebarIcons.AzureSubscriptions,
+            SectionViews.SupportRequests => SidebarIcons.SupportRequests,
+            SectionViews.HostingServices => SidebarIcons.HostingServices,
+            SectionViews.MetadataDefinitions => SidebarIcons.Metadata,
+            SectionViews.VersionControl => SidebarIcons.VersionControl,
+            SectionViews.PublishingBlocklist => SidebarIcons.Publishing,
+            _ => SidebarIcons.Profile
+        };
+    }
+
+    private string GetLabel(string sectionView)
+    {
+        return sectionView switch
+        {
+            SectionViews.Profile => Localizer["Profile"],
+            SectionViews.Customization => Localizer["Customization"],
+            SectionViews.Appearance => Localizer["Appearance"],
+            SectionViews.Notifications => Localizer["Notifications"],
+            SectionViews.Achievements => Localizer["Achievements"],
+
+            SectionViews.Diagnostics => Localizer["Diagnostics"],
+            SectionViews.Statistics => Localizer["Statistics & Reports"],
+            SectionViews.HealthCheck => Localizer["Health Check"],
+            SectionViews.Email => Localizer["Email"],
+            SectionViews.AzureSubscriptions => Localizer["Azure Subscriptions"],
+            SectionViews.SupportRequests => Localizer["Support Requests"],
+            SectionViews.HostingServices => Localizer["Hosting Services"],
+            SectionViews.MetadataDefinitions => Localizer["Metadata Definitions"],
+            SectionViews.VersionControl => Localizer["Version Control"],
+            SectionViews.PublishingBlocklist => Localizer["Publishing Blocklist"],
+
+            _ => Localizer["Public Profile"]
+        };
+    }
+
+    private async Task ToggleAdminMode()
+    {
+        _isViewAsAdmin = !_isViewAsAdmin;
+        await _userInformationService.SetAdminModeView(_isViewAsAdmin);
+        _navigationManager.NavigateTo(_navigationManager.Uri, true);
+    }
+}

@@ -1,0 +1,501 @@
+@using Datahub.Application.Services;
+@using Datahub.Core.Model.CloudStorage;
+@using Datahub.Core.Model.Projects
+@using Datahub.Core.Model.Users
+@using Datahub.Core.Model
+@using Datahub.Core.Storage;
+@using Datahub.Core.Data
+@using Datahub.Infrastructure.Services.Security
+@using Datahub.Infrastructure.Services.Storage
+@using Datahub.Portal.Components.Dialogs
+@using Datahub.Portal.Pages.Workspace.Storage.Container
+@using Datahub.Portal.Pages.Workspace.Storage.ResourcePages
+@using Microsoft.Extensions.Options
+@using Microsoft.Graph.Models;
+@using Microsoft.Identity.Web;
+@using System.Security.Claims
+
+@inject MicrosoftIdentityConsentAndConditionalAccessHandler _consentHandler
+@inject IDbContextFactory<DatahubProjectDBContext> _dbFactoryProject
+@inject IUserInformationService _userInformationService
+@inject IProjectStorageConfigurationService _projectStorageConfigService
+@inject IDialogService _dialogService
+@inject ILogger<FileExplorerPage> _logger
+@inject CloudStorageManagerFactory _cloudStorageManagerFactory
+@inject IKeyVaultUserService keyVaultUserService
+@inject DatahubPortalConfiguration _datahubPortalConfiguration
+@inject NavigationManager NavigationManager
+
+
+<!--suppress CssUnresolvedCustomProperty -->
+<PageTitle>@_title</PageTitle>
+
+@if (_loading)
+{
+    <DHLoadingInitializer />
+    return;
+}
+<MudStack>
+    <MudStack Row Justify="Justify.SpaceBetween">
+        <DHMainContentTitle Title="@Localizer["{0} Storage Explorer", WorkspaceAcronym]" />
+    </MudStack>
+    <WorkspaceAlerts WorkspaceAcronym="@WorkspaceAcronym" View="@WorkspaceSidebar.SectionViews.Storage" />
+    @if (_isProjectKeyEnabled)
+    {
+        <CascadingValue Value="@WorkspaceAcronym" Name="ProjectAcronym">
+            <CascadingValue Value="@_project" Name="Project">
+                <CascadingValue Value="_user" Name="PortalUser">
+                    @if (ShouldShowContainerDropdown && !_failedToLoadContainers)
+                    {
+                        <MudStack Style="border-bottom: 1px solid var(--mud-palette-lines-default);" Class="my-6">
+                            <MudStack Row Justify=@Justify.FlexStart AlignItems=@AlignItems.Center>
+                                <MudText Typo="Typo.h2">@Localizer["Current Container"]</MudText>
+                                <StorageContainerSelector @bind-SelectedContainer=@SelectedContainer
+                                                          CloudContainers=_cloudContainers
+                                                          OnAddProviderClicked=@AddCloudStorageAccount
+                                                          OnEditProviderClicked=@EditCloudStorageAccount
+                                                          OnRemoveProviderClicked=@RemoveCloudStorageAccount />
+                            </MudStack>
+                        </MudStack>
+                    }
+                    <MudPaper Elevation="0" Class="file-explorer-layout-wrapper py-4 px-6">
+                        <MudTabs Elevation="0">
+                            <MudTabPanel Text="@(!MultiContainer ? SelectedContainer?.Name : Localizer["File Explorer"])"
+                                         Icon="fas fa-hdd">
+                                @if (_failedToLoadContainers)
+                                {
+                                    <MudAlert Severity="Severity.Error">
+                                        <MudText>@Localizer["Failed to load storage containers"]</MudText>
+                                    </MudAlert>
+                                }
+                                else
+                                {
+                                    <!-- Search Section -->
+                                    <MudStack Row Justify="Justify.SpaceBetween" AlignItems="AlignItems.Center" Class="mb-4">
+                                        <MudTextField @bind-Value="_searchQuery" Placeholder="@Localizer["Search files or folders"]" Class="mx-2" Adornment="Adornment.End" AdornmentIcon="fas fa-times" OnAdornmentClick="ClearSearch" />
+                                        <MudButton OnClick="SearchFiles" Color="Color.Primary">@Localizer["Search"]</MudButton>
+                                    </MudStack>
+
+                                    @if (IsLoading)
+                                    {
+                                        <DHLoadingInitializer />
+                                    }
+                                    else if (_searchPerformed && !_searchResults.Any())
+                                    {
+                                        <MudText>@Localizer["No results found."]</MudText>
+                                    }
+                                    else if (_searchPerformed)
+                                    {
+                                        <SearchResultsExplorer ProjectId=@_projectId
+                                                               Container="@_selectedContainer"
+                                                               SearchResults="_searchResults" />
+                                    }
+                                    else
+                                    {
+                                        @if (_isExternalUser)
+                                        {
+                                            <ExternalUserFileExplorer ProjectId=@_projectId 
+                                                                      Container="@_selectedContainer" />
+                                        }
+                                        else
+                                        {
+                                            <FileExplorer ProjectId=@_projectId Container="@_selectedContainer" />
+                                        }
+                                    }
+
+                                }
+                            </MudTabPanel>
+                            <DatahubAuthView AuthLevel="DatahubAuthView.AuthLevels.WorkspaceCollaborator"
+                                             ProjectAcronym="@WorkspaceAcronym">
+                                @if (SelectedContainer is null || SelectedContainer.StorageManager.AzCopyEnabled)
+                                {
+                                    <MudTabPanel Text="@Localizer["AzCopy"]" Icon="fas fa-info-circle">
+                                        <MudStack Class="py-6 px-2">
+                                            <AzCopy Container=@SelectedContainer
+                                                    TermsAcknowledged=@_tokenTermsAcknowledged
+                                                    OnTermsAccepted=@AgreeToAccessTokenTerms />
+                                        </MudStack>
+                                    </MudTabPanel>
+                                }
+                                @if (SelectedContainer is null || SelectedContainer.StorageManager.DatabrickEnabled)
+                                {
+                                    <MudTabPanel Text="@Localizer["Databricks Access"]" Icon="fas fa-info-circle">
+                                        <MudStack Class="py-6 px-2">
+                                            <Databricks Container="@SelectedContainer" />
+                                        </MudStack>
+                                    </MudTabPanel>
+                                }
+                                @if (SelectedContainer is null || SelectedContainer.StorageManager.AzCopyEnabled)
+                                {
+                                    <MudTabPanel Text="@Localizer["DataHub Uploader"]" Icon="fas fa-info-circle">
+                                        <MudStack Class="py-6 px-2">
+                                            <UploaderCode Container=@SelectedContainer
+                                                          TermsAcknowledged=@_tokenTermsAcknowledged
+                                                          OnTermsAccepted=@AgreeToAccessTokenTerms />
+                                        </MudStack>
+                                    </MudTabPanel>
+                                }
+                            </DatahubAuthView>
+                        </MudTabs>
+                    </MudPaper>
+                </CascadingValue>
+            </CascadingValue>
+        </CascadingValue>
+    }
+    else
+    {
+        <MudPaper Elevation="0" Outlined Class="pa-4">
+            <MudText>
+                @Localizer["Access to storage was disabled due to workspace being over budget."]
+            </MudText>
+        </MudPaper>
+    }
+</MudStack>
+
+@code {
+
+    [Parameter] public required string WorkspaceAcronym { get; set; }
+    [Parameter] public bool ElevatedWorkspaceAccessEnabled { get; set; } = false;
+
+    [CascadingParameter]
+    public Task<AuthenticationState> AuthenticationStateTask { get; set; } = default!;
+
+    private Datahub_Project? _project;
+    private int? _projectId;
+    private string _title;
+
+    private List<CloudStorageContainer> _cloudContainers = new();
+    private CloudStorageContainer? _selectedContainer;
+
+    private List<(string Icon, string LabelText, RenderFragment Content)> _tabs = new();
+    private PortalUser _user = null!;
+    private ClaimsPrincipal? _authenticatedUser;
+
+    private bool _tokenTermsAcknowledged = false;
+
+    private void AgreeToAccessTokenTerms() => _tokenTermsAcknowledged = true;
+
+    private bool _loading = true;
+    private bool _isProjectKeyEnabled = false;
+    private bool _failedToLoadContainers = false;
+    private bool MultiContainer => _cloudContainers?.Count > 1;
+    private bool _isUserProjectAdmin = false;
+    private bool _isExternalUser = false;
+    private bool ShouldShowContainerDropdown => !_loading && (MultiContainer || _isUserProjectAdmin);
+
+    private string _searchQuery = string.Empty;
+    private List<FileSearchResult> _searchResults = new();
+    private bool _searchPerformed = false;
+    private bool IsLoading { get; set; } = false;
+    private bool _isEntraUser = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (_project != null)
+        {
+            return;
+        }
+
+        // Get authenticated user from authentication state
+        var authState = await AuthenticationStateTask;
+        _authenticatedUser = authState.User;
+
+        // Check if user has external login role
+        _isExternalUser = _authenticatedUser?.IsInRole(RoleConstants.EXTERNAL_LOGIN) ?? false;
+
+        if (_isExternalUser)
+        {
+            NavigationManager.NavigateTo($"/{PageRoutes.WorkspacePrefix}/{WorkspaceAcronym}/{PageRoutes.WorkspaceExternalStoragePrefix}", forceLoad: true);
+            return;
+        }
+
+        await using var projectContext = await _dbFactoryProject.CreateDbContextAsync();
+
+        _user = await _userInformationService.GetCurrentPortalUserAsync() ?? throw new InvalidOperationException("User is not authenticated");
+        _isEntraUser = await _userInformationService.IsEntraUser();
+        if (_isEntraUser)
+        {
+            _isUserProjectAdmin = await _userInformationService.IsUserProjectAdmin(WorkspaceAcronym) ||
+                                  await _userInformationService.IsUserProjectWorkspaceLead(WorkspaceAcronym);
+        }
+        _project = await projectContext.Projects
+            .Include(p => p.UserRoles)
+            .AsSingleQuery()
+            .Where(p => p.Project_Acronym_CD == WorkspaceAcronym)
+            .FirstOrDefaultAsync();
+
+        var acronym = _project?.Project_Acronym_CD;
+        _title = $"{acronym} - {Localizer["Storage"]}";
+        _projectId = _project?.Project_ID;
+        try
+        {
+            _isProjectKeyEnabled = await IsProjectKeyEnabled();
+            if (!_isProjectKeyEnabled) throw new Exception("Project key disabled");
+            if (_isEntraUser)
+            {
+                await keyVaultUserService.AuthenticateWithUserContext();
+            }
+            else
+            {
+                //await keyVaultUserService.AuthenticateWithPortalContext();
+            }
+            await LoadContainersAsync();
+        }
+        catch (MicrosoftIdentityWebChallengeUserException e)
+        {
+            _consentHandler.HandleException(e);
+        }
+        catch (Azure.RequestFailedException e)
+        {
+            _logger.LogInformation(e, "Error loading cloud storage connection. Possibly due to Access Key not being set.");
+            _failedToLoadContainers = true;
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Error loading cloud storage connection");
+        }
+
+        _loading = false;
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private async Task LoadContainersAsync()
+    {
+        _cloudContainers = new();
+
+        // pick the project storage containers
+        var accountName = _projectStorageConfigService.GetProjectStorageAccountName(WorkspaceAcronym);
+        var accountKey = await _projectStorageConfigService.GetProjectStorageAccountKey(WorkspaceAcronym);
+
+        var projectStorageManager = new AzureCloudStorageManager(accountName, accountKey);
+        var containerNames = await projectStorageManager.GetContainersAsync();
+
+        _cloudContainers.AddRange(containerNames.Select(c => new CloudStorageContainer(accountName, c, CloudStorageProviderType.Azure, projectStorageManager)));
+        var dbStorage = await GetCloudStorages();
+        foreach (var stg in dbStorage.Where(s => s.Enabled || _isUserProjectAdmin))
+        {
+            try
+            {
+                var storageManager = await _cloudStorageManagerFactory.CreateCloudStorageManager(WorkspaceAcronym, stg);
+                if (storageManager is null)
+                {
+                    continue;
+                }
+
+                containerNames = await storageManager.GetContainersAsync();
+                _cloudContainers.AddRange(containerNames.Select(c => new CloudStorageContainer(storageManager, c, stg.Id, stg.Enabled)));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogCritical(ex, $"cannot access containers from {stg.Name} (ID:{stg.Id})");
+                try
+                {
+                    await using var ctx = await _dbFactoryProject.CreateDbContextAsync();
+                    ctx.Attach(stg);
+                    stg.Enabled = false;
+                    await ctx.SaveChangesAsync();
+                }
+                catch (Exception ex2)
+                {
+                    _logger.LogCritical(ex2, $"error disabling containers from {stg.Name} (ID:{stg.Id})");
+                }
+            }
+        }
+
+        _selectedContainer = _cloudContainers.FirstOrDefault();
+    }
+
+    private async Task<List<ProjectCloudStorage>> GetCloudStorages()
+    {
+        await using var ctx = await _dbFactoryProject.CreateDbContextAsync();
+        return await ctx.ProjectCloudStorages.AsNoTracking().Where(e => e.ProjectId == _project.Project_ID).ToListAsync();
+    }
+
+    private async Task<DialogResult?> ShowCloudStorageDialog(CloudStorageProviderType cloudStorageProvider, ProjectCloudStorage settings)
+    {
+        var dialogOptions = new DialogOptions() { MaxWidth = MaxWidth.Medium, FullWidth = true };
+
+        var dialogParams = new DialogParameters();
+        dialogParams.Add(nameof(StorageConfigurationDialog.CloudProvider), cloudStorageProvider);
+        dialogParams.Add(nameof(StorageConfigurationDialog.ProjectCloudStorage), settings);
+        dialogParams.Add(nameof(StorageConfigurationDialog.WorkspaceAcronym), WorkspaceAcronym);
+
+        var dialogTitle = cloudStorageProvider switch
+        {
+            CloudStorageProviderType.Azure => Localizer["Configure Azure Storage"],
+            CloudStorageProviderType.AWS => Localizer["Configure AWS Storage"],
+            CloudStorageProviderType.GCP => Localizer["Configure GCP Storage"],
+            _ => Localizer["Configure Storage"]
+        };
+
+        var dialog = await _dialogService.ShowAsync<StorageConfigurationDialog>(dialogTitle, dialogParams, dialogOptions);
+        return await dialog.Result;
+    }
+
+    private async Task AddCloudStorageAccount(CloudStorageProviderType cloudStorageProvider)
+    {
+        var result = await ShowCloudStorageDialog(cloudStorageProvider, new ProjectCloudStorage() { Enabled = true, Name = $"{WorkspaceAcronym} Storage {cloudStorageProvider.ToString()}", Provider = cloudStorageProvider.ToString() });
+
+        if (!result.Canceled)
+        {
+            if (result.Data is (ProjectCloudStorage storageSettings, IDictionary<string, string> ConnectionData))
+            {
+                await using var ctx = await _dbFactoryProject.CreateDbContextAsync();
+
+                storageSettings.ProjectId = _projectId.Value;
+                storageSettings.Provider = cloudStorageProvider.ToString();
+
+                ctx.ProjectCloudStorages.Add(storageSettings);
+
+                await ctx.SaveChangesAsync();
+                await keyVaultUserService.StoreAllSecrets(storageSettings, WorkspaceAcronym, ConnectionData);
+                await LoadContainersAsync();
+                await InvokeAsync(StateHasChanged);
+            }
+        }
+    }
+
+    private async Task EditCloudStorageAccount(int id)
+    {
+        var pageCloudProvider = _cloudContainers.FirstOrDefault(c => c.Id == id);
+        if (pageCloudProvider is null)
+        {
+            return;
+        }
+
+        await using var ctx = await _dbFactoryProject.CreateDbContextAsync();
+        var cloudProvider = await ctx.ProjectCloudStorages.FirstOrDefaultAsync(c => c.Id == id);
+        if (cloudProvider is null)
+        {
+            return;
+        }
+
+        var result = await ShowCloudStorageDialog(pageCloudProvider.CloudStorageProvider, cloudProvider);
+
+        if (!result.Canceled)
+        {
+            if (result.Data is (ProjectCloudStorage storageSettings, IDictionary<string, string> ConnectionData))
+            {
+                await keyVaultUserService.StoreAllSecrets(storageSettings, WorkspaceAcronym, ConnectionData);
+                await ctx.SaveChangesAsync();
+                await LoadContainersAsync();
+                await InvokeAsync(StateHasChanged);
+            }
+        }
+    }
+
+    private async Task RemoveCloudStorageAccount(int id)
+    {
+        var pageCloudProvider = _cloudContainers.FirstOrDefault(c => c.Id == id);
+        if (pageCloudProvider is null)
+        {
+            return;
+        }
+
+        await using var ctx = await _dbFactoryProject.CreateDbContextAsync();
+        var cloudProvider = await ctx.ProjectCloudStorages.FirstOrDefaultAsync(c => c.Id == id);
+        if (cloudProvider is null)
+        {
+            return;
+        }
+
+        var dialogTitle = Localizer["Remove Storage Account"];
+        var promptText = Localizer["RemoveStorageNamePrompt", pageCloudProvider.AccountName];
+
+        var dialogOptions = new DialogOptions() { MaxWidth = MaxWidth.Medium, FullWidth = true };
+
+        var dialogParams = new DialogParameters();
+        dialogParams.Add(nameof(SimpleChoiceDialog.PromptText), promptText.ToString());
+        dialogParams.Add(nameof(SimpleChoiceDialog.ConfirmColour), Color.Error);
+
+        var dialog = await _dialogService.ShowAsync<SimpleChoiceDialog>(dialogTitle, dialogParams, dialogOptions);
+        var result = await dialog.Result;
+
+        if (!result.Canceled)
+        {
+            var confirmDelete = result.Data as bool?;
+            if (confirmDelete.HasValue && confirmDelete.Value)
+            {
+                await keyVaultUserService.DeleteAllSecrets(cloudProvider, WorkspaceAcronym);
+
+                ctx.ProjectCloudStorages.Remove(cloudProvider);
+                await ctx.SaveChangesAsync();
+                await LoadContainersAsync();
+                await InvokeAsync(StateHasChanged);
+            }
+        }
+    }
+
+    private async Task<bool> IsProjectKeyEnabled()
+    {
+        // A small problem we have is that we have two different keyvault services:
+        // - one for using portal credentials to query portal KV
+        // - one for using user credentials to query workspace KV
+        // but we don't exactly have a good way to use portal credentials to query workspace KV, which is needed to check project key
+        // so I am doing a workaround here to force the core KV service to target the workspace KV
+        var apiTarget = new APITargets
+        {
+            KeyVaultName = keyVaultUserService.GetVaultName(WorkspaceAcronym, _datahubPortalConfiguration.Hosting.EnvironmentName)
+        };
+        var options = Options.Create<APITargets>(apiTarget);
+
+        var logger = (new LoggerFactory()).CreateLogger<KeyVaultCoreService>();
+        var keyVaultService = new KeyVaultCoreService(options, logger, _datahubPortalConfiguration);
+        var projectKey = await keyVaultService.GetKey(_datahubPortalConfiguration.KeyVault.ProjectKey);
+        return projectKey.Attributes.Enabled ?? false;
+    }
+
+    public CloudStorageContainer SelectedContainer
+    {
+        get => _selectedContainer;
+        set => _selectedContainer = value;
+    }
+
+    private void ClearSearch()
+    {
+        _searchQuery = string.Empty;
+        _searchResults = new();
+        _searchPerformed = false;
+    }
+
+    private async Task SearchFiles()
+    {
+        if (string.IsNullOrWhiteSpace(_searchQuery))
+        {
+            _searchResults = new();
+            _searchPerformed = true;
+            return;
+        }
+
+        IsLoading = true;
+        try
+        {
+            var results = await SelectedContainer.StorageManager.SearchFilesAsync(
+                SelectedContainer.ContainerName,
+                "",
+                _searchQuery,
+                false
+            );
+
+            _searchResults = results
+                .Select(file => new FileSearchResult
+                {
+                    Name = file.filename.Split('/').Last(),
+                    Path = string.Join("/", file.filename.Split('/').SkipLast(1))
+                })
+                .ToList();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error searching files");
+            _searchResults = new();
+        }
+        finally
+        {
+            IsLoading = false;
+            _searchPerformed = true;
+            await InvokeAsync(StateHasChanged);
+        }
+    }
+
+}

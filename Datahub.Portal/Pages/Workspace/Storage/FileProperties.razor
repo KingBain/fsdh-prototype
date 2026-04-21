@@ -1,0 +1,124 @@
+@*FileProperties.razor*@
+@using Datahub.Core.Components.Code
+@using Datahub.Core.Services.Api;
+@using Datahub.Core.Services.Storage;
+@using Datahub.Metadata.Model
+@using Datahub.Application.Services
+@using Datahub.Infrastructure.Services.Api
+@using Datahub.Infrastructure.Services.Storage
+@using Datahub.Portal.Components.User
+
+@inject CommonAzureServices _commonAzureServices;
+
+@if (File != null)
+{
+    <div class="storage-properties">
+        <div class="title-container">
+            <i class="@DatahubTools.GetFileTypeIcon(File.fileformat)"></i>
+            <MudText Typo="Typo.h3" class="details-title-text">
+                @Path.GetFileName(File.name)
+            </MudText>
+        </div>
+
+        <div class="access-container">
+            <MudText Typo="Typo.h4">@Localizer["Who has access"]</MudText>
+            <span class="circle-item">
+                <ProfileCircle FullName="@ProjectAcronym"/>
+                <MudText>@ProjectAcronym</MudText>
+            </span>
+        </div>
+
+        <div class="properties">
+            <MudText class="properties-title" Typo="Typo.h4">@Localizer["Storage Properties"]</MudText>
+            @foreach (var (key, value) in _properties)
+            {
+                if (!string.IsNullOrEmpty(value) && value != "[]")
+                {
+                    <MudText class="label">@Localizer[key]</MudText>
+                    <MudText class="text">@value</MudText>
+                }
+            }
+
+            <MudText class="label">@Localizer["Power BI URL"]</MudText>
+            <InlineCodeWithCopy>@_powerBiPasteText</InlineCodeWithCopy>
+            <MudText class="label">@Localizer["File URL"]</MudText>
+            <InlineCodeWithCopy>@_fileLinkUrl</InlineCodeWithCopy>
+
+            <MudText class="label">@Localizer["Access from Databricks"]</MudText>
+            <InlineCodeWithCopy>@_databricksPasteText</InlineCodeWithCopy>
+
+        </div>
+    </div>
+}
+
+
+@code {
+
+    [CascadingParameter(Name = "ProjectAcronym")]
+    public string ProjectAcronym { get; set; }
+
+    [CascadingParameter(Name = "StorageAccountMetadata")]
+    public AzureStorageMetadata StorageAccountMetadata { get; set; }
+
+    [Parameter]
+    public int? ProjectId { get; set; }
+
+    [Parameter]
+    public FileMetaData File { get; set; }
+
+    [Parameter]
+    public string ContainerName { get; set; } = "datahub";
+
+    [Parameter]
+    public string FolderName { get; set; }
+
+    [Parameter]
+    public bool Readonly { get; set; }
+
+    [Parameter]
+    public EventCallback OnMetadataChanged { get; set; }
+
+    private List<(string, string)> _properties;
+    private string _powerBiPasteText;
+    private string _fileLinkUrl;
+    private string _databricksPasteText;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        await base.OnParametersSetAsync();
+
+        if (File == null)
+            return;
+
+        // Generate the correct path dynamically without modifying File.folderpath
+        var effectiveFolderPath = GenerateEffectiveFolderPath();
+
+        _properties = File.GetMetadataProperties()
+            .Where(p => p.IsVisible)
+            .Select(p => (p.Key, Value: File.GetMetadataPropertyValue(p.Key)))
+            .ToList();
+
+        var fullFilePath = $"{File.folderpath}/{File.filename}".Replace("//","/").TrimStart('/');
+        if (!string.IsNullOrEmpty(StorageAccountMetadata?.Url))
+        {
+            var accountName = StorageAccountMetadata.Url.Split('.')[0].Replace("https://", "");
+            _fileLinkUrl = $"{StorageAccountMetadata.Url}/{effectiveFolderPath}/{File.filename}".Replace("//", "/");
+            _powerBiPasteText = $"abfs://{_commonAzureServices.FileSystemName}@{accountName}.dfs.core.windows.net/{effectiveFolderPath}/{File.filename}".Replace("//", "/");
+        }
+        if (!string.IsNullOrEmpty(fullFilePath))
+        {
+            _databricksPasteText = $"/mnt/fsdh-dbk-main-mount/{fullFilePath}";
+        }
+    }
+
+    private string GenerateEffectiveFolderPath()
+    {
+        if (string.IsNullOrEmpty(FolderName) || FolderName == "/")
+        {
+            return "/";
+        }
+
+        return $"{FolderName}/{File.folderpath}".Replace("//", "/");
+    }
+}
+

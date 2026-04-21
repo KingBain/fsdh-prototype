@@ -1,0 +1,88 @@
+{
+  "ConnectionStrings": {
+    "datahub_mssql_project": "",
+    "datahub_mssql_pip": "",
+    "datahub_mssql_etldb": "",
+    "datahub_mssql_finance": "",
+    "datahub_mssql_webanalytics": "",
+    "datahub_mssql_metadata-bak": "",
+    "datahub_mssql_metadata": ""
+  },
+  "AzureAd": {
+    "Instance": "https://login.microsoftonline.com/",
+    "Domain": "",
+    "TenantId": "",
+    "ClientId": "",
+    "ClientSecret": "",
+    "CallbackPath": "/signin-oidc",
+    "SignedOutCallbackPath ": "/signout-callback-oidc",
+    "AppIDURL": ""
+  },
+  "Graph": {
+    "BaseUrl": "https://graph.microsoft.com/v1.0",
+    "Scopes": "user.read"
+  },
+  "APITargets": {
+    "StorageURL": "",
+    "SearchServiceName": "",
+    "StorageAccountName": "",
+    "KeyVaultName": "",
+    "FileSystemName": "datahub",
+    "FileIndexName": "filemetadata-index",
+    "FileIndexerName": "filemetadata-indexer",
+    "LogoutURL": "",
+    "LoginUrl": ""
+  },
+  "ApplicationInsights": {
+    "InstrumentationKey": ""
+  },
+  "DetailedErrors": true,
+  "Logging": {
+    "LogLevel": {
+      "Default": "Warning",
+      "Microsoft": "Warning",
+      "Microsoft.Hosting.Lifetime": "Information"
+    },
+    "ApplicationInsights": {
+      "LogLevel": {
+        "Default": "Warning",
+        "NRCan": "Information",
+        "Microsoft": "Warning",
+        "Microsoft.Hosting.Lifetime": "Information"
+      }
+    }
+  },
+  "KeyVault": {
+    "UserName": ""
+  },
+  "EmailNotification": {
+    "SmtpHost": "",
+    "SmtpPort": 587,
+    "SmtpUsername": "",
+    "SmtpPassword": "",
+    "SenderName": "NRCan DataHub RNCan",
+    "SenderAddress": "",
+    "DevTestMode": false
+  },
+  "PublicFileSharing": {
+    "OpenDataApprovalPdfBaseUrl": "",
+    "OpenDataApprovalPdfFormIdParam": "rp:p_approval_form_id",
+    "PublicFileSharingDomain": "https://localhost:44347"
+  },
+  "Azure:SignalR:StickyServerMode": "Required",
+  "AllowedHosts": "*"
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+

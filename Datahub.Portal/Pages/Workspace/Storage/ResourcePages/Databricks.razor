@@ -1,0 +1,60 @@
+﻿@using Datahub.Core.Services.Storage
+@using Datahub.Infrastructure.Services.Storage
+@using Datahub.Core.Storage
+@using Datahub.Portal.Pages.Workspace.Storage.Container
+
+@inject IConfiguration _configuration
+@inject ICultureService CultureService
+
+<MudStack>
+    @if (Container?.StorageManager is AWSCloudStorageManager)
+    {
+        <DHButton Variant="Variant.Filled" Href=@Localizer[PageRoutes.ResourceSite_ImportAWS] Color="Color.Primary" style="width: fit-content;" Target="_blank">
+            <MudText>@Localizer["Learn how to access AWS storage in Databricks"]</MudText>
+        </DHButton>
+    }
+    else if (Container?.StorageManager is GoogleCloudStorageManager)
+    {
+        <DHButton Variant="Variant.Filled" Href=@Localizer[PageRoutes.ResourceSite_ImportGCP] Color="Color.Primary" style="width: fit-content;" Target="_blank">
+            <MudText>@Localizer["Learn how to access GCP storage in Databricks"]</MudText>
+        </DHButton>
+    }
+    else if (Container?.StorageManager is AzureCloudStorageManager { IsInboxAccount: true })
+    {
+        <DHButton Variant="Variant.Filled" Href=@Localizer[PageRoutes.ResourceSite_Import] Color="Color.Primary" style="width: fit-content;" Target="_blank">
+            <MudText>@Localizer["Learn how to access your storage in Databricks"]</MudText>
+        </DHButton>
+    }
+    else
+    {
+        <DHButton Variant="Variant.Filled" Href=@Localizer[PageRoutes.ResourceSite_ImportAzure] Color="Color.Primary" style="width: fit-content;" Target="_blank">
+            <MudText>@Localizer["Learn how to access Azure storage in Databricks"]</MudText>
+        </DHButton>
+    }
+
+</MudStack>
+
+
+@code {
+
+    [CascadingParameter(Name = "ProjectAcronym")]
+    public string ProjectAcronym { get; set; }
+
+    [Parameter, EditorRequired]
+    public CloudStorageContainer Container { get; set; }
+
+    private List<(string, string)> _substitutions;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        _substitutions = Container?.StorageManager?.GetSubstitutions(ProjectAcronym, Container)
+            ?? new List<(string, string)>();
+    }
+
+    private string GetPageName()
+    {
+        return _configuration[$"WikiPageTitles:DatabricksStorageAccess:{CultureService.Culture}"];
+    }
+
+}

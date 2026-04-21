@@ -1,0 +1,24 @@
+@page "/"
+@inject NavigationManager Navigation
+@attribute [ExternalUserPage]
+
+@code {
+    private bool _navigated;
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (!_navigated && firstRender)
+        {
+            _navigated = true;
+
+            try
+            {
+                Navigation.NavigateTo(Localizer[PageRoutes.Home], forceLoad: false);
+            }
+            catch (NavigationException)
+            {
+                // ignore
+            }
+        }
+    }
+}

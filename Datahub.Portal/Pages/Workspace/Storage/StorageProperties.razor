@@ -1,0 +1,102 @@
+@* StorageProperties.razor *@
+@using Datahub.Application.Services;
+@using Datahub.Core.Components.Code
+@using Datahub.Core.Services.Storage
+@using Datahub.Portal.Pages.Workspace.Storage.Container
+@using Datahub.Core.Storage
+@using Datahub.Portal.Components.User
+
+
+@if (_loading)
+{
+    <span style="display: flex; gap: .5rem; align-items: center;">
+        <MudSkeleton Width="30px" Height="30px" SkeletonType="SkeletonType.Circle" />
+        <MudSkeleton Width="300px" Height="2rem" />
+    </span>
+}
+else
+{
+    <div class="storage-properties">
+        <div class="title-container">
+            <i class="fas fa-folder"></i>
+            <MudText Typo="Typo.h3" class="details-title-text">
+                @DisplayName
+            </MudText>
+        </div>
+
+        <div class="access-container">
+            <MudText Typo="Typo.h4">@Localizer["Who has access"]</MudText>
+            <span class="circle-item">
+                <ProfileCircle FullName="@ProjectAcronym"/>
+                <MudText>@ProjectAcronym</MudText>
+            </span>
+        </div>
+
+        <div class="properties">
+            <MudText class="properties-title" Typo="Typo.h4">@Localizer["Storage Properties"]</MudText>
+            @foreach (var (key, (value, fragment)) in _properties)
+            {
+                <MudText class="label">@Localizer[key]</MudText>
+                @if (fragment != null)
+                {
+                    @fragment
+                }
+                else
+                {
+                    <MudText class="text">@value</MudText>
+                }
+            }
+        </div>
+    </div>
+}
+
+@code {
+
+    [CascadingParameter(Name = "ProjectAcronym")]
+    public string ProjectAcronym { get; set; }
+
+    [Parameter]
+    public string DisplayName { get; set; }
+
+    [Parameter]
+    public CloudStorageContainer Container { get; set; }
+
+    private bool _loading = true;
+    private string _root = "/";
+    private Dictionary<string, (string, RenderFragment)> _properties;
+    private CloudStorageContainer _lastContainer = default;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (_lastContainer != Container)
+        {
+            _lastContainer = Container;
+
+            var storageMetadata = await Container.StorageManager.GetStorageMetadataAsync(Container.Name);
+            _properties = new Dictionary<string, (string, RenderFragment)>();
+            TryAdd(_properties, Localizer["Container Name"], storageMetadata.Container);
+            if (storageMetadata is AzureStorageMetadata azureMetadata)
+            {
+                TryAdd(_properties, Localizer["AccountName"], azureMetadata.AccountName);
+                TryAdd(_properties, Localizer["Account Kind"], azureMetadata.StorageAccountType);
+                TryAdd(_properties, Localizer["Replication"], azureMetadata.GeoRedundancy);
+                TryAdd(_properties, Localizer["Versioning"], azureMetadata.Versioning);
+                TryAdd(_properties, Localizer["Url"], (azureMetadata.Url, @<InlineCodeWithCopy>@azureMetadata.Url</InlineCodeWithCopy>));
+            }
+
+            _loading = false;
+        }
+    }
+
+    private void TryAdd(Dictionary<string, (string, RenderFragment)> dict, string prop, string value)
+    {
+        if (!string.IsNullOrEmpty(value))
+            TryAdd(dict, prop, (value, null));
+    }
+
+    private void TryAdd(Dictionary<string, (string, RenderFragment)> dict, string prop, (string Label, RenderFragment Fragment) value)
+    {
+        if (!string.IsNullOrEmpty(value.Label))
+            dict[prop] = value;
+    }
+}

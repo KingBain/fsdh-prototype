@@ -1,0 +1,159 @@
+﻿@page "/metadata/definition/{Id}"
+@page "/metadata/newdefinition"
+@using Datahub.Application.Services
+@using Datahub.Application.Services.UserManagement
+@using Datahub.Infrastructure.Services.Security
+@using Datahub.Metadata.Model
+@using Datahub.Portal.Data.Forms.Metadata
+@using MudBlazor
+
+@inject IUserInformationService _userInformationService
+@inject IDbContextFactory<MetadataDbContext> ContextFactory
+@inject NavigationManager NavigationManager
+@inject IServiceAuthManager ServiceAuthManager
+@inject IDatahubAuditingService AuditingService
+
+<PageTitle>@Localizer["Edit Field Definition"]</PageTitle>
+<div style="margin: 2rem">
+    <DatahubAuthView AuthLevel="DatahubAuthView.AuthLevels.DatahubSupport">
+        <Authorized>
+            <MudText Typo="Typo.h2">Edit Field Definition</MudText>
+            <MudCard>
+                <MudCardContent>
+                    <MudForm Model="@_form" @ref="_formRef" IsValidChanged="@HandleValidSubmit">
+                        <MudTextField @bind-Value="_form.Field_Name_TXT" Label="@GetDataLabel(nameof(_form.Field_Name_TXT))" Required="true" />
+                        <MudTextField @bind-Value="_form.Name_English_TXT" Label="@GetDataLabel(nameof(_form.Name_English_TXT))" Required="true" />
+                        <MudTextField @bind-Value="_form.Name_French_TXT" Label="@GetDataLabel(nameof(_form.Name_French_TXT))" Required="true" />
+                        <MudTextField @bind-Value="_form.English_DESC" Label="@GetDataLabel(nameof(_form.English_DESC))" />
+                        <MudTextField @bind-Value="_form.French_DESC" Label="@GetDataLabel(nameof(_form.French_DESC))" />
+                        <MudCheckBox @bind-Value="_form.Required_FLAG" Label="@GetDataLabel(nameof(_form.Required_FLAG))" T="bool" />
+                        <MudCheckBox @bind-Value="_form.MultiSelect_FLAG" Label="@GetDataLabel(nameof(_form.MultiSelect_FLAG))" T="bool" />
+                        <MudTextField @bind-Value="_form.Default_Value_TXT" Label="@GetDataLabel(nameof(_form.Default_Value_TXT))" />
+                        <MudNumericField @bind-Value="_form.Sort_Order_NUM" Label="@GetDataLabel(nameof(_form.Sort_Order_NUM))" T="int" />
+                        <MudTextField @bind-Value="_form.Choices_TXT" Label="@GetDataLabel(nameof(_form.Choices_TXT))" Placeholder="Enter choice list separated by | characters. (new definitions)" />
+
+                        <MudButton Color="Color.Primary">Submit</MudButton>
+                        <MudButton OnClick="ClearForm" Color="Color.Secondary">Cancel</MudButton>
+                    </MudForm>
+                </MudCardContent>
+            </MudCard>
+        </Authorized>
+        <NotAuthorized>
+            @Localizer["You are not authorized to view this page."]
+        </NotAuthorized>
+    </DatahubAuthView>
+</div>
+
+@code {
+    [Parameter]
+    public string Id { get; set; } = "0";
+
+    private FieldDefinitionForm _form { get; set; } = new FieldDefinitionForm();
+    private MudForm _formRef;
+
+    private FieldDefinition FieldDefinition { get; set; }
+
+    private List<string> _authorizedRoles = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var user = await _userInformationService.GetCurrentGraphUserAsync();
+        _authorizedRoles = ServiceAuthManager.GetAdminProjectRoles(user.Id);
+
+        var defId = Id is not null ? int.Parse(Id) : 0;
+        if (defId != 0)
+        {
+            using var ctx = ContextFactory.CreateDbContext();
+            FieldDefinition = await ctx.FieldDefinitions.FirstOrDefaultAsync(e => e.FieldDefinitionId == defId);
+            FieldDefinition.CopyPublicPropertiesTo(_form);
+        }
+    }
+
+    private async Task HandleValidSubmit()
+    {
+        var isNewDefinition = FieldDefinition is null;
+
+        var def = FieldDefinition ?? new FieldDefinition();
+        _form.CopyPublicPropertiesTo(def);
+
+        using var ctx = ContextFactory.CreateDbContext();
+        var transaction = ctx.Database.BeginTransaction();
+        try
+        {
+            if (isNewDefinition)
+            {
+                var version = await ctx.MetadataVersions.FirstOrDefaultAsync();
+                if (version is not null)
+                {
+                    def.MetadataVersionId = version.MetadataVersionId;
+                    ctx.FieldDefinitions.Add(def);
+                }
+            }
+            else
+            {
+                ctx.FieldDefinitions.Update(def);
+            }
+
+            await ctx.TrackSaveChangesAsync(AuditingService);
+
+            if (isNewDefinition && !string.IsNullOrEmpty(_form.Choices_TXT))
+            {
+                foreach (var choice in ParseChoices(_form.Choices_TXT, def.FieldDefinitionId))
+                {
+                    ctx.FieldChoices.Add(choice);
+                }
+                await ctx.TrackSaveChangesAsync(AuditingService);
+            }
+
+            await AuditingService.TrackAdminEvent("metadata", "MetadataDefinitions", AuditChangeType.Edit);
+
+            transaction.Commit();
+        }
+        catch (Exception)
+        {
+            transaction.Rollback();
+        }
+
+        NavigationManager.NavigateTo("/metadata/definitions");
+    }
+
+    private IEnumerable<FieldChoice> ParseChoices(string choices, int definitionId)
+    {
+        return choices.Split('|', StringSplitOptions.RemoveEmptyEntries).Select(c => CreateChoice(definitionId, c));
+    }
+
+    static FieldChoice CreateChoice(int definitionId, string data)
+    {
+        var choice = ParseChoiceData(data);
+        return new FieldChoice()
+            {
+                FieldDefinitionId = definitionId,
+                Label_English_TXT = choice.English.Trim(),
+                Label_French_TXT = choice.French.Trim(),
+                Value_TXT = choice.Id.Trim()
+            };
+    }
+
+    static ChoiceData ParseChoiceData(string data)
+    {
+        var cols = data.Split(':', StringSplitOptions.RemoveEmptyEntries);
+        if (cols.Length == 3)
+            return new ChoiceData(cols[0], cols[1], cols[2]);
+        return new ChoiceData(data, data, data);
+    }
+
+    private async Task ClearForm()
+    {
+        NavigationManager.NavigateTo("/metadata/definitions");
+        await Task.CompletedTask;
+    }
+
+    private string GetDataLabel(string propName)
+    {
+        return Localizer[MakeLabel(propName)];
+    }
+
+    static string MakeLabel(string label) => $"METADATA-EDIT.FIELD-DEFINITIONS.{label}";
+
+    record ChoiceData(string Id, string English, string French);
+}

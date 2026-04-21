@@ -1,0 +1,10 @@
+/* _content/Datahub.Portal/Layout/WorkspaceSidebar.razor.rz.scp.css */
+ul[b-w96r293c2u] {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+li:not(:last-child)[b-w96r293c2u] {
+    margin-bottom: 0.25rem;
+}

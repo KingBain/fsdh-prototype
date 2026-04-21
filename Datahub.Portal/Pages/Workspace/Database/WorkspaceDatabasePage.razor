@@ -1,0 +1,324 @@
+@using Datahub.Application.Services.Security
+@using Datahub.Portal.Model
+@using Datahub.Shared.Entities
+@using Datahub.Shared.Entities.WorkspaceToolConfiguration
+@using Microsoft.Identity.Web
+
+@inject IDbContextFactory<DatahubProjectDBContext> _dbContextFactory
+@inject IKeyVaultUserService _keyVaultUserService
+@inject ILogger<WorkspaceDatabasePage> _logger
+@inject DatahubPortalConfiguration _portalConfiguration
+@inject MicrosoftIdentityConsentAndConditionalAccessHandler _consentHandler
+
+
+@if (!_isElevated)
+{
+    <DHLoadingInitializer Message="@Localizer["Validating your credentials..."]"/>
+    return;
+}
+<MudStack>
+    <DHMainContentTitle Title="@Localizer["Workspace Database"]" />
+    <WorkspaceAlerts WorkspaceAcronym="@WorkspaceAcronym" View="@WorkspaceSidebar.SectionViews.SqlDatabase"/>
+    <MudText>
+        @Localizer["Here you can manage your workspace database. You can view and test the connectivity of your database"]
+    </MudText>
+
+    <DatabaseInfoTable dbServer="@_dbServer"/>
+
+    <MudText Typo="Typo.caption">@Localizer["Connection info can only be displayed by the workspace lead."]</MudText>
+    <DatahubAuthView AuthLevel="DatahubAuthView.AuthLevels.WorkspaceLead" ProjectAcronym="@WorkspaceAcronym" ElevatedWorkspaceAccessEnabled="@ElevatedWorkspaceAccessEnabled">
+        <DHButton style="width: fit-content;" OnClick="ToggleContentVisibility" Color=@Color.Primary Variant=@Variant.Filled>@Localizer[_message]</DHButton>
+        <DatabaseAdminSetupInfo />
+    </DatahubAuthView>
+
+    <MudText Typo="Typo.h2">
+        @Localizer["Connection Info"]
+    </MudText>
+
+    <MudTabs Elevation="0" Outlined PanelClass="pa-6" Class="mt-8">
+        <MudTabPanel Text="Databricks">
+            <DHMarkdown Content="@_databricksConnectionInfo" LinkRewriter="@(link => link)"/>
+        </MudTabPanel>
+        <MudTabPanel Text="Python">
+            <DHMarkdown Content="@_pythonConnectionInfo" LinkRewriter="@(link => link)"/>
+        </MudTabPanel>
+        <MudTabPanel Text="R">
+            <DHMarkdown Content="@_rConnectionInfo" LinkRewriter="@(link => link)"/>
+        </MudTabPanel>
+        <MudTabPanel Text="Java">
+            <DHMarkdown Content="@_javaConnectionInfo" LinkRewriter="@(link => link)"/>
+        </MudTabPanel>
+        <MudTabPanel Text="C#">
+            <DHMarkdown Content="@_csharpConnectionInfo" LinkRewriter="@(link => link)"/>
+        </MudTabPanel>
+    </MudTabs>
+
+    <DatabaseIpWhitelistTable WorkspaceAcronym="@WorkspaceAcronym" />
+</MudStack>
+
+@code {
+
+    [Parameter, EditorRequired] 
+    public string WorkspaceAcronym { get; set; }
+    [Parameter] public bool ElevatedWorkspaceAccessEnabled { get; set; } = false;
+
+    private string _pythonConnectionInfo;
+    private string _rConnectionInfo;
+    private string _javaConnectionInfo;
+    private string _csharpConnectionInfo;
+    private string _databricksConnectionInfo;
+
+    private AzurePgsqlDBServer _dbServer = new AzurePgsqlDBServer();
+
+    private bool _hideContent = true;
+    private string _message = "Show Connection Info";
+
+    private bool _isElevated = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+        try
+        {
+            await _keyVaultUserService.AuthenticateWithUserContext();
+            _isElevated = true;
+            await HydrateValues();
+
+            UpdateCodeSamples();
+        }
+        catch (MicrosoftIdentityWebChallengeUserException e)
+        {
+            _consentHandler.HandleException(e);
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Failed to get consent from user");
+        }
+        
+        // get SKU 
+        try 
+        {
+            var postgresResource = await BuildPostgresSqlFlexibleServerResource();
+            var serverData = await postgresResource.GetAsync();
+            if (serverData.Value.HasData)
+            {
+                var sku = serverData.Value.Data.Sku.Name; // Typically, tier + family + cores, e.g. Standard_D4s_v3.
+                var parts = sku.Split('_');
+                if (parts.Length > 0)
+                {
+                    var skuName = parts[1];
+                    var postgresTiers = PostgresTier.GetPostgresTiers();
+                    _dbServer.PostgresTier = postgresTiers.Where(p => p.SKUName == skuName).FirstOrDefault() ?? new PostgresTier() { Type = "-", SKUName = skuName, Cores = -1, MemorySize = "-", TerraformSku = skuName };          
+                }
+                _dbServer.StorageSize = serverData.Value.Data.StorageSizeInGB ?? 0;
+            }
+        }
+        catch (Exception ex) 
+        {
+            _logger.LogError(ex, "Failed to get database server information");
+        }
+
+        StateHasChanged();
+    }
+
+    private async Task ToggleContentVisibility()
+    {
+        if (_hideContent){
+            _hideContent = false;
+            _message = "Hide Connection Info";
+            await HydrateValues();
+            UpdateCodeSamples();
+
+        }
+        else
+        {
+            _hideContent = true;
+            _message = "Show Connection Info";
+            UpdateCodeSamples();
+        }
+        StateHasChanged();
+    }
+
+    private void UpdateCodeSamples()
+    {
+        if (_hideContent){
+            _pythonConnectionInfo = BuildPythonConnectionInfo();
+            _rConnectionInfo = BuildRConnectionInfo();
+            _javaConnectionInfo = BuildJavaConnectionInfo();
+            _csharpConnectionInfo = BuildCSharpConnectionInfo();
+            _databricksConnectionInfo = BuildDatabricksConnectionInfo();
+        }
+        else
+        {
+            _pythonConnectionInfo = ReplaceHydrationValues(BuildPythonConnectionInfo());
+            _rConnectionInfo = ReplaceHydrationValues(BuildRConnectionInfo());
+            _javaConnectionInfo = ReplaceHydrationValues(BuildJavaConnectionInfo());
+            _csharpConnectionInfo = ReplaceHydrationValues(BuildCSharpConnectionInfo());
+            _databricksConnectionInfo = ReplaceHydrationValues(BuildDatabricksConnectionInfo());
+        }
+        StateHasChanged();
+    }
+
+    private string ReplaceHydrationValues(string text)
+    {
+        text = text.Replace("<database_host>", _dbServer.DatabaseHost);
+        text = text.Replace("<database_name>", _dbServer.DatabaseName);
+        text = text.Replace("<username>", _dbServer.Username);
+        text = text.Replace("<password>", _dbServer.Password);
+        text = text.Replace("<port>", _dbServer.Port);
+
+        return text;
+    }
+
+    private async Task HydrateValues()
+    {
+        if (!_hideContent)
+        {
+            await using var context = await _dbContextFactory.CreateDbContextAsync();
+            var workspace = await context.Projects
+                .Include(x => x.Resources)
+                .FirstOrDefaultAsync(x => x.Project_Acronym_CD == WorkspaceAcronym);
+
+            if (workspace == null)
+                throw new Exception($"Workspace with acronym {WorkspaceAcronym} not found");
+
+            _dbServer.Port = "5432";
+            _dbServer.DatabaseHost = TerraformVariableExtraction.ExtractAzurePostgresHost(workspace);
+            _dbServer.DatabaseName = TerraformVariableExtraction.ExtractAzurePostgresDatabaseName(workspace);
+
+            var usernameSecretName = TerraformVariableExtraction.ExtractAzurePostgresUsernameSecretName(workspace);
+            if (usernameSecretName != null)
+            {
+                _dbServer.Username = await _keyVaultUserService.GetSecretAsync(WorkspaceAcronym, usernameSecretName);
+            }
+            else
+            {
+                _logger.LogWarning($"No username secret name found for workspace {WorkspaceAcronym}");
+            }
+
+            var passwordSecretName = TerraformVariableExtraction.ExtractAzurePostgresPasswordSecretName(workspace);
+            if (passwordSecretName != null)
+            {
+                _dbServer.Password = await _keyVaultUserService.GetSecretAsync(WorkspaceAcronym, passwordSecretName);
+            }
+            else
+            {
+                _logger.LogWarning($"No password secret name found for workspace {WorkspaceAcronym}");
+            }
+        }
+    }
+
+    private string BuildPythonConnectionInfo()
+    {
+        return @"```python
+import psycopg2
+
+conn = psycopg2.connect(
+    host=""<database_host>"",
+    database=""<database_name>"",
+    user=""<username>"",
+    password=""<password>""
+)
+
+cursor = conn.cursor()
+
+# You can then use the connection to execute queries. Use cursor.execute(query) to execute a query.
+```";
+    }
+
+    private string BuildRConnectionInfo()
+    {
+        return @"```r
+install.packages('RPostgres')
+
+library(DBI)
+
+db <- '<database_name>'  #provide the name of your db
+
+host_db <- '<database_host>' #i.e. # i.e. 'ec2-54-83-201-96.compute-1.amazonaws.com'
+
+db_port <- '<port>'  # or any other port specified by the DBA
+
+db_user <- '<username>'
+
+db_password <- '<password>'
+
+con <- dbConnect(RPostgres::Postgres(), dbname = db, host=host_db, port=db_port, user=db_user, password=db_password)
+```";
+    }
+
+    private string BuildJavaConnectionInfo()
+    {
+        return @"```java
+String url = ""jdbc:postgresql://<database_host>:<port>/<database_name>"";
+Properties props = new Properties();
+props.setProperty(""user"", ""<username>"");
+props.setProperty(""password"", ""<password>"");
+props.setProperty(""ssl"", ""true"");
+Connection conn = DriverManager.getConnection(url, props);
+```";
+    }
+
+    private string BuildCSharpConnectionInfo()
+    {
+        return @"```csharp
+string Host = ""<database_host>"";
+string User = ""<username>"";
+string DBname = ""<database_name>"";
+string Password = ""<password>"";
+string Port = ""<port>"";
+
+string connString =
+    String.Format(
+        ""Server={0};Username={1};Database={2};Port={3};Password={4};SSLMode=Prefer"",
+        Host,
+        User,
+        DBname,
+        Port,
+        Password);
+
+
+using (var conn = new NpgsqlConnection(connString))
+{
+    Console.Out.WriteLine(""Opening connection"");
+    conn.Open();
+
+// do stuff
+
+}
+```";
+    }
+
+    private string BuildDatabricksConnectionInfo()
+    {
+        return @"```python
+%python
+database_host = ""<database_host>""
+database_port = ""5432""
+database_name = ""<database_name>""
+table = ""<table_name>""
+user = ""<username>""
+password = ""<password>""
+
+url = f""jdbc:postgresql://{database_host}:{database_port}/{database_name}""
+
+remote_table = (spark.read
+    .format(""jdbc"")
+    .option(""driver"", driver)
+    .option(""url"", url)
+    .option(""dbtable"", table)
+    .option(""user"", user)
+    .option(""password"", password)
+    .load()
+)
+
+# Optional - Convert the table to use with pandas
+import pandas as pd
+remote_table = remote_table.toPandas()
+
+display(remote_table)
+```";
+    }
+
+}

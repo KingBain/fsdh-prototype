@@ -1,0 +1,330 @@
+﻿@using Datahub.Application.Services
+@using Datahub.Core.Model.Onboarding
+@using Datahub.Core.Model.Projects
+@using Datahub.Portal.Components
+@using static Datahub.Core.DevTools
+@inject IWorkspaceCreationService _projectCreationService
+@inject NavigationManager _navigationManager
+@inject DatahubPortalConfiguration _portalConfiguration
+
+<MudStack Spacing="6">
+    <DHMainContentTitle Title="@Localizer["Create a new Workspace"]" />
+    <MudText>
+        @Localizer["Please complete the following information to create a new workspace"]
+    </MudText>
+
+    <MudForm Class="mb-4" @bind-IsValid="@_success" ValidationDelay="50" @ref=@_creationForm>
+        <MudSelect T="GCHostingWorkspaceDetails"
+            @bind-Value="_currentGcHostingPlan"
+            Label=@Localizer["GC Hosting CBR"]
+            Validation="new Func<GCHostingWorkspaceDetails, string>(CbrValidation)"
+            ToStringFunc="GenerateGcHostingPlanLabel"
+            Tag=CBR_DROPDOWN_TAG>
+
+            <MudSelectItem Value="default(GCHostingWorkspaceDetails)" Disabled/>
+            <MudDivider />
+            @foreach(var cbr in gcHostingPlans)
+            {
+                <MudSelectItem Value="cbr" />
+            }
+
+        </MudSelect>
+
+        <MudTextField T="string"
+                      @bind-Value="_projectTitle"
+                      Label="@Localizer["Workspace Title"]" Required
+                      RequiredError="@Localizer["Workspace Title is required"]"
+                      HelperText="@Localizer["Enter a descriptive title for the workspace"]"
+                      DebounceInterval="500"
+                      OnDebounceIntervalElapsed="UpdateProjectAcronym"
+                      Validation="@(new Func<string, Task<string>>(ValidateTitle))"
+                      Tag=WORKSPACE_TITLE_INPUT_TAG
+                      MaxLength="@MaxTitleLength" />
+
+        <MudTextField T="string"
+                      @bind-Value="_projectAcronym"
+                      Label="@Localizer["Workspace Acronym"]"
+                      AdornmentIcon="fa-light fa-arrows-rotate"
+                      HelperText="@Localizer["A unique alphanumeric acronym to identify the workspace. Click the icon to generate an acronym based on the title."]"
+                      Adornment="Adornment.End"
+                      OnAdornmentClick="GenerateAcronym"
+                      AdornmentAriaLabel="@Localizer["Generate Acronym"]"
+                      RequiredError="@Localizer["Workspace Acronym is required"]"
+                      Converter="_converter"
+                      @ref="_acronymField"
+                      alt=@Localizer["A unique alphanumeric acronym to identify the workspace. Click the icon to generate an acronym based on the title."]
+                      Required
+                      Tag=WORKSPACE_ACRONYM_INPUT_TAG
+                      Validation="@(new Func<string, Task<string>>(ValidateAcronym))"
+                      MaxLength="@MaxAcronymLength" />
+
+        <MudSelect T="string"
+                   Label="@Localizer["(Optional) Which features are of interest to you?"]"
+                   MultiSelection="true"
+                   HelperText="@Localizer["Please select all that apply"]"
+                   AnchorOrigin="Origin.BottomLeft"
+                   TransformOrigin="Origin.TopLeft"
+                   @bind-Value="@_interestedFeatures">
+            <MudSelectItem T="string" Value="@("Storage")">@Localizer["Storage"]</MudSelectItem>
+            <MudSelectItem T="string" Value="@("Analytics")">@Localizer["Analytics"]</MudSelectItem>
+            <MudSelectItem T="string" Value="@("Collaboration")">@Localizer["Collaboration"]</MudSelectItem>
+            <MudSelectItem T="string" Value="@("Other")">@Localizer["Other"]</MudSelectItem>
+        </MudSelect>
+
+        @if (GCHostingPlanSelected)
+        {
+            <MudTextField @bind-Value=@_workspaceBudget 
+                          Label="@Localizer["Workspace Budget"]" 
+                          Immediate
+                          Validation="new Func<decimal, string>(BudgetValidation)"
+                          Tag=BUDGET_INPUT_TAG />
+            <MudStack Row AlignItems="AlignItems.Center">
+                <MudAlert Severity=@_availableBudgetSeverity NoIcon>
+                    <MudStack Row>
+                        <MudText>@Localizer["Available:"]</MudText>
+                        <MudText>@_availableBudget.ToString("C2")</MudText>
+                    </MudStack>
+                </MudAlert>
+                <MudAlert Severity="Severity.Normal" NoIcon>
+                    <MudStack Row>
+                        <MudText>@Localizer["Already allocated:"]</MudText>
+                        <MudText>@_budgetAlreadyAllocated.ToString("C2")</MudText>
+                    </MudStack>
+                </MudAlert>
+                <MudAlert Severity="Severity.Normal" NoIcon>
+                    <MudStack Row>
+                        <MudText>@Localizer["Total in CBR:"]</MudText>
+                        <MudText>@_totalCbrBudget.ToString("C2")</MudText>
+                    </MudStack>
+                </MudAlert>
+                @if (_isOverBudget)
+                {
+                    <MudButton Href="@GetCbrSettingsUrl()" Variant="@Variant.Outlined" Color="@Color.Primary" Disabled="@(GetCbrSettingsUrl() is null)">@Localizer["Open CBR Budget"]</MudButton>
+                }
+            </MudStack>
+        }
+
+        @if (_portalConfiguration.Github.Enabled)
+        {
+            <MudStack Row Class="mt-4">
+                <MudButton Href="https://github.com/apps/datahub-workspaces"
+                           OnClick="HandleIntegrateWithGit"
+                           Target="_blank"
+                           Variant="Variant.Filled"
+                           EndIcon="@Icons.Custom.Brands.GitHub"
+                           Color="Color.Primary">
+                    @Localizer["Link GitHub"]
+                </MudButton>
+                <MudCheckBox Value=@_createRepository
+                             ValueChanged=@ToggleCreateRepo
+                             Disabled="!_githubIntegration"
+                             T="bool"
+                             Label=@Localizer["Create Repository"] />
+            </MudStack>
+        }
+
+        @if (_errorMessage is not null)
+        {
+            <MudAlert Severity="Severity.Error" Dense="true" Class="my-2" ShowCloseIcon CloseIconClicked="CloseAlert">
+                @_errorMessage
+            </MudAlert>
+        }
+    </MudForm>
+    <MudElement Class="pb-4">
+        <MudButton Variant="Variant.Outlined" Color="Color.Secondary" Href="@PageRoutes.Home" Class="mr-2">
+            @Localizer["Cancel"]
+        </MudButton>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" Disabled="!_canCreate" OnClick="CreateProject" Class="ml-2" Tag=@CREATE_WORKSPACE_BUTTON_TAG>
+            @if (_isCreating)
+            {
+                <MudProgressCircular Class="ms-n1 mr-2" Size="Size.Small" Indeterminate="true" />
+            }
+            @Localizer["Create Workspace"]
+        </MudButton>
+    </MudElement>
+</MudStack>
+
+
+@code {
+    public bool ShowCancel { get; set; } = true;
+
+    [Parameter]
+    public bool ShowAllCBRs { get; set; } = false;
+
+    public const string CREATE_WORKSPACE_BUTTON_TAG = "CreateWorkspace";
+    public const string WORKSPACE_TITLE_INPUT_TAG = "WorkspaceTitle";
+    public const string WORKSPACE_ACRONYM_INPUT_TAG = "WorkspaceAcronym";
+    public const string CBR_DROPDOWN_TAG = "CbrSelect";
+    public const string BUDGET_INPUT_TAG = "WorkspaceBudget";
+
+#nullable enable
+    private const int MaxAcronymLength = 7;
+    private const int MaxTitleLength = 100;
+    private string? _errorMessage;
+    private string _projectTitle = string.Empty;
+    private string _projectAcronym = string.Empty;
+    private string _interestedFeatures = string.Empty;
+    private MudTextField<string>? _acronymField;
+    private MudForm? _creationForm;
+
+    private List<TopBarEnvironments> _environmentsToShowDisabledMessage = new List<TopBarEnvironments> { TopBarEnvironments.Development, TopBarEnvironments.Production, TopBarEnvironments.ProductionProtected };
+    private List<TopBarEnvironments> _environmentsToAllowCreation = new List<TopBarEnvironments> { TopBarEnvironments.Development, TopBarEnvironments.Integration, TopBarEnvironments.ProofOfConcept, TopBarEnvironments.QualityControl };
+
+    private IEnumerable<GCHostingWorkspaceDetails> gcHostingPlans = [];
+    private GCHostingWorkspaceDetails? _currentGcHostingPlan = default;
+    private bool GCHostingPlanSelected => _currentGcHostingPlan is not null;
+    private decimal _workspaceBudget;
+    private decimal _totalCbrBudget => _currentGcHostingPlan?.WorkspaceBudget ?? 0;
+    private decimal _budgetAlreadyAllocated => _currentGcHostingPlan?.WorkspacesInBudget.Sum(w => w.Project_Budget) ?? 0;
+    private decimal _availableBudget => _totalCbrBudget - _budgetAlreadyAllocated;
+    private bool _isOverBudget => _workspaceBudget > _availableBudget;
+    private Severity _availableBudgetSeverity => _isOverBudget ? Severity.Error : Severity.Info;
+    private string _overBudgetError => Localizer["Workspace must not exceed available budget in CBR"];
+    private string? BudgetValidation(decimal b) => b > _availableBudget ? _overBudgetError : null;
+    private string _cbrNotSelectedError => Localizer["CBR must be selected to create a workspace"];
+    private string? CbrValidation(GCHostingWorkspaceDetails d) => d is null ? _cbrNotSelectedError : null;
+
+    private bool _success = false;
+    private bool _isCreating;
+
+    private bool _canCreate => _success && GCHostingPlanSelected;
+
+    private bool _githubIntegration;
+    private bool _createRepository;
+
+    private async Task GenerateAcronym(MouseEventArgs e)
+    {
+        // There must be a clean way to get the validation/update to work without this arbitrary delay, but for now this hack works
+        await Task.Delay(1);
+        await UpdateProjectAcronym();
+    }
+
+    private void CloseAlert()
+    {
+        _errorMessage = null;
+    }
+
+    private async Task<string?> ValidateAcronym(string acronym)
+    {
+        if (await _projectCreationService.AcronymExists(acronym))
+            return Localizer["Workspace Acronym already exists"];
+
+        // check it is alphanumeric
+        if (!acronym.All(char.IsLetterOrDigit))
+            return Localizer["Acronym must be alphanumeric"];
+
+        return (acronym.Length > MaxAcronymLength ? Localizer["Acronym must be {0} characters or less", MaxAcronymLength] : null)!;
+    }
+
+    private async Task<string?> ValidateTitle(string title)
+    {
+        if (string.IsNullOrWhiteSpace(title))
+            return Localizer["Workspace Title is required"];
+        return (title.Length > MaxTitleLength ? Localizer["Workspace Title must be {0} characters or less", MaxTitleLength] : null)!;
+    }
+
+    private readonly Converter<string> _converter = new()
+        {
+            SetFunc = value => value?.ToUpperInvariant() ?? string.Empty,
+            GetFunc = text => text?.ToUpperInvariant() ?? string.Empty,
+        };
+
+    private async Task UpdateProjectAcronym()
+    {
+        if (string.IsNullOrWhiteSpace(_projectTitle))
+        {
+            _errorMessage = Localizer["Workspace Title is required to generate an acronym"];
+            return;
+        }
+        else
+        {
+            CloseAlert();
+        }
+        _projectAcronym = await _projectCreationService.GenerateWorkspaceAcronymAsync(_projectTitle);
+        await _acronymField!.ValueChanged.InvokeAsync(_projectAcronym);
+        await InvokeAsync(_acronymField!.ForceUpdate);
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private async Task CreateProject()
+    {
+        await InvokeAsync(_creationForm!.Validate); // Force validation - users can avoid otherwise by clicking the button while the field is selected.
+        _success = _success && string.IsNullOrWhiteSpace(await ValidateAcronym(_projectAcronym));
+        _success = _success && string.IsNullOrWhiteSpace(await ValidateTitle(_projectTitle));
+
+        if (_success)
+        {
+            if (_isCreating)
+                return;
+            _isCreating = true;
+            //update Button
+            StateHasChanged();
+            await Task.Delay(1);
+            // TODO: Get Organization name?
+
+            var gcHostingId = _currentGcHostingPlan?.Id;
+
+            var isAdded = await _projectCreationService.CreateWorkspaceAsync(_projectTitle, _projectAcronym, "Unspecified", gcHostingId, _workspaceBudget);
+            _isCreating = false;
+            if (isAdded)
+            {
+                await _projectCreationService.SaveWorkspaceCreationDetailsAsync(_projectAcronym, _interestedFeatures);
+                //MudDialog.Close(DialogResult.Ok(_projectAcronym));
+                _navigationManager.NavigateTo(PageRoutes.WorkspaceDefault.Replace("{WorkspaceAcronymParam}", _projectAcronym), forceLoad: true);
+            }
+            else
+            {
+                _errorMessage = Localizer["An error occurred while creating the workspace"];
+                StateHasChanged();
+            }
+        }
+    }
+
+    private void HandleIntegrateWithGit()
+    {
+        _githubIntegration = true;
+    }
+
+    private void ToggleCreateRepo(bool value)
+    {
+        _createRepository = value;
+    }
+
+    private Datahub_Project? GetFirstCBRWorkspace() => GetFirstCBRWorkspace(_currentGcHostingPlan);
+
+    private Datahub_Project? GetFirstCBRWorkspace(GCHostingWorkspaceDetails? workspaceDetails) => workspaceDetails?.WorkspacesInBudget.FirstOrDefault();
+
+    private string? GetCbrSettingsUrl()
+    {
+        var firstWorkspace = GetFirstCBRWorkspace();
+        if (firstWorkspace is null)
+        {
+            return null;
+        }
+
+        return $"/w/{firstWorkspace.Project_Acronym_CD}/{WorkspaceSidebar.SectionViews.Settings}/cbr";
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        gcHostingPlans = ShowAllCBRs ?
+            await _projectCreationService.GetAllGCHostingWorkspaceDetails() :
+            await _projectCreationService.GetGCHostingWorkspaceDetailsForCurrentUser();
+
+        _workspaceBudget = _portalConfiguration.DefaultProjectBudget;
+
+        await base.OnInitializedAsync();
+    }
+
+    private string GenerateGcHostingPlanLabel(GCHostingWorkspaceDetails d)
+    {
+        if (d is null)
+            return Localizer["N/A"];
+        var firstWorkspace = GetFirstCBRWorkspace(d);
+        var projectAcronym = firstWorkspace?.Project_Acronym_CD ?? Localizer["N/A"];
+
+        return  $"{d.CBRID} - {d.CBRName} ({projectAcronym})";            
+    }
+
+#nullable disable
+}

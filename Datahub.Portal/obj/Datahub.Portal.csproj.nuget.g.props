@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Condition=" '$(ExcludeRestorePackageImports)' != 'true' ">
+    <RestoreSuccess Condition=" '$(RestoreSuccess)' == '' ">True</RestoreSuccess>
+    <RestoreTool Condition=" '$(RestoreTool)' == '' ">NuGet</RestoreTool>
+    <ProjectAssetsFile Condition=" '$(ProjectAssetsFile)' == '' ">$(MSBuildThisFileDirectory)project.assets.json</ProjectAssetsFile>
+    <NuGetPackageRoot Condition=" '$(NuGetPackageRoot)' == '' ">/home/vscode/.nuget/packages/</NuGetPackageRoot>
+    <NuGetPackageFolders Condition=" '$(NuGetPackageFolders)' == '' ">/home/vscode/.nuget/packages/</NuGetPackageFolders>
+    <NuGetProjectStyle Condition=" '$(NuGetProjectStyle)' == '' ">PackageReference</NuGetProjectStyle>
+    <NuGetToolVersion Condition=" '$(NuGetToolVersion)' == '' ">6.14.0</NuGetToolVersion>
+  </PropertyGroup>
+  <ItemGroup Condition=" '$(ExcludeRestorePackageImports)' != 'true' ">
+    <SourceRoot Include="/home/vscode/.nuget/packages/" />
+  </ItemGroup>
+  <ImportGroup Condition=" '$(ExcludeRestorePackageImports)' != 'true' ">
+    <Import Project="$(NuGetPackageRoot)toolbelt.blazor.localtimetext/1.0.1/buildTransitive/Toolbelt.Blazor.LocalTimeText.props" Condition="Exists('$(NuGetPackageRoot)toolbelt.blazor.localtimetext/1.0.1/buildTransitive/Toolbelt.Blazor.LocalTimeText.props')" />
+    <Import Project="$(NuGetPackageRoot)tewr.blazor.filereader/3.4.0.24340/buildTransitive/Tewr.Blazor.FileReader.props" Condition="Exists('$(NuGetPackageRoot)tewr.blazor.filereader/3.4.0.24340/buildTransitive/Tewr.Blazor.FileReader.props')" />
+    <Import Project="$(NuGetPackageRoot)psc.blazor.components.markdowneditor/8.0.8/buildTransitive/PSC.Blazor.Components.MarkdownEditor.props" Condition="Exists('$(NuGetPackageRoot)psc.blazor.components.markdowneditor/8.0.8/buildTransitive/PSC.Blazor.Components.MarkdownEditor.props')" />
+    <Import Project="$(NuGetPackageRoot)mudblazor/8.12.0/buildTransitive/MudBlazor.props" Condition="Exists('$(NuGetPackageRoot)mudblazor/8.12.0/buildTransitive/MudBlazor.props')" />
+    <Import Project="$(NuGetPackageRoot)mudblazor.markdown/8.11.0/buildTransitive/MudBlazor.Markdown.props" Condition="Exists('$(NuGetPackageRoot)mudblazor.markdown/8.11.0/buildTransitive/MudBlazor.Markdown.props')" />
+    <Import Project="$(NuGetPackageRoot)microsoft.entityframeworkcore/9.0.12/buildTransitive/net8.0/Microsoft.EntityFrameworkCore.props" Condition="Exists('$(NuGetPackageRoot)microsoft.entityframeworkcore/9.0.12/buildTransitive/net8.0/Microsoft.EntityFrameworkCore.props')" />
+    <Import Project="$(NuGetPackageRoot)microsoft.codeanalysis.analyzers/3.3.4/buildTransitive/Microsoft.CodeAnalysis.Analyzers.props" Condition="Exists('$(NuGetPackageRoot)microsoft.codeanalysis.analyzers/3.3.4/buildTransitive/Microsoft.CodeAnalysis.Analyzers.props')" />
+    <Import Project="$(NuGetPackageRoot)microsoft.entityframeworkcore.design/9.0.12/build/net8.0/Microsoft.EntityFrameworkCore.Design.props" Condition="Exists('$(NuGetPackageRoot)microsoft.entityframeworkcore.design/9.0.12/build/net8.0/Microsoft.EntityFrameworkCore.Design.props')" />
+    <Import Project="$(NuGetPackageRoot)microsoft.aspnetcore.components.webassembly.authentication/9.0.12/buildTransitive/Microsoft.AspNetCore.Components.WebAssembly.Authentication.props" Condition="Exists('$(NuGetPackageRoot)microsoft.aspnetcore.components.webassembly.authentication/9.0.12/buildTransitive/Microsoft.AspNetCore.Components.WebAssembly.Authentication.props')" />
+    <Import Project="$(NuGetPackageRoot)microsoft.authentication.webassembly.msal/9.0.12/buildTransitive/Microsoft.Authentication.WebAssembly.Msal.props" Condition="Exists('$(NuGetPackageRoot)microsoft.authentication.webassembly.msal/9.0.12/buildTransitive/Microsoft.Authentication.WebAssembly.Msal.props')" />
+    <Import Project="$(NuGetPackageRoot)blazorinputfile/0.2.0/buildTransitive/BlazorInputFile.props" Condition="Exists('$(NuGetPackageRoot)blazorinputfile/0.2.0/buildTransitive/BlazorInputFile.props')" />
+    <Import Project="$(NuGetPackageRoot)blazordownloadfile/2.4.0.2/buildTransitive/BlazorDownloadFile.props" Condition="Exists('$(NuGetPackageRoot)blazordownloadfile/2.4.0.2/buildTransitive/BlazorDownloadFile.props')" />
+    <Import Project="$(NuGetPackageRoot)blazor-apexcharts/3.4.0/buildTransitive/Blazor-ApexCharts.props" Condition="Exists('$(NuGetPackageRoot)blazor-apexcharts/3.4.0/buildTransitive/Blazor-ApexCharts.props')" />
+  </ImportGroup>
+  <PropertyGroup Condition=" '$(ExcludeRestorePackageImports)' != 'true' ">
+    <PkgMicrosoft_VisualStudio_Azure_Containers_Tools_Targets Condition=" '$(PkgMicrosoft_VisualStudio_Azure_Containers_Tools_Targets)' == '' ">/home/vscode/.nuget/packages/microsoft.visualstudio.azure.containers.tools.targets/1.22.1</PkgMicrosoft_VisualStudio_Azure_Containers_Tools_Targets>
+    <PkgMicrosoft_CodeAnalysis_Analyzers Condition=" '$(PkgMicrosoft_CodeAnalysis_Analyzers)' == '' ">/home/vscode/.nuget/packages/microsoft.codeanalysis.analyzers/3.3.4</PkgMicrosoft_CodeAnalysis_Analyzers>
+    <PkgLucene_Net Condition=" '$(PkgLucene_Net)' == '' ">/home/vscode/.nuget/packages/lucene.net/4.8.0-beta00016</PkgLucene_Net>
+    <PkgAWSSDK_Core Condition=" '$(PkgAWSSDK_Core)' == '' ">/home/vscode/.nuget/packages/awssdk.core/4.0.3.12</PkgAWSSDK_Core>
+    <PkgAWSSDK_S3 Condition=" '$(PkgAWSSDK_S3)' == '' ">/home/vscode/.nuget/packages/awssdk.s3/4.0.18.1</PkgAWSSDK_S3>
+    <PkgBuildBundlerMinifier Condition=" '$(PkgBuildBundlerMinifier)' == '' ">/home/vscode/.nuget/packages/buildbundlerminifier/3.2.449</PkgBuildBundlerMinifier>
+  </PropertyGroup>
+</Project>

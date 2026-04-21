@@ -1,0 +1,37 @@
+@using Datahub.Application.Services.UserManagement
+@using Datahub.Application.Services
+@inject ILocalStorageService _localStorage
+@inject IUserSettingsService _userSettingsService
+
+<MudText Typo="Typo.h2" Class="mb-6">
+    Cache Details
+</MudText>
+<MudSimpleTable Dense Hover Bordered>
+    <tbody>
+    <tr>
+        <td>Local cache</td>
+        <td>
+            <DHButton Variant="Variant.Filled" Color="Color.Error" OnClick="@ClearLocalStorage" EndIcon="@Icons.Material.Filled.ContentPasteOff">Empty local storage</DHButton>
+        </td>
+    </tr>
+    <tr>
+        <td>User settings</td>
+        <td>
+            <DHButton Variant="Variant.Filled" Color="Color.Error" OnClick="@ClearUserSettings" EndIcon="@Icons.Material.Filled.CloudOff">Clear user settings</DHButton>
+        </td>
+    </tr>
+    </tbody>
+</MudSimpleTable>
+
+@code {
+    
+    private async Task ClearLocalStorage()
+    {
+        await _localStorage.ClearAsync();
+    }
+    
+    private async Task ClearUserSettings()
+    {
+        await _userSettingsService.ClearUserSettingsAsync();
+    }
+}

@@ -1,0 +1,73 @@
+@using Datahub.Application.Services.UserManagement
+@using Datahub.Core.Model.Achievements;
+
+@inject IUserSettingsService _userSettingsService
+@inject ILocalStorageService _localStorage
+@inject IPortalUserTelemetryService _telemetryService
+@inject NavigationManager NavManager
+@inject IJSRuntime _jsRuntime
+@inject ICultureService CultureService
+
+<DHButton HtmlTag="button" lang="@Language" focusable="true" translate="no" OnClick="() => ChangeLanguage(Language)" Size="@Size" @attributes="@InputAttributes">
+    <MudText>
+        @LanguageDisplay
+    </MudText>
+</DHButton>
+
+@code {
+    [Parameter]
+    public Size Size { get; set; } = Size.Medium;
+
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object> InputAttributes { get; set; }
+
+    private string Language => CultureService.IsFrench ? ICultureService.CanadaEnglish : ICultureService.CanadaFrench;
+    private string LanguageDisplay => CultureService.IsFrench ? "English" : "Français";
+
+    private static List<string> TranslatedPageRoutes = new() { 
+        PageRoutes.Home, PageRoutes.Home_FR,
+        PageRoutes.News, PageRoutes.News_FR,
+        PageRoutes.Explore, PageRoutes.Explore_FR,
+        PageRoutes.Help, PageRoutes.Help_FR,
+        PageRoutes.HelpWithParam, PageRoutes.HelpWithParam_FR,
+        PageRoutes.TermsAndConditions, PageRoutes.TermsAndConditions_FR,
+        PageRoutes.AccountDefault, PageRoutes.AccountDefault_FR,       
+        "/login", "/connexion", "/register", "/inscription", "/locked", "/verrouille"
+    };
+    private static List<string> UnauthenticatedPages = new() { "/login", "/register", "/terms-and-conditions", "account-setup", "/locked" };
+    private static List<string> UnauthenticatedPages_Fr = new() { "/connexion", "/inscription", "/conditions-generales", "configuration-de-compte", "/verrouille" };
+
+    private async Task ChangeLanguage(string language)
+    {
+        // if in an unauthenticated page, user still needs to be able to translate languages
+        var currentPage = NavManager.Uri;
+        if (UnauthenticatedPages.Any(x => currentPage.Contains(x)) || UnauthenticatedPages_Fr.Any(x => currentPage.Contains(x)))
+        {
+            await CultureService.SetLanguageInLocalStorageAsync(language);
+        }
+        else
+        {
+            await CultureService.SetLanguageInLocalStorageAsync(language);
+            await _userSettingsService.SaveUserLanguage(language);
+            await _telemetryService.LogTelemetryEvent(TelemetryEvents.UserToggleCulture);
+        }
+
+        foreach (string route in TranslatedPageRoutes)
+        {
+            if (currentPage.Contains(route))
+            {
+                var newRoute = Localizer[$"{route}-lt"];
+                await _userSettingsService.SetLanguage(language, newRoute);
+                return;
+            }
+        }
+
+        await _userSettingsService.SetLanguage(language);
+    }
+
+    public async Task ToggleLanguage()
+    {
+        await ChangeLanguage(Language);
+	}
+
+}

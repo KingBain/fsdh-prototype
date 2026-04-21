@@ -1,0 +1,193 @@
+@using Datahub.Application.Services
+@using Datahub.Application.Services.Metadata
+@using Datahub.Core.Model.Achievements
+@using Datahub.Core.Model.Users
+@using Datahub.Infrastructure.Extensions
+@using Datahub.Infrastructure.Queues.Messages
+@using Datahub.Shared.Configuration
+@using MassTransit
+@using Newtonsoft.Json
+@using static Datahub.Core.DevTools
+
+@layout BarebonesPublicLayout
+
+@inject ILogger<RegisterPage> _logger
+@inject IMetadataBrokerService _metadataBrokerService
+@inject IUserEnrollmentService _userEnrollmentService
+@inject IUserInformationService _userInformationService
+@inject IProjectUserManagementService _projectUserManagementService
+@inject ISendEndpointProvider _sendEndpointProvider
+@inject NavigationManager _navigationManager
+@inject ISnackbar _snackbar
+
+@page "/register"
+@page "/inscription"
+
+<PageTitle>@Localizer["Registration - Federal Science DataHub"]</PageTitle>
+
+<MudContainer MaxWidth=@MaxWidth.Medium>
+    <MudPaper Class="pt-12 px-12 mt-20">
+        <MudStack>
+            <MudGrid>
+                <MudItem xs="11">
+                    <MudImage Src=@Localizer["/img/canada-fip.svg"] Class="mb-4" Alt="Government of Canada Wordmark / Symbole de mot du gouvernement du Canada" Style="max-height: 1.5rem" />
+                </MudItem>
+                <MudItem xs="1">
+                    <LanguageToggle />
+                </MudItem>
+            </MudGrid>
+            <DHMainContentTitle Title="@Localizer["MainTitle"]" />
+        </MudStack>
+        <MudAlert Severity="Severity.Error" Dense="true" Class="my-2" Style="color: #0d1117" Variant="Variant.Outlined">
+            <MudText Typo="Typo.body1">
+                @Localizer["You do not have an active account on the Federal Science DataHub. Visit the links in the footer for more information about the platform. Contact us if you believe this is an error."]
+            </MudText>
+        </MudAlert>
+        <MudText Typo="Typo.body1">
+            <MudLink Href="@Localizer[PageRoutes.Home]" Typo="Typo.body1">
+                @Localizer["Return to previous page"]
+            </MudLink>
+        </MudText>
+        <DHFooter />
+    </MudPaper>
+</MudContainer>
+
+
+@code {
+    [Parameter] [SupplyParameterFromQuery] public string Email { get; set; }
+
+    [Parameter]
+    [SupplyParameterFromQuery(Name = "s")]
+    public string State { get; set; }
+
+    private string _email;
+    private string _emailFieldText { get; set; }
+    private string _comment;
+    private bool _success = true;
+    private bool _timedOut;
+    private bool _wasDeleted = false;
+    private bool _isRegistering;
+    private string[] _errors = { };
+    private MudForm _form;
+
+    private List<TopBarEnvironments> _environmentsToShowDisabledMessage = new List<TopBarEnvironments> { TopBarEnvironments.Development, TopBarEnvironments.Integration, TopBarEnvironments.ProofOfConcept, TopBarEnvironments.QualityControl, TopBarEnvironments.Production, TopBarEnvironments.ProductionProtected };
+    private List<TopBarEnvironments> _environmentsToAllowRegistration = new List<TopBarEnvironments> {  };
+
+    protected override void OnInitialized()
+    {
+        _emailFieldText = Localizer["Government of Canada Email"];
+        if (!string.IsNullOrEmpty(Email))
+        {
+            _email = Email;
+        }
+    }
+
+    private string EmailValidation(string email)
+    {
+        var valid = _userEnrollmentService.IsValidGcEmail(email);
+        _emailFieldText = valid ? Localizer["Government of Canada Email"] : Localizer["Government of Canada email"] + " - " + Localizer["Invalid Government of Canada email address"];
+        var validationString = valid ? null : Localizer["Invalid Government of Canada email address"];
+        return validationString;
+    }
+
+
+    internal async Task HandleValidSubmit()
+    {
+        _isRegistering = true;
+        await InvokeAsync(StateHasChanged);
+        var timeoutTask = Task.Delay(20000);
+        var registrationTask = Registration();
+
+        if (await Task.WhenAny(registrationTask, timeoutTask) == timeoutTask)
+        {
+            _logger.LogWarning("Registration for user timed out");
+            _timedOut = true;
+        }
+        else
+        {
+            _isRegistering = false;
+        }
+
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private async Task Registration()
+    {
+        await Task.Delay(3000);
+
+        var existingUser = await _userInformationService.GetUserByEmailAsync(_email);
+        if (existingUser != null)
+        {
+            _wasDeleted = existingUser.IsDeleted;
+        }
+
+        _logger.LogInformation("Saving registration details for user");
+        await _userEnrollmentService.SaveRegistrationDetails(_email, _comment);
+
+        _logger.LogInformation("Attempting to register user");
+        var userId = await _userEnrollmentService.SendUserDatahubPortalInvite(_email, null);
+
+        if (!string.IsNullOrWhiteSpace(userId))
+        {
+            if (_wasDeleted)
+            {
+                await _userInformationService.HandleDeletedEntraUserRegistration(_email, userId, existingUser!.Id);
+                var projectList = await _projectUserManagementService.GetProjectListForPortalUser(existingUser!.Id);
+                if (projectList.Count > 0)
+                {
+                    foreach (var projectAcronym in projectList)
+                    {
+                        var projectLead = _projectUserManagementService.GetProjectLeadAsync(projectAcronym);
+                        if (projectLead.Result != null)
+                        {
+                            await NotifyWorkspaceAdmin(projectLead.Result?.PortalUser, projectAcronym, existingUser.DisplayName);
+                        }
+                        else
+                        {
+                            _logger.LogInformation("Could not find workspace lead for workspace {ProjectAcronym}", projectAcronym);
+                        }
+
+                        await _projectUserManagementService.RunWorkspaceSync(projectAcronym);
+                    }
+                }
+            }
+
+            _logger.LogInformation("User has been registered");
+            _snackbar.Add(Localizer["Registration successful! Please log in to continue"], Severity.Success);
+            _navigationManager.NavigateTo(Localizer["/login"]);
+        }
+        else
+        {
+            _logger.LogWarning("User could not be registered");
+            _timedOut = true;
+        }
+    }
+
+    private async Task NotifyWorkspaceAdmin(PortalUser workspaceLead, string projectAcronym, string userName)
+    {
+        var parameters = new Dictionary<string, string>
+        {
+            { "WorkspaceAcronym", projectAcronym },
+            { "LeadName", workspaceLead.DisplayName },
+            { "UserName", userName }
+        };
+
+        var request = new EmailRequestMessage
+        {
+            To = [workspaceLead.Email],
+            Subject = "FSDH Account Reactivation Notification",
+            Body = JsonConvert.SerializeObject(parameters)
+        };
+
+        try
+        {
+            await _sendEndpointProvider.SendDatahubServiceBusMessage(
+                QueueConstants.EmailNotificationQueueName, request);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("Sending email notification to workspace lead {LeadName} failed for user {UserName}. Error: {Ex}", workspaceLead.DisplayName, userName, ex.Message);
+        }
+    }
+
+}

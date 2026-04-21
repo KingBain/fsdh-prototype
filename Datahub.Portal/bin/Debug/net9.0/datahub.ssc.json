@@ -1,0 +1,24 @@
+{
+  "WikiURL": "https://raw.githubusercontent.com/ssc-sp/datahub-docs/main/",
+  "GlobalSearch": "disabled",
+  "DataCatalog": "disabled",
+  "PortalRunAsManagedIdentity": "disabled",
+  "DataProjectsConfiguration": {
+    "IoT": false,
+    "WebForms": false,
+    "EnableGitModuleRepository": true,
+    "PowerBI": false,
+    "PublicSharing": false,
+    "DataEntry": false
+  },
+  "WikiPageTitles": {
+    "AzCopyStorageAccess": {
+      "en": "English/Use-AzCopy-to-Interact-with-Azure-Storage-Account",
+      "fr": "Francais/Use-AzCopy-to-Interact-with-Azure-Storage-Account"
+    },
+    "DatabricksStorageAccess": {
+      "en": "English/Access-your-storage-account-in-Databricks",
+      "fr": "Francais/Access-your-storage-account-in-Databricks"
+    }
+  }
+}

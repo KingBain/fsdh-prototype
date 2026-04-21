@@ -1,0 +1,18 @@
+﻿<MudText Typo="Typo.h2">@Localizer["Add Users to Database"]</MudText>
+<MudText Typo="Typo.body1">
+    @Localizer["The default postgres user should only be used for administrative tasks. You should create a new user for users in your workspace."]
+</MudText>
+<MudStack>
+    <DHButton Variant="Variant.Filled" Href=@Localizer[PageRoutes.ResourceSite_AddUserPostgres] Color="Color.Primary" style="width: fit-content;" Target="_blank">
+        <MudText>@Localizer["Learn how to create a user in PostgreSQL"]</MudText>
+    </DHButton>
+</MudStack>
+
+@code {
+    private bool _expanded = false;
+
+    private void OnExpandCollapseClick()
+    {
+        _expanded = !_expanded;
+    }
+}

@@ -1,0 +1,170 @@
+@inherits LayoutComponentBase
+
+@using Datahub.Application.Services
+@using Datahub.Application.Services.UserManagement
+@using Microsoft.Identity.Web
+@using Datahub.Portal.Views.Dialogs
+@using System.Runtime.ExceptionServices
+@using System.Security.Claims
+
+@inject NavigationManager _navigationManager
+@inject IDatahubAuditingService _auditingService
+@inject IUserCircuitCounterService _userCircuitCounterService
+@inject MicrosoftIdentityConsentAndConditionalAccessHandler _consentHandler
+@inject DatahubPortalConfiguration _portalConfiguration
+@inject IUserInformationService _userInformationService
+@inject IUserSettingsService _userSettingsService
+@inject IDialogService _dialogService
+@inject ICultureService CultureService
+@inject ILogger<MainLayout> _logger
+
+
+<PageTitle>@Localizer["Federal Science DataHub"]</PageTitle>
+
+@if (_isLoaded)
+{
+	<CascadingValue Value="@DatahubTheme.DefaultTheme">
+		<AuthorizeView>
+			<Authorized>
+				@if (_isSessionEnabled == true)
+				{
+					@Body
+				}
+				@if (_isSessionEnabled == false)
+				{
+					<TooManyTabs />
+				}
+			</Authorized>
+			<NotAuthorized>
+				<div>@Localizer["Connection lost, please refresh this page"]</div>
+			</NotAuthorized>
+		</AuthorizeView>
+	</CascadingValue>
+}
+else
+{
+	<MudContainer MaxWidth="MaxWidth.Large" Class="mt-16">
+		<i class="fa-solid fa-house" style="opacity:0; position: absolute; top: 0; left: 0;"></i>
+		<i class="fa-duotone fa-house" style="opacity:0; position: absolute; top: 0; left: 0;"></i>
+		<DHLoadingInitializer Message="@Localizer[GetLoadMessage()]" />
+	</MudContainer>
+	<MudDialogProvider />
+}
+
+@code
+{
+	private bool? _isSessionEnabled;
+	private bool _isLoaded = false;
+	private const string LogoutUrl = PageRoutes.Logout;
+	private bool _isUserValid = false;
+
+	private static readonly string[] LOAD_MESSAGES = new[] { "Recomputing DNA sequence", "Identifying the pathogen", "Recalculating fungal genome", "Predicting soil mapping", "Analyzing forest coverage" };
+
+	private static string GetLoadMessage()
+	{
+		return LOAD_MESSAGES[new Random().Next(LOAD_MESSAGES.Length)];
+	}
+
+	private ClaimsPrincipal? _user;
+
+	protected override async Task OnInitializedAsync()
+	{
+		try
+		{
+			var user = await _userInformationService.GetAuthenticatedUser(true);
+			if (user == _user)
+			{
+				// if the user is the same as before, no need to re-check authentication/authorization
+				return;
+			}
+			_user = user;
+			if (!user.Identity?.IsAuthenticated ?? true)
+			{
+				var returnUrl = _navigationManager.ToBaseRelativePath(_navigationManager.Uri);
+				_navigationManager.NavigateTo($"/login?redirectUri={returnUrl}", forceLoad: true);
+				return;
+			}
+			if (!await _userInformationService.IsAuthorized())
+			{
+				_navigationManager.NavigateTo(Localizer[PageRoutes.AccessDenied], true);
+				return;
+			}
+
+			_isUserValid = await _userSettingsService.HasUserAcceptedTAC();
+			_isSessionEnabled = await _userCircuitCounterService.IsSessionEnabled();
+			await _auditingService.TrackEvent("Login");
+		}
+		catch (Exception ex)
+		{
+			var exceptionSrc = ExceptionDispatchInfo.Capture(ex);
+			try
+			{
+				_consentHandler.HandleException(ex);
+			}
+			catch (Exception)
+			{
+				// rethrow the original exception if consent handling fails
+				exceptionSrc.Throw();
+			}
+		}
+
+		// register and or update authenticated portal user
+		if (await _userInformationService.IsEntraUser())
+		{
+			await _userInformationService.RegisterAuthenticatedEntraUser();
+		}
+		await _userSettingsService.RegisterUserSettingsAsync();
+
+		_isLoaded = true;
+	}
+
+	protected override async Task OnAfterRenderAsync(bool firstRender)
+	{
+		await base.OnAfterRenderAsync(firstRender);
+
+		if (firstRender)
+		{
+
+			await UpdateUserLanguageSetting();
+
+			_isUserValid = await _userSettingsService.HasUserAcceptedTAC();
+			if (!_isUserValid)
+			{
+				await _userSettingsService.RegisterUserTAC();
+				_isUserValid = true;
+				StateHasChanged();
+			}
+
+		}
+	}
+
+	private async Task UpdateUserLanguageSetting()
+	{
+		try
+		{
+			// order of language: 1) current localization 2) local settings 3) user settings
+			var userLanguageSetting = await _userSettingsService.GetUserLanguage();
+			var finalUserLanguage = await CultureService.GetLanguageFromLocalStorageAsync();
+			var currentLocalization = Thread.CurrentThread.CurrentCulture.Name;
+
+			if (string.IsNullOrWhiteSpace(finalUserLanguage))
+			{
+				finalUserLanguage = currentLocalization;
+			}
+
+			if (!string.Equals(currentLocalization, finalUserLanguage, StringComparison.OrdinalIgnoreCase))
+			{
+				finalUserLanguage = currentLocalization;
+				await CultureService.SetLanguageInLocalStorageAsync(finalUserLanguage);
+			}
+			if (!string.Equals(userLanguageSetting, finalUserLanguage, StringComparison.OrdinalIgnoreCase))
+			{
+				await _userSettingsService.SaveUserLanguage(finalUserLanguage);
+			}
+		}
+		catch (JSDisconnectedException)
+		{
+			//ignore
+		}
+	}
+}

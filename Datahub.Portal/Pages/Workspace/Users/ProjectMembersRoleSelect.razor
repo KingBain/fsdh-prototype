@@ -1,0 +1,97 @@
+@using Datahub.Core.Model.Projects
+@using MudBlazor.Utilities
+
+@inject IJSRuntime _jsRuntime;
+@inject Microsoft.FeatureManagement.IFeatureManagerSnapshot _featureManager
+
+<!--suppress CssUnresolvedCustomProperty -->
+<MudMenu AnchorOrigin="Origin.BottomLeft" TransformOrigin="Origin.TopLeft">
+    <ActivatorContent>
+        <MudStack Row AlignItems="AlignItems.Center" Style="@_outlineStyle" Class="py-2 px-4">
+            <MudText Typo="Typo.body1">@Localizer[_currentRole?.Name ?? string.Empty]</MudText>
+            <DHIcon Icon="@Icons.Material.Filled.ArrowDropDown"/>
+        </MudStack>
+    </ActivatorContent>
+    <ChildContent>
+        <DatahubAuthView AuthLevel="DatahubAuthView.AuthLevels.DatahubSupport">
+            <Authorized>
+                @{
+                    var role = _projectRoles.First(r => r.Id == (int)Project_Role.RoleNames.WorkspaceLead);
+                }
+                <MudMenuItem OnClick="@(() => RoleChanged(role.Id))" Style="max-width: 400px;">
+                    <MudText Typo="Typo.h6">@Localizer[role.Name]</MudText>
+                    <MudText>@Localizer[role.Description]</MudText>
+                </MudMenuItem>
+            </Authorized>
+            <NotAuthorized>
+                @{
+                    var role = _projectRoles.First(r => r.Id == (int)Project_Role.RoleNames.WorkspaceLead);
+                }
+                <MudMenuItem Disabled Style="max-width: 400px;">
+                    <MudAlert Style="margin-bottom: 12px;" Dense Severity="Severity.Info">@Localizer["Please contact the Datahub Admins to change Workspace Leads."]</MudAlert>
+                    <MudText Typo="Typo.h6">@Localizer[role.Name]</MudText>
+                    <MudText>@Localizer[role.Description]</MudText>
+                </MudMenuItem>
+            </NotAuthorized>
+        </DatahubAuthView>
+        <MudDivider />
+        @foreach (var role in _projectRoles.Where(r => r.Id is not ((int)Project_Role.RoleNames.Removed or (int)Project_Role.RoleNames.WorkspaceLead or (int)Project_Role.RoleNames.DisabledUser)))
+        {
+            <MudMenuItem OnClick="@(() => RoleChanged(role.Id))" Style="max-width: 400px;">
+                <MudText Typo="Typo.h6">@Localizer[role.Name]</MudText>
+                <MudText>@Localizer[role.Description]</MudText>
+            </MudMenuItem>
+        }
+        <MudDivider />
+        <MudMenuItem OnClick="@(() => RoleChanged(_removeRole.Id))" Style="max-width: 400px;">
+            <MudText Color="Color.Error" Typo="Typo.h6">@Localizer[_removeRole.Name]</MudText>
+            <MudText Color="Color.Error">@Localizer[_removeRole.Description]</MudText>
+        </MudMenuItem>
+    </ChildContent>
+
+</MudMenu>
+
+@code {
+	[Parameter] public int InitialValue { get; set; }
+	[Parameter] public EventCallback<int> OnRoleChanged { get; set; }
+
+	public IEnumerable<Project_Role> ProjectRoles => _projectRoles;
+
+	private Project_Role? _currentRole;
+	private IEnumerable<Project_Role> _projectRoles = null!;
+	private Project_Role _removeRole;
+
+	private string _outlineStyle = new StyleBuilder()
+		.AddStyle("border", "1px solid var(--mud-palette-table-lines)")
+		.AddStyle("border-radius", "var(--mud-default-borderradius)")
+		.Build();
+
+	protected override async Task OnParametersSetAsync()
+	{
+		var gccfEnabled = await _featureManager.IsEnabledAsync(Features.GCCF_Feature);
+		_projectRoles = Project_Role.GetAll().ToList();
+		// do not show external roles if gccf feature is disabled
+		//TODO: Check if PB workspace
+		if (!gccfEnabled)
+		{
+			_projectRoles = _projectRoles.Where(r => !r.IsExternalRole).ToList();
+		}
+		_removeRole = _projectRoles.First(r => r.Id == (int)Project_Role.RoleNames.Removed);
+        _currentRole = _projectRoles.FirstOrDefault(r => r.Id == InitialValue);
+    }
+
+    public async Task RoleChanged(int newRoleId)
+    {
+        if (newRoleId == (int)Project_Role.RoleNames.Removed)
+        {
+            var message = Localizer["Are you sure you want to remove this user from the workspace?"].Value;
+            var confirmed = await _jsRuntime.InvokeAsync<bool>("confirm", message);
+            if (!confirmed)
+            {
+                return;
+            }
+        }
+
+        await OnRoleChanged.InvokeAsync(newRoleId);
+    }
+}

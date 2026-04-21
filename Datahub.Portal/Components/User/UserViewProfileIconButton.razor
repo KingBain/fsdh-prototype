@@ -1,0 +1,15 @@
+@using Datahub.Core.Extensions
+@using Datahub.Core.Model.Users
+
+    <DHButton title="@Localizer["View profile"]" Underline Class="align-self-end" Href="@_href" aria-label="view profile" StartIcon="@Icons.Material.Outlined.Person" >
+        <MudText>@Localizer["Profile"]</MudText>
+    </DHButton>
+
+@code {
+
+    [Parameter]
+    public PortalUser ViewedUser { get; set; } = null!;
+
+    private string _href => $"/{Localizer[PageRoutes.AccountPrefix]}/?u={ViewedUser.UserProfileLink()}";
+
+}

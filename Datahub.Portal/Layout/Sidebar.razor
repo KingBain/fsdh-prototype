@@ -1,0 +1,131 @@
+@*Sidebar.razor*@
+@using Datahub.Application.Services.UserManagement
+@using Datahub.Core.Data
+@using Datahub.Core.Services.Docs;
+@using Datahub.Core.Utils
+@using Datahub.Infrastructure.Services.Security
+@using MudBlazor.Utilities
+
+@inject IServiceAuthManager ServiceAuthManager
+@inject IUserInformationService _userInformationService
+@inject IConfiguration Configuration
+@inject DocumentationService documentationService
+@inject ILocalStorageService localStorage
+@inject ILogger<Sidebar> logger
+
+<MudNavMenu Bordered>
+    <div class="sr-only" id="nav">
+        <h3>@Localizer["Navigation menu"]</h3>
+    </div>
+    @foreach (var (href, icon, label,_, showDotBadge) in GetLinks().Where(t => t.enabled))
+    {
+        <div class="mud-nav-item">
+            <NavLink class="mud-nav-link mud-ripple px-0 py-4 justify-center" style="@GetNavStyle(icon)" href="@href" Match="NavLinkMatch.Prefix" ActiveClass="active">
+                <MudBadge Dot=true Color="@Color.Primary" Visible="@(showDotBadge())">
+                    <MudStack AlignItems="AlignItems.Center" Spacing="1">
+                        <DHIcon Icon="@icon.Name" />
+                        <MudText Typo="Typo.body2" Style="@_navTextStyle">
+                            @Localizer[label]
+                        </MudText>
+                    </MudStack>
+                </MudBadge>
+            </NavLink>
+        </div>
+    }
+    @foreach (var (href, icon, label, roles) in _authorizedLinks)
+    {
+        <AuthorizeView Roles="@string.Join(',', roles)">
+            <div class="mud-nav-item">
+                <NavLink class="mud-nav-link mud-ripple px-0 py-4 justify-center" href="@href" Match="NavLinkMatch.Prefix" ActiveClass="active">
+                    <MudStack AlignItems="AlignItems.Center">
+                        <DHIcon Icon="@icon.Name" />
+                        <MudText Typo="Typo.body2" Style="@_navTextStyle">
+                            @Localizer[label]
+                        </MudText>
+                    </MudStack>
+                </NavLink>
+            </div>
+        </AuthorizeView>
+    }
+</MudNavMenu>
+
+@code {
+
+    private bool _userHasInitiatives;
+    private bool _isDatahubAdmin;
+    private string _navTextStyle;
+    private bool _resourceBadge;
+
+    private List<(string Href, Icon Icon, string Label, List<string> Roles)> _authorizedLinks = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+        var user = await _userInformationService.GetCurrentGraphUserAsync();
+        _authorizedLinks = GetAuthorizedLinks(user.Id);
+        _resourceBadge = await ShowResourcesBadge();
+        _userHasInitiatives = !(await _userInformationService.IsUserWithoutWorkspaces());
+        _isDatahubAdmin = await _userInformationService.IsUserDatahubAdmin();
+
+        _navTextStyle = new StyleBuilder()
+            .AddStyle("font-size", ".5rem")
+            .AddStyle("text-transform", "uppercase")
+            .Build();
+    }
+
+    private string GetNavStyle(Icon icon)
+    {
+        return new StyleBuilder()
+            .AddStyle("--mud-palette-primary", icon.HexColor)
+            .Build();
+    }
+
+    private async Task<bool> ShowResourcesBadge()
+    {
+        try {
+            var lastCommitGit = await documentationService.LastRepoCommitTs();
+            var lastCommitUser = await localStorage.GetItemAsync<DateTime?>(DocumentationService.Sidebar) ?? DateTime.MinValue;
+            return lastCommitGit.HasValue && lastCommitGit.Value > lastCommitUser;
+        } 
+        catch (Exception ex)
+        {
+            logger.LogWarning($"Error checking resource badge", ex);
+            return false;
+        }
+    }
+
+    private List<(string Href, Icon Icon, string Label, bool enabled, Func<bool> showDotBadge)> GetLinks()
+    {
+        return new()
+        {
+            ("/home", Icon.HOME, "SIDEBAR.Home", true, () => false),
+            ("/resources", Icon.RESOURCES, "SIDEBAR.Learn", true, () => _resourceBadge),
+            ("/news", Icon.NEWS, "News", true, () => false),
+            ("/w", Icon.PROJECT, "SIDEBAR.Explore", true, () => false),
+            ("/tools", Icon.TOOLS, "SIDEBAR.Tools", _isDatahubAdmin, () => false),
+            ("/profile", Icon.PROFILE, "My Profile", true, () => false),
+            //("/data", Icon.STORAGE, "SIDEBAR.Storage"),
+            //("/datasets", Icon.DATASETS, "SIDEBAR.Datasets"),
+            //("/powerbi", Icon.POWERBI, "SIDEBAR.PowerBI"),
+        };
+    }
+
+    private List<(string Href, Icon Icon, string Label, List<string> Roles)> GetAuthorizedLinks(string userId = null)
+    {
+        if (_isDatahubAdmin)
+        {
+            return new()
+            {
+                ("/administration", Icon.ADMIN, "SIDEBAR.Admin", new List<string>() {RoleConstants.DATAHUB_ROLE_ADMIN})
+            };
+        }
+
+        return new List<(string, Icon, string, List<string>)>();
+    }
+
+    private bool IsFeatureEnabled(string name)
+    {
+        return Configuration[name] == "enabled";
+    }
+}

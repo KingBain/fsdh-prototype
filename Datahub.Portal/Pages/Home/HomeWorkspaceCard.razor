@@ -1,0 +1,351 @@
+@using Datahub.Application.Services
+@using Datahub.Application.Services.Notification
+@using Datahub.Core.Model.Projects
+@using Datahub.Core.Services.Projects
+@using Datahub.Metadata.Model
+@using Datahub.Portal.Components.Dialogs
+@using Datahub.Shared.Entities
+@using Datahub.Shared
+@using Datahub.Core.Data
+@using System.Security.Claims
+@using Microsoft.Extensions.Caching.Memory
+@using Microsoft.AspNetCore.Components.Authorization
+@using MudBlazor.Utilities
+@using Datahub.Portal.Pages.Explore
+
+@inject ICultureService CultureService
+@inject IDialogService Dialog
+@inject IProjectUserManagementService ProjectUserManagementService
+@inject IResourceMessagingService ResourceMessagingService
+@inject IRequestManagementService RequestManagementService
+@inject IWorkspaceVersionService WorkspaceVersionService
+@inject IUserInformationService UserInformationService
+@inject ISnackbar Snackbar
+@inject IMemoryCache MemoryCache
+
+
+<MudPaper Elevation="0" Outlined Style=@PaperStyle>
+    <MudStack Style=@MainStackStyle>
+        <MudStack Row>
+            <MudText Style="@WorkspaceNameStyle">
+                <strong>
+                    @Workspace.Project_Name
+                </strong>
+                (@Workspace.Project_Acronym_CD)
+            </MudText>
+            <FeaturedProjectToggle Project="@Workspace" />
+            <MudSpacer />
+            <MudChip T="string" Color="@GetSecurityColor(Workspace.Data_Sensitivity)" Size="Size.Small" title="@Localizer[GetSecurityTitle(Workspace.Data_Sensitivity)]">
+                <DHIcon Icon=@(Workspace.Data_Sensitivity == ClassificationType.Unclassified ? Icons.Material.Outlined.LockOpen : Icons.Material.Outlined.Lock)/>
+                <MudText Typo="Typo.body1">
+                  <strong>
+                    @Localizer[(Workspace.Data_Sensitivity.ToSpacedString())]
+                    </strong>
+                </MudText>
+                <span class="sr-only">@Localizer[GetSecurityTitle(Workspace.Data_Sensitivity)]</span>
+            </MudChip>
+        </MudStack>
+        <MudStack Row>
+            <ProjectPreviewCardIconDetails NumberOfUsers=@NumberOfUsers
+                                           NumberOfRepositories=@NumberOfRepositories />
+            <MudSpacer />
+        </MudStack>
+        @if (!string.IsNullOrWhiteSpace(Workspace.ProjectDescription))
+        {
+            <div style=@ProjectDescriptionContainerStyle>
+                <MudText title="@Workspace.ProjectDescription" Style=@ProjectDescriptionStyle>
+                    @Workspace.ProjectDescription
+                </MudText>
+            </div>
+        }
+        else
+        {
+            <MudText Style=@ItalicTextStyle>
+                @Localizer["No description available."]
+            </MudText>
+        }
+        <MudSpacer />
+        <nav>
+            <ul style=@CardActionListStyle>
+				@foreach (var tool in IsEntraUser ? EntraToolActions : ExternalToolActions)
+                {
+                    @if (ToolExists(tool))
+                    {
+                        <li style=@CardActionStyle>
+                            <DHButton Underline NoWrap FullWidth
+                                      Color="Color.Primary"
+                                      Href=@ToolLink(tool)
+                                      EndIcon=@Icons.Material.Filled.KeyboardDoubleArrowRight>
+                                @ToolLabel(tool)
+                            </DHButton>
+                        </li>
+                    }
+                }
+                @if (ShowCost && CostBarColor() != Color.Primary)
+                {
+                    <li style=@CardActionStyle>
+                        <DHButton Underline NoWrap FullWidth
+                                  Color="Color.Primary"
+                                  Href="@($"/{PageRoutes.WorkspacePrefix}/{Workspace.Project_Acronym_CD}/{WorkspaceSidebar.SectionViews.Reports}")"
+                                  EndIcon="@Icons.Material.Filled.KeyboardDoubleArrowRight">
+                            @Localizer["Reports"]
+                        </DHButton>
+                    </li>
+                }
+                <li style=@CardMainActionStyle>
+                    <DHButton Underline NoWrap FullWidth
+                              Color="Color.Primary"
+                              Variant="Variant.Outlined"
+                              Href="@($"/{PageRoutes.WorkspacePrefix}/{Workspace?.Project_Acronym_CD}")"
+                              EndIcon="@Icons.Material.Filled.KeyboardDoubleArrowRight">
+                        @Localizer["View workspace"]
+                    </DHButton>
+                </li>
+            </ul>
+        </nav>
+    </MudStack>
+    @if (ShowCost)
+    {
+        <MudProgressLinear Color=@CostBarColor()
+                           Size="Size.Large"
+                           Style=@CostBarStyle
+                           Value=@((double)WorkspaceUsage.Item1)
+                           Max=@((double)WorkspaceUsage.Item2)
+                           title=@CostBarTitle()>
+            <ProjectPreviewCardIconDetails WorkspaceUsage=@WorkspaceUsage />
+        </MudProgressLinear>
+    }
+</MudPaper>
+
+@code {
+
+    [CascadingParameter]
+    private Task<AuthenticationState> AuthenticationStateTask { get; set; } = null!;
+
+	// Params
+	[Parameter] public required Datahub_Project Workspace { get; set; }
+	[Parameter] public bool ShowCost { get; set; } = false;
+	[Parameter] public string? LatestVersion { get; set; }
+	[Parameter] public string? UserEmail { get; set; }
+	[Parameter] public bool IsLead { get; set; } = false;
+
+	// Styles
+	private string PaperStyle => new StyleBuilder()
+		.AddStyle("display", "flex")
+		.AddStyle("flex-direction", "column")
+		.AddStyle("flex-grow", "1")
+		.AddStyle("min-width", "385px")
+		.AddStyle("min-height", "250px")
+		.Build();
+
+	private string CostBarStyle => new StyleBuilder()
+		.AddStyle("height", "35px")
+		.AddStyle("margin-left", "0")
+		.AddStyle("margin-right", "0")
+		.AddStyle("margin-bottom", "0")
+		.Build();
+
+	private string MainStackStyle => new StyleBuilder()
+		.AddStyle("padding", "8px 16px 16px 16px")
+		.AddStyle("width", "100%")
+		.AddStyle("height", "100%")
+		.Build();
+
+	private string WorkspaceNameStyle => new StyleBuilder()
+		.AddStyle("padding-top", "6px")
+		.Build();
+
+	private string ContainerStyle => new StyleBuilder()
+		.AddStyle("flex-grow", "1")
+		.AddStyle("width", "100%")
+		.AddStyle("height", "100%")
+		.Build();
+
+	private string CardActionListStyle => new StyleBuilder()
+		.AddStyle("display", "flex")
+		.AddStyle("flex-wrap", "wrap")
+		.AddStyle("list-style-type", "none")
+		.AddStyle("row-gap", "5px")
+		.AddStyle("justify-content", "space-evenly")
+		.AddStyle("align-items", "center")
+		.Build();
+
+	private string CardActionStyle => new StyleBuilder()
+		.AddStyle("width", "150px")
+		.Build();
+
+	private string CardMainActionStyle => new StyleBuilder()
+		.AddStyle("width", "100%")
+		.Build();
+
+	private string ItalicTextStyle => new StyleBuilder()
+		.AddStyle("font-style", "italic")
+		.Build();
+
+	private string ProjectDescriptionContainerStyle => new StyleBuilder()
+		.AddStyle("overflow", "hidden")
+		.Build();
+
+	private string ProjectDescriptionStyle => new StyleBuilder()
+		.AddStyle("display", "-webkit-box")
+		.AddStyle("-webkit-line-clamp", "5")
+		.AddStyle("-webkit-box-orient", "vertical")
+		.AddStyle("overflow", "hidden")
+		.Build();
+
+	// Display state
+	private int NumberOfUsers;
+	private bool IsEntraUser;
+    private ClaimsPrincipal? _authenticatedUser;
+	private int NumberOfRepositories => Workspace?.Repositories?.Count ?? 0;
+	private static List<string> EntraToolActions => [TerraformTemplate.AzureStorageBlob, TerraformTemplate.AzureDatabricks, TerraformTemplate.AzurePostgres, TerraformTemplate.AzureAppService];
+	private static List<string> ExternalToolActions => [TerraformTemplate.AzureStorageBlob, TerraformTemplate.AzureAppService];
+	private Tuple<decimal, decimal> WorkspaceUsage => ShowCost ? new Tuple<decimal, decimal>(Workspace.Credits == null ? 0 : (decimal)Workspace.Credits.Current, Workspace.Project_Budget ?? 100) : null;
+
+	protected override async Task OnParametersSetAsync()
+	{
+		UpdateResourceStatusesFromHealthChecks();
+		var users = await ProjectUserManagementService.GetProjectUsersAsync(Workspace?.Project_Acronym_CD);
+
+		NumberOfUsers = users?.Count(x => x.Role?.Id != (int)Project_Role.RoleNames.Removed) ?? 0;
+	}
+
+	protected override async Task OnInitializedAsync()
+	{
+        var authState = await AuthenticationStateTask;
+        _authenticatedUser = authState.User;
+
+		IsEntraUser = await UserInformationService.IsEntraUser();
+		if (!IsEntraUser)
+		{
+			ShowCost = false;
+		}
+	}
+
+    private void UpdateResourceStatusesFromHealthChecks()
+    {
+        if (MemoryCache.TryGetValue("InfrastructureHealthChecks", out List<InfrastructureHealthCheck> healthChecks))
+        {
+            foreach (var resource in Workspace.Resources)
+            {
+                if (resource.Status == null)
+                {
+                    var serviceType = resource.ResourceType;
+                    var health = healthChecks.FirstOrDefault(h =>
+                        h.Group == Workspace.Project_Acronym_CD &&
+                        TerraformTemplate.MapHealthResourceTypeToTemplateConstant(h.ResourceType) == serviceType);
+
+                    if (health != null
+                        && health.Status != InfrastructureHealthStatus.NotProvisioned
+                        && health.Status != InfrastructureHealthStatus.Undefined
+                    )
+                    {
+                        resource.Status = TerraformStatus.Completed;
+                    }
+                }
+            }
+        }
+    }
+
+    // Utils
+    private Color CostBarColor()
+    {
+        return (WorkspaceUsage.Item1 / WorkspaceUsage.Item2 * 100) switch
+        {
+            >= 90 and < 100 => Color.Warning,
+            >= 100 => Color.Error,
+            _ => Color.Primary
+        };
+    }
+
+    private string CostBarTitle()
+    {
+        var defaultTitle = @Localizer["{0:C2} spent of {1:C2} budget for workspace {2}.", WorkspaceUsage.Item1, WorkspaceUsage.Item2, Workspace.Project_Acronym_CD];
+        return (WorkspaceUsage.Item1 / WorkspaceUsage.Item2 * 100) switch
+        {
+            >= 90 and < 100 => defaultTitle + " " + Localizer["Warning: You are close to reaching your budget."],
+            >= 100 => defaultTitle + " " + Localizer["Error: You have reached your budget."],
+            _ => defaultTitle
+        };
+    }
+
+
+    private bool ToolExists(string toolName)
+    {
+        return Workspace.Resources.Any(x => x.ResourceType == TerraformTemplate.GetTerraformServiceType(toolName) && x.Status == TerraformStatus.Completed)
+            && UserCanAccessTool(toolName);
+    }
+
+    private bool UserCanAccessTool(string toolName)
+    {
+        if (IsEntraUser)
+        {
+            return true;
+        }
+
+        if (_authenticatedUser is null || string.IsNullOrWhiteSpace(Workspace?.Project_Acronym_CD))
+        {
+            return false;
+        }
+
+        var projectAcronym = Workspace.Project_Acronym_CD;
+        return toolName switch
+        {
+            TerraformTemplate.AzureStorageBlob => _authenticatedUser.IsInRole($"{projectAcronym}{RoleConstants.STORAGE_SUFFIX}"),
+            TerraformTemplate.AzureAppService => _authenticatedUser.IsInRole($"{projectAcronym}{RoleConstants.WEBAPP_SUFFIX}"),
+            _ => false
+        };
+    }
+
+    private string ToolLabel(string toolName)
+    {
+        return toolName switch
+        {
+            TerraformTemplate.AzureStorageBlob => Localizer["Storage"],
+            TerraformTemplate.AzureDatabricks => Localizer["Databricks"],
+            TerraformTemplate.AzurePostgres => Localizer["Database"],
+            TerraformTemplate.AzureAppService => Localizer["Web app"],
+            _ => throw new ArgumentOutOfRangeException(nameof(toolName), toolName, null)
+        };
+    }
+
+    private string ToolLink(string toolName)
+    {
+        return toolName switch
+        {
+            TerraformTemplate.AzureStorageBlob => IsEntraUser
+                ? $"/{PageRoutes.WorkspacePrefix}/{Workspace?.Project_Acronym_CD}/{PageRoutes.WorkspaceStoragePrefix}"
+                : $"/{PageRoutes.WorkspacePrefix}/{Workspace?.Project_Acronym_CD}/{PageRoutes.WorkspaceExternalStoragePrefix}",
+            TerraformTemplate.AzureDatabricks => TerraformVariableExtraction.ExtractDatabricksUrl(Workspace, CultureService.IsFrench)!,
+            TerraformTemplate.AzurePostgres => $"/{PageRoutes.WorkspacePrefix}/{Workspace?.Project_Acronym_CD}/{PageRoutes.WorkspacePostgresPrefix}",
+            TerraformTemplate.AzureAppService => PageRoutes.WorkspaceWebAppShare.Replace("{WorkspaceAcronymParam}", Workspace!.Project_Acronym_CD),
+            _ => throw new ArgumentOutOfRangeException(nameof(toolName), toolName, null)
+        };
+    }
+
+    private Color GetSecurityColor(ClassificationType securityLevel)
+    {
+            switch (securityLevel)
+            {
+                case ClassificationType.ProtectedB:
+                    return Color.Tertiary;
+                case ClassificationType.ProtectedA:
+                    return Color.Secondary;
+                default:
+                    return Color.Info;
+            }
+    }
+
+    private string GetSecurityTitle(ClassificationType securityLevel)
+    {
+            switch (securityLevel)
+            {
+                case ClassificationType.ProtectedB:
+                        return "This workspace has Protected B security level";
+                case ClassificationType.ProtectedA:
+                    return "This workspace has Protected A security level";
+                default:
+                    return "This workspace has Unclassified security level";
+            }
+    }
+}

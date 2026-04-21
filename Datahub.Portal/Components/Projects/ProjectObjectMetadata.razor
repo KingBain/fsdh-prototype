@@ -1,0 +1,202 @@
+﻿@*ProjectObjectMetadata.razor*@
+
+@using Datahub.Core.Services.CatalogSearch;
+@using Datahub.Metadata.DTO
+@using Datahub.Metadata.Model
+@using Datahub.Core
+@using Datahub.Core.Model.Projects
+@using Datahub.Metadata.Utils;
+@inject NavigationManager NavigationManager
+@inject IDbContextFactory<DatahubProjectDBContext> ContextFactory
+@inject ILogger<ProjectObjectMetadata> Logger
+@inject ISnackbar _snackbar
+@inject IDatahubCatalogSearch _datahubCatalogSearch
+
+@if (_project is not null)
+{
+    <ObjectMetadataEditor @ref="_editor"
+                          @key=@ObjectId
+                          ObjectId=@ObjectId
+                          DefaultMetadataId=@DefaultMetadaId
+                          ProfileName=@ProfileName
+                          Location=@Location
+                          ProjectId=@_project.Project_ID
+                          ObjectType=@ObjectType
+                          SecurityClass=@GetProjectSensitivity()
+                          SaveButtonLabel=@GetSaveButtonLabel()
+                          OnSave=@HandleSave
+                          OnDiscard=@(AllowDiscard ? HandleNavigateToProject : null)
+                          OnNewMetadataCreated=@OnMetadataCreated
+                          OnExistingMetadataLoaded=@OnMetadataCreated
+                          UpdateCatalog="false"
+                          ValidateRequired=@ValidateRequired/>
+}
+
+@code {
+
+    [Parameter]
+    public string ProjectAcronym { get; set; }
+
+    [Parameter]
+    public string ProfileName { get; set; }
+
+    [Parameter]
+    public string ObjectId { get; set; }
+
+    [Parameter]
+    public MetadataObjectType ObjectType { get; set; }
+
+    [Parameter]
+    public string Location { get; set; }
+
+    [Parameter]
+    public bool UpdateCatalog { get; set; } = true;
+
+    [Parameter]
+    public string SaveButtonLabel { get; set; }
+
+    [Parameter]
+    public bool HideTranslationNote { get; set; }
+
+    [Parameter]
+    public bool NavigateToProject { get; set; } = true;
+
+    [Parameter]
+    public bool ValidateRequired { get; set; } = true;
+
+    [Parameter]
+    public EventCallback<Datahub_Project> OnProjectLoaded { get; set; }
+
+    [Parameter]
+    public EventCallback<Datahub_Project> OnMetadataSaved { get; set; }
+
+    [Parameter]
+    public bool AllowDiscard { get; set; } = true;
+
+    private string DefaultMetadaId => ObjectId != ProjectAcronym ? ProjectAcronym : null;
+
+    private Datahub_Project _project;
+    private ObjectMetadataEditor _editor;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            using var ctx = await ContextFactory.CreateDbContextAsync();
+            _project = await ctx.Projects.Include(p => p.Resources)
+                .AsSingleQuery()
+                .FirstOrDefaultAsync(p => p.Project_Acronym_CD == ProjectAcronym);
+            if (_project is not null)
+            {
+                await OnProjectLoaded.InvokeAsync(_project);
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Failed to load project: {ex.Message}");
+        }
+    }
+
+    private int? FindOrganizationLevelId(List<OrganizationLevel> levels, string value)
+    {
+        if (!string.IsNullOrEmpty(value))
+            return levels.FirstOrDefault(l => MatchesLevelWithName(l, value))?.Id;
+        return default;
+    }
+
+    private bool MatchesLevelWithName(OrganizationLevel level, string value)
+    {
+        var mode = StringComparison.OrdinalIgnoreCase;
+        return value.Equals(level.EnglishLabel, mode) ||
+               value.Equals(level.FrenchLabel, mode) ||
+               value.Equals(level.EnglishAcronym, mode) ||
+               value.Equals(level.FrenchAcronym, mode);
+    }
+
+    private void OnMetadataCreated()
+    {
+        if (string.IsNullOrEmpty(_editor.GetValue(FieldNames.name_en)))
+            _editor.SetValue(FieldNames.name_en, _project.Project_Name);
+
+        if (string.IsNullOrEmpty(_editor.GetValue(FieldNames.name_fr)))
+            _editor.SetValue(FieldNames.name_fr, _project.Project_Name_Fr);
+
+        if (string.IsNullOrEmpty(_editor.GetValue(FieldNames.acronym)))
+            _editor.SetValue(FieldNames.acronym, _project.Project_Acronym_CD);
+
+        if (string.IsNullOrEmpty(_editor.GetValue(FieldNames.description_en)))
+            _editor.SetValue(FieldNames.description_en, _project.Project_Summary_Desc);
+
+        if (string.IsNullOrEmpty(_editor.GetValue(FieldNames.description_fr)))
+            _editor.SetValue(FieldNames.description_fr, _project.Project_Summary_Desc_Fr);
+    }
+
+    private async Task HandleSave(FieldValueContainer values)
+    {
+        try
+        {
+            await OnMetadataSaved.InvokeAsync(_project);
+
+            // Metadata is "added" only when the profile required fields are entered
+            _project.MetadataAdded = _editor.ValidProfileFields();
+
+            var name_en = _editor.GetValue(FieldNames.name_en);
+            if (!string.IsNullOrEmpty(name_en))
+                _project.Project_Name = name_en;
+
+            var name_fr = _editor.GetValue(FieldNames.name_fr);
+            if (!string.IsNullOrEmpty(name_fr))
+                _project.Project_Name_Fr = name_fr;
+
+            var desc_en = _editor.GetValue(FieldNames.description_en);
+            if (!string.IsNullOrEmpty(desc_en))
+                _project.Project_Summary_Desc = desc_en;
+
+            var desc_fr = _editor.GetValue(FieldNames.description_fr);
+            if (!string.IsNullOrEmpty(desc_en))
+                _project.Project_Summary_Desc_Fr = desc_fr;
+
+            using var ctx = await ContextFactory.CreateDbContextAsync();
+            ctx.Attach(_project);
+            ctx.Projects.Update(_project);
+            await ctx.SaveChangesAsync();
+
+            var catalogObject = new Core.Model.Catalog.CatalogObject()
+            {
+                ObjectType = Core.Model.Catalog.CatalogObjectType.Workspace,
+                ObjectId = _project.Project_Acronym_CD,
+                Name_English = _project.Project_Name,
+                Name_French = _project.Project_Name_Fr,
+                Desc_English = _project.Project_Summary_Desc,
+                Desc_French = _project.Project_Summary_Desc_Fr
+            };
+            await _datahubCatalogSearch.AddCatalogObject(catalogObject);
+
+            _snackbar.Add(Localizer["Successfully saved project metadata."], Severity.Success);
+            HandleNavigateToProject();
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Internal error updating project object metadata.");
+        }
+    }
+
+    private void HandleNavigateToProject()
+    {
+        if (NavigateToProject)
+            NavigationManager.NavigateTo($"/w/{ProjectAcronym}");
+    }
+
+    private string GetProjectSensitivity()
+    {
+        var sensitivity = _project.Data_Sensitivity;
+        return sensitivity switch
+        {
+            ClassificationType.ProtectedB => SecurityClassification.ProtectedB,
+            ClassificationType.ProtectedA => SecurityClassification.ProtectedA,
+            _ => SecurityClassification.Unclassified
+        };
+    }
+
+    private string GetSaveButtonLabel() => SaveButtonLabel ?? Localizer["Save"];
+}

@@ -1,0 +1,97 @@
+@using System.Globalization
+@using MudBlazor.Utilities
+
+@inject NavigationManager _navManager
+
+
+<ScreenReaderNavigation/>
+
+<MudImage Src=@ImageSrc Alt=@Localizer["Government of Canada Wordmark"] Style="max-height: 25px; float:left!important;" />
+
+
+<MudText Typo="Typo.h2" Style="@_titleStyle">
+    @Localizer["MainTitle"]
+</MudText>
+
+
+<MudStack Row Style="margin-right: auto; width: 40%;" Justify="Justify.Center" role="group">
+    <h2 class="sr-only">@Localizer["Navigation menu"]</h2>
+    <nav role="navigation">
+        <ul style="list-style-type: none">
+            <MudHidden Breakpoint="Breakpoint.MdAndDown" Invert="true">
+                <li style="display: inline-block; margin-inline: 3px">
+                    <DHButton Variant="Variant.Text" Href=@Localizer[PageRoutes.Home] Size="Size.Small">
+                        <MudText>@Localizer["Home"]</MudText>
+                    </DHButton>
+                </li>
+                <li style="display: inline-block; margin-inline: 3px">
+                    <DHButton Variant="Variant.Text" Href=@Localizer[PageRoutes.News] Size="Size.Small">
+                        <MudText>@Localizer["Announcements"]</MudText>
+                    </DHButton>
+                </li>
+                <li style="display: inline-block; margin-inline: 3px">
+                    <DHButton Variant="Variant.Text" Href=@Localizer[@PageRoutes.ResourceSite] Size="Size.Small" Target="_blank">
+                        <MudText>@Localizer["Resources"]</MudText>
+                    </DHButton>
+                </li>
+                <li style="display: inline-block; margin-inline: 3px">
+                    <DHButton Variant="Variant.Text" Href=@Localizer[@PageRoutes.Help] Size="Size.Small">
+                        <MudText>@Localizer["Support"]</MudText>
+                    </DHButton>
+                </li>
+            </MudHidden>
+            <MudHidden Breakpoint="Breakpoint.LgAndUp" Invert="true">
+                <li style="display: inline-block; margin-inline: 3px">
+                    <DHButton Variant="Variant.Text" Href=@Localizer[PageRoutes.Home] Size="Size.Medium">
+                        <MudText>@Localizer["Home"]</MudText>
+                    </DHButton>
+                </li>
+                <li style="display: inline-block; margin-inline: 3px">
+                    <DHButton Variant="Variant.Text" Href=@Localizer[PageRoutes.News] Size="Size.Medium">
+                        <MudText>@Localizer["Announcements"]</MudText>
+                    </DHButton>
+                </li>
+                <li style="display: inline-block; margin-inline: 3px">
+                    <DHButton Variant="Variant.Text" Href=@Localizer[@PageRoutes.ResourceSite] Size="Size.Medium" Target="_blank">
+                        <MudText>@Localizer["Resources"]</MudText>
+                    </DHButton>
+                </li>
+                <li style="display: inline-block; margin-inline: 3px">
+                    <DHButton Variant="Variant.Text" Href=@Localizer[@PageRoutes.Help] Size="Size.Medium">
+                        <MudText>@Localizer["Support"]</MudText>
+                    </DHButton>
+                </li>
+            </MudHidden>
+        </ul>
+    </nav>
+</MudStack>
+
+<TopBarProfileButton/>
+
+@code {
+
+    [CascadingParameter] public bool IsDarkMode { get; set; }
+    
+    [Parameter] public string SupportFormUrl { get; set; }
+
+    private string CurrentLanguage => CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+
+    private string ImageSrc => IsDarkMode
+        ? $"/img/canada-fip-dark{(CurrentLanguage == "en" ? "" : "-fr")}.svg"
+        : $"/img/canada-fip{(CurrentLanguage == "en" ? "" : $"-fr")}.svg";
+
+    private string _titleStyle;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        _titleStyle = new StyleBuilder()
+            .AddStyle("color", "var(--mud-palette-text-primary)")
+            .AddStyle("font-size", "1.2rem")
+            .AddStyle("margin-left", "3rem")
+            .AddStyle("text-wrap", "nowrap")
+            .Build();
+    }
+
+}

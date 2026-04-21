@@ -1,0 +1,63 @@
+@using Datahub.Core.Model.Achievements
+@using Datahub.Core.Model.Users
+@using Datahub.Portal.Components.User
+
+@inherits ViewUserBase<HomePage>
+
+@inject DatahubPortalConfiguration _datahubPortalConfiguration
+@inject IPortalUserTelemetryService _telemetryService
+@inject IUserSettingsService _userSettingsService
+
+@attribute [Route(PageRoutes.Home)]
+@attribute [Route(PageRoutes.Home_FR)]
+@attribute [ExternalUserPage]
+
+<MudStack>
+    @if (ViewedPortalUser is null)
+    {
+        <div role="group">
+            <MudStack Row AlignItems="AlignItems.End">
+                <DHMainContentTitle Title="@Localizer["Home"]" />
+                <MudSpacer />
+                @if (_currentUser is not null)
+                {
+                    <UserCard ViewedUser="@_currentUser" RightAvatar ShowLoginTime />
+                }
+            </MudStack>
+            <AnnouncementCarousel />
+        </div>
+    }
+    else
+    {
+        <MudImage Src="@_datahubPortalConfiguration.Media.GetAchievementImageUrl(_currentUser?.BannerPictureUrl)"
+                  Alt="@Localizer["User's background image"]"
+                  Class="rounded-lg mud-elevation-4"
+                  Style="width: 100%"
+                  ObjectFit="ObjectFit.Cover"
+                  Height="320"
+                  ObjectPosition="ObjectPosition.Center" />
+    }
+	@if (_currentUser is not null)
+	{
+		<UserProjects PortalUser="@_currentUser" SmSize="6" NewStyle />
+	}
+</MudStack>
+
+@code {
+
+    [Parameter] public PortalUser? ViewedPortalUser {get;set;}
+    private PortalUser? _currentUser;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        _currentUser = ViewedPortalUser ?? await GetViewedPortalUserAsync();
+        if (ViewedPortalUser != null)
+        {
+            await _telemetryService.LogTelemetryEvent(TelemetryEvents.UserViewOtherProfile);
+        }
+
+    }
+
+
+}

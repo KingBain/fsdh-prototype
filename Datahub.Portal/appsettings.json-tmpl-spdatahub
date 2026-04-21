@@ -1,0 +1,50 @@
+{
+  "CultureSettings": {
+    "Default": "en-CA",
+    "SupportedCultures": "fr-CA|en-CA"
+  },
+  "LandingBgFolder": "ssc",
+  "LandingBgImgCount": 2,
+  "Title": "SSC Datahub",
+  "DataHubModules": "",
+  "DataProjects": {
+    "PowerBI": false,
+    "PublicSharing": false,
+    "WebForms": false,
+    "Databricks": true,
+    "SQLServer": false,
+    "PostgreSQL": true,
+    "Costing": false,
+    "Storage": true
+  },
+  "Logging": {
+    "ApplicationInsights": {
+      "LogLevel": {
+        "Default": "Warning",
+        "Microsoft.Hosting.Lifetime": "Information",
+        "Microsoft": "Warning",
+        "Datahub": "Information"
+      }
+    },
+    "LogLevel": {
+      "Default": "Warning",
+      "Datahub": "Information",
+      "Microsoft": "Warning",
+      "Microsoft.Hosting.Lifetime": "Information"
+    }
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+

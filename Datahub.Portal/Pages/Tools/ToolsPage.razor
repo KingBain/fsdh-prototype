@@ -1,0 +1,73 @@
+@using Datahub.Portal.Pages.Tools.AzureSubscriptionManagement
+@using Datahub.Portal.Pages.Tools.Diagnostics
+@using Datahub.Portal.Pages.Tools.Email
+@using Datahub.Portal.Pages.Tools.Health
+@using Datahub.Portal.Pages.Tools.Statistics
+@using Datahub.Portal.Pages.Tools.SupportRequests
+@using Datahub.Portal.Pages.Tools.HostingServices
+@using Datahub.Portal.Pages.Tools.Users
+@using Datahub.Portal.Components.Sidebar
+@using Datahub.Portal.Pages.Tools.VersionControl
+@using Datahub.Portal.Pages.Tools.PublishingBlocklist
+
+@inject ILogger<ToolsPage> _logger
+
+@attribute [Route(PageRoutes.ToolDefault)]
+@attribute [Route(PageRoutes.Tool)]
+@attribute [Route(PageRoutes.ToolDefault_FR)]
+@attribute [Route(PageRoutes.Tool_FR)]
+
+<PageTitle>
+    @Localizer["Admin Tools - Federal Science DataHub"]
+</PageTitle>
+
+<DHSidebarDrawer>
+    <PersonalSidebar/>
+</DHSidebarDrawer>
+
+@{
+    var containsKey = !string.IsNullOrWhiteSpace(Section)
+                      && _sectionComponents.ContainsKey(Section);
+    var parameters = new Dictionary<string, object>
+    {
+        // { "WorkspaceAcronym", WorkspaceAcronymParam }
+    };
+
+    if (containsKey)
+    {
+        <DynamicComponent Type="@_sectionComponents[Section]" Parameters="@parameters"/>
+    }
+    else
+    {
+        _logger.LogWarning("The section {Section} is not a valid section for the tools page", Section);
+        <DiagnosticsPage/>
+    }
+}
+
+@code {
+
+    [Parameter] public string Section { get; set; } = PersonalSidebar.SectionViews.Diagnostics;
+
+    private readonly Dictionary<string, Type> _sectionComponents = new()
+    {
+        { PersonalSidebar.SectionViews.Diagnostics, typeof(DiagnosticsPage) },
+        { PersonalSidebar.SectionViews.Statistics, typeof(StatisticsPage) },
+        { PersonalSidebar.SectionViews.HealthCheck, typeof(InfrastructureHealthPage) },
+        { PersonalSidebar.SectionViews.Email, typeof(ComposeEmailPage) },
+        { PersonalSidebar.SectionViews.AzureSubscriptions, typeof(AzureSubscriptionsPage) },
+        { PersonalSidebar.SectionViews.SupportRequests, typeof(SupportRequestPage) },
+        { PersonalSidebar.SectionViews.HostingServices, typeof(HostingServicesToolPage) },
+        { PersonalSidebar.SectionViews.Diagnostics_FR, typeof(DiagnosticsPage) },
+        { PersonalSidebar.SectionViews.Statistics_FR, typeof(StatisticsPage) },
+        { PersonalSidebar.SectionViews.HealthCheck_FR, typeof(InfrastructureHealthPage) },
+        { PersonalSidebar.SectionViews.Email_FR, typeof(ComposeEmailPage) },
+        { PersonalSidebar.SectionViews.AzureSubscriptions_FR, typeof(AzureSubscriptionsPage) },
+        { PersonalSidebar.SectionViews.SupportRequests_FR, typeof(SupportRequestPage) },
+        { PersonalSidebar.SectionViews.HostingServices_FR, typeof(HostingServicesToolPage) },
+        { PersonalSidebar.SectionViews.VersionControl, typeof(VersionControlPage) },
+        { PersonalSidebar.SectionViews.VersionControl_FR, typeof(VersionControlPage) },
+        { PersonalSidebar.SectionViews.PublishingBlocklist, typeof(ManagePublishingBlocklist) },
+        { PersonalSidebar.SectionViews.PublishingBlocklist_FR, typeof(ManagePublishingBlocklist) }
+};
+
+}

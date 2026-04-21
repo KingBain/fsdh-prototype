@@ -1,0 +1,36 @@
+@using Datahub.Application.Services
+@using Datahub.Portal.Components
+@using Datahub.Portal.Pages.Workspace
+@using static Datahub.Core.DevTools
+@inject IWorkspaceCreationService _projectCreationService
+@inject NavigationManager _navigationManager
+@inject DatahubPortalConfiguration _portalConfiguration
+
+@attribute [Route(PageRoutes.CreateWorkspace)]
+@attribute [Route(PageRoutes.CreateWorkspace_FR)]
+
+<PageTitle>@Localizer["Create a Workspace - Federal Science DataHub"]</PageTitle>
+
+<DatahubAuthView AuthLevel="DatahubAuthView.AuthLevels.Authenticated">
+  <DatahubAuthView AuthLevel="DatahubAuthView.AuthLevels.DatahubSupport" ElevatedWorkspaceAccessEnabled="true">
+    <Authorized>
+      <CreateWorkspaceForm ShowAllCBRs />
+    </Authorized>
+    <NotAuthorized>
+      <DatahubAuthView AuthLevel="DatahubAuthView.AuthLevels.CbrOwner">
+        <Authorized>
+          <CreateWorkspaceForm />
+        </Authorized>
+        <NotAuthorized>
+          <MudText Tag=NON_CBR_OWNER_MESSAGE_TAG>
+            @Localizer["Workspaces may only be created through GC Hosting or with an existing CBR. Please contact your workspace lead or the FSDH support team for more information."]
+          </MudText>
+        </NotAuthorized>
+      </DatahubAuthView>
+    </NotAuthorized>
+  </DatahubAuthView>
+</DatahubAuthView>
+
+@code {
+  public const string NON_CBR_OWNER_MESSAGE_TAG = "NonCbrOwnerMessage";
+}

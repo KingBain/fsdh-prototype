@@ -1,0 +1,99 @@
+{
+  "profiles": {
+    "IIS Express (Development)": {
+      "commandName": "IISExpress",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "APPLICATIONINSIGHTS_DIAGNOSTICS_LOG_LEVEL": "verbose"
+      }
+    },
+    "IIS Express (Sqlite)": {
+      "commandName": "IISExpress",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Sqlite"
+      }
+    },
+    "Console Portal (Development)": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "https://localhost:5001;http://localhost:5000"
+    },
+    "Console Portal (Development No Launch)": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "https://localhost:5001;http://localhost:5000"
+    },
+    "Console Portal (Development LocalDB)": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "ConnectionStrings__datahub_mssql_project": "Server=(LocalDB)\\MSSQLLocalDB;Initial Catalog=dh-portal-projectdb",
+        "ConnectionStrings__datahub_mssql_metadata": "Server=(LocalDB)\\MSSQLLocalDB;Initial Catalog=dh-portal-metadata"
+      },
+      "applicationUrl": "https://localhost:5001;http://localhost:5000"
+    },
+    "Console Portal (Offline)": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Offline"
+      },
+      "applicationUrl": "https://localhost:5001;http://localhost:5000"
+    },
+    "IIS Express (Sandbox)": {
+      "commandName": "IISExpress",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "sand",
+        "HostingProfile": "ssc"
+      }
+    },
+    "IIS Express (Sandbox) - No Launch": {
+      "commandName": "IISExpress",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "sand",
+        "HostingProfile": "ssc"
+      }
+    },
+    "Console Portal (Sandbox)": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "sand",
+        "HostingProfile": "ssc"
+      },
+      "applicationUrl": "https://localhost:5001;http://localhost:5000"
+    },
+    "Console Portal (Sandbox No launch)": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "sand",
+        "HostingProfile": "ssc"
+      },
+      "applicationUrl": "https://localhost:5001;http://localhost:5000"
+    },
+    "Console Portal (PoC No launch)": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "poc",
+        "HostingProfile": "ssc"
+      },
+      "applicationUrl": "https://localhost:5001;http://localhost:5000"
+    }
+  },
+  "iisSettings": {
+    "windowsAuthentication": false,
+    "anonymousAuthentication": true,
+    "iisExpress": {
+      "applicationUrl": "http://localhost:61775/",
+      "sslPort": 44347
+    }
+  }
+}

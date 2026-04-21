@@ -1,0 +1,85 @@
+@using Datahub.Application.Services.Announcements
+@using MudBlazor.Utilities
+
+@inject IAnnouncementService _announcementService
+@inject ICultureService CultureService
+
+@if (_previewCount > 0)
+{
+    <MudText Typo="Typo.h2">@Localizer["Announcements"]</MudText>
+}
+<ul class="my-4 d-flex" style="gap: 25px; flex-wrap: wrap">
+    @foreach (var index in _announcementIndices)
+    {
+        if (index != -1)
+        {
+            var preview = Previews[index];
+            if (!preview.Preview.StartsWith("!["))
+            {
+                <li class="flex-1">
+                    <MudAlert Severity="_announcementService.GetSeverity(preview.Severity)" Style="color: #000;" NoIcon="true">
+                        <div style="display: flex;">
+                            <MudChip T="string" Variant="Variant.Text" Color="_announcementService.GetColor(preview.Severity, true)">
+                                <DHIcon Icon="@_announcementService.GetIcon(preview.Severity)" Class="mr-1" Color="_announcementService.GetColor(preview.Severity, true)" />
+                                <MudText Typo="Typo.button">@Localizer[_announcementService.GetText(preview.Severity)]</MudText>
+                            </MudChip>
+                        </div>
+                        <MudStack Justify="Justify.SpaceBetween" Style="height: 184px;" Spacing="1">
+                            <MudElement>
+                                <DHMarkdown Content="@preview.Preview" Style="@_descriptionTextStyle"/>
+                            </MudElement>
+                            <MudElement>
+                                <DHButton Href="@Localizer[PageRoutes.News]"
+                                Color="@Color.Primary"
+                                Variant="@Variant.Text"
+                                EndIcon="@Icons.Material.Filled.KeyboardDoubleArrowRight"
+                                Underline 
+                                NoWrap>
+                                    <span class="sr-only">@preview.Preview</span>
+                                    @Localizer["Read more"]
+                                </DHButton>
+                            </MudElement>
+                        </MudStack>
+                    </MudAlert>
+                </li>
+            }
+        }
+    }
+</ul>
+
+@code {
+    private bool _isLoading = true;
+
+    public List<AnnouncementPreview> Previews { get; set; } = new();
+
+    private string _descriptionTextStyle;
+
+    private int _previewCount;
+    private int[] _announcementIndices = new int[3] { -1, -1, -1 };
+
+    protected override async Task OnInitializedAsync()
+    {
+        base.OnInitialized();
+
+        _descriptionTextStyle = new StyleBuilder()
+            .AddStyle("overflow", "hidden")
+            .AddStyle("-webkit-line-clamp", "6")
+            .AddStyle("-webkit-box-orient", "vertical")
+            .AddStyle("display", "-webkit-box")
+            .Build();
+
+        Previews = (await _announcementService.GetActivePreviews(CultureService.IsFrench)).OrderBy(o => o.Severity).ToList();
+
+        for (int i = 0; i < Math.Min(Previews.Count, 3); i++)
+        {
+            var preview = Previews[i];
+            _announcementIndices[i] = i;
+        }
+
+        // There should really only be 1, 2, or 3 announcements at a time
+        // The # of columns for the announcements is displayed accordingly
+        _previewCount = Math.Min(Previews.Count, 3);
+        _isLoading = false;
+    }
+}
+

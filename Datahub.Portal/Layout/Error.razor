@@ -1,0 +1,142 @@
+﻿@using Datahub.Core.Services.Notification
+@using Datahub.Infrastructure.Queues.Messages
+@using MediatR
+@using Datahub.Application.Services.UserManagement
+@using Datahub.Application.Services.Notification
+@inject IJSRuntime JSRuntime
+@inject NavigationManager _navigationManager
+@inject IUserInformationService _userInformationService
+@inject ILocalStorageService _localStorage
+@inject IMediator _mediator
+
+<p id="datahub-error-page" style="display: none">An error has occured!</p>
+
+<MudCard Class="pa-4">
+    <MudCardHeader>
+        <CardHeaderContent>
+            <MudText Typo="Typo.h4">@Localizer["Something went wrong"]</MudText>
+        </CardHeaderContent>
+        <CardHeaderActions>
+            <MudTooltip Text="@Localizer["Error"]">
+                <MudIconButton Icon="@Icons.Material.Filled.Error" Color="Color.Default"/>
+            </MudTooltip>
+        </CardHeaderActions>
+    </MudCardHeader>
+    <MudCardContent>
+        <MudStack Spacing="2">
+            <MudItem>
+                <MudText Typo="Typo.h5">@Localizer["TECHNICAL DETAILS"]</MudText>
+                <MudText>@GetGeneralErrorText()</MudText>
+            </MudItem>
+            <MudItem>
+                <MudText>@SupportContact() <MudLink Underline="Underline.Always" OnClick="NavigateToSupport">@Localizer["FSDH Support Request Form"]</MudLink></MudText>
+            </MudItem>
+            <DatahubAuthView AuthLevel="DatahubAuthView.AuthLevels.DatahubSupport">
+                <environment include="Development">
+                    <MudItem>
+                        <MudText Typo="Typo.h6">AppInsights Query</MudText>
+                        <pre>
+                            @AppInsightsQuery
+                        </pre>
+                    </MudItem>
+
+                    <MudItem>
+                        <MudText Typo="Typo.h6">Message</MudText>
+                        <pre>
+                            @Exception?.Message
+                        </pre>
+                    </MudItem>
+
+                    <MudItem>
+                        <MudText Typo="Typo.h6">Stack Trace</MudText>
+                        <pre>
+                            @Exception?.StackTrace
+                        </pre>
+                    </MudItem>
+                </environment>
+            </DatahubAuthView>
+        </MudStack>
+    </MudCardContent>    
+</MudCard>
+
+@code {
+
+    [Parameter]
+    public string User { get; set; }
+
+    [Parameter]
+    public string CorrelationId { get; set; }
+
+    [Parameter]
+    public Exception Exception { get; set; }
+
+    private bool _emailSent;
+
+    private string _supportLink;
+
+
+    private MarkupString GetGeneralErrorText()
+    {
+        var template = Localizer["An application error has occurred on the DataHub server. The error has been recorded with Correlation ID {0}. To avoid network issues, if you are currently on the VPN, please try to disconnect the VPN and retry your actions."].ToString();
+        return new MarkupString(string.Format(template, $"<strong>{CorrelationId}</strong>"));        
+    }
+    private void NavigateToSupport()
+    {
+        var url = Localizer[PageRoutes.HelpWithParam];
+        _navigationManager.NavigateTo(url.ToString().Replace("{CorrelationId}", CorrelationId), forceLoad: true);
+    }
+
+    private string SupportContact()
+    {
+        return Localizer["To report an issue or request assistance, please use the "];
+    }
+
+    private string AppInsightsQuery => $"exceptions\n| where customDimensions.correlationId == '{CorrelationId}'";
+
+    private async Task HandleEmailDatahub()
+    {
+        try
+        {
+            _emailSent = true;
+            await InvokeAsync(StateHasChanged);
+
+            var portalUser = await _userInformationService.GetCurrentPortalUserAsync();
+            
+            var allKeys = await _localStorage.KeysAsync();
+            var dataDict = new Dictionary<string, string>();
+            foreach (var key in allKeys)
+            {
+                var value = await _localStorage.GetItemAsStringAsync(key);
+                dataDict.Add(key, value);
+            }
+            var localStorageData = Newtonsoft.Json.JsonConvert.SerializeObject(dataDict);
+
+            var description = $"Datahub App Error - Correlation ID:{CorrelationId}\n\nApp Insights Query:{AppInsightsQuery}\n\n Exception Message: {Exception?.Message}\n\nException Stack Trace:{Exception?.StackTrace}";
+            
+            var bugReport = new BugReportMessage(
+                UserName: portalUser.DisplayName,
+                UserEmail: portalUser.Email,
+                UserOrganization: "",
+                PortalLanguage: portalUser.UserSettings.Language,
+                PreferredLanguage: "",
+                Timezone: "",
+                Workspaces: _navigationManager.Uri,
+                Topics: "System Error",
+                URL: _navigationManager.Uri,
+                UserAgent: "",
+                Resolution: "",
+                LocalStorage: localStorageData,
+                BugReportType: BugReportTypes.SystemError,
+                Description: description,
+                CorrelationId: CorrelationId
+            );
+
+            await _mediator.Send(bugReport);
+        }
+        catch (Exception)
+        {
+            _emailSent = false;
+        }
+    }
+
+}

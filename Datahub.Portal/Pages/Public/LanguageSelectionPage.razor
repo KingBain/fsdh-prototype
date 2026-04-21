@@ -1,0 +1,90 @@
+@page "/language-langue"
+@layout BarebonesPublicLayout
+
+@inject NavigationManager _navManager
+@inject ICultureService CultureService
+
+
+<PageTitle>Federal Science DataHub / DataHub scientifique fédéral</PageTitle>
+
+
+<MudContainer MaxWidth=@MaxWidth.Small>
+    <MudStack>
+        <MudSpacer/>
+        <MudPaper Class="pa-0 mt-20" Style="background-color: var(--mud-palette-background-gray)">
+
+            <MudPaper Class="py-10 px-6" Elevation="0" Outlined>
+                <MudStack>
+                    <span class="sr-only" translate="no">
+                        <DHMainContentTitle Title="Federal Science DataHub - Language Selection / Plateforme fédérale de données scientifiques - Sélection de la langue" />
+                    </span>
+                    <MudImage Src=@ImageSrc Alt="Government of Canada Wordmark / Symbole de mot du gouvernement du Canada" Style="max-height: 2rem" />
+                    <MudSpacer/>
+                    <MudStack Row>
+                        <MudSpacer/>
+                        <MudStack lang="en" Style="width: 50%">
+                            <MudText translate="no" Align=@Align.Right Typo=@Typo.h2 Style="font-size: 24px">Federal Science DataHub</MudText>
+                            <MudSpacer/>
+                            <MudButton translate="no" Variant=@Variant.Filled Color=@Color.Primary OnClick=@(() => SetLanguage(ICultureService.CanadaEnglish))>English</MudButton>
+                        </MudStack>
+                        <MudStack lang="fr" Style="width: 50%">
+                            <MudText translate="no" Align=@Align.Left Typo=@Typo.h2 Style="font-size: 24px">Plateforme fédérale de données scientifiques</MudText>
+                            <MudSpacer/>
+                            <MudButton translate="no" Variant=@Variant.Filled Color=@Color.Primary OnClick=@(() => SetLanguage(ICultureService.CanadaFrench))>
+                                Français
+                            </MudButton>
+                        </MudStack>
+                        <MudSpacer/>
+                    </MudStack>
+                </MudStack>
+            </MudPaper>
+
+            <MudPaper Elevation=0 Class="pa-10" Style="background: transparent;">
+
+                <MudStack Row>
+                    <MudLink lang="en" Href=@EnglishTermsUrl Target="_blank" Typo="Typo.body1" Style="font-size:large">
+                        Terms and conditions
+                    </MudLink>
+                    <MudDivider Vertical/>
+                    <MudLink lang="fr" Href=@FrenchTermsUrl Target="_blank" Typo="Typo.body1" Style="font-size:large">
+                        Avis
+                    </MudLink>
+                    <MudSpacer/>
+                    <p>
+                        <MudImage Src="/img/fip_mark.png" Alt="Symbol of the Government of Canada" Style="max-height: 1.5rem"/>
+                        <span lang="fr" class="sr-only">Symbole du gouvernement du Canada</span>
+                    </p>
+                </MudStack>
+            </MudPaper>
+        </MudPaper>
+
+    </MudStack>
+</MudContainer>
+
+@code {
+    [CascadingParameter] public bool IsDarkMode { get; set; } 
+    [SupplyParameterFromQuery(Name = "redirectUrl")]
+
+    public string RedirectUrl { get; set; }
+
+    private string ImageSrc => IsDarkMode
+    ? "/img/canada-fip-dark.png"
+    : "/img/canada-fip.svg";
+    private string EnglishTermsUrl => $"{PageRoutes.TermsAndConditions}?culture={ICultureService.CanadaEnglish}";
+    private string FrenchTermsUrl => $"{PageRoutes.TermsAndConditions_FR}?culture={ICultureService.CanadaFrench}";
+
+    private async Task SetLanguage(string language)
+    {
+        await CultureService.SetLanguageInLocalStorageAsync(language);
+
+        if (string.IsNullOrWhiteSpace(RedirectUrl))
+        {
+            RedirectUrl = "/";
+        }
+
+        var query = $"?culture={Uri.EscapeDataString(language)}" +
+                    $"&redirectionUri={Uri.EscapeDataString(RedirectUrl)}";
+        _navManager.NavigateTo($"/Culture/SetCulture{query}", forceLoad: true);
+    }
+
+}

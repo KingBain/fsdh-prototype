@@ -1,0 +1,161 @@
+@using Datahub.Application.Services.UserManagement
+@using Datahub.Core.Extensions
+@using Datahub.Core.Model.Achievements
+@using Datahub.Core.Model.Users;
+@using Microsoft.Graph.Models
+@using Toolbelt.Blazor.Globalization
+
+@inject IUserInformationService _userInformationService
+@inject ICultureService CultureService
+@inject ILogger<UserCard> _logger;
+@inject IPortalUserTelemetryService _telemetryService;
+@inject IJSRuntime _jsRuntime;
+@inject ILocalTimeZone _localTz;
+@implements IDisposable
+
+@if (_viewedUser is null)
+{
+    return;
+}
+
+<MudStack Row Spacing="0" AlignItems="AlignItems.Center">
+    @if (!RightAvatar)
+    {
+        <UserAvatar ViewedUser="@_viewedUser" Size="@Size"/>
+    }
+    <MudStack Spacing="0" AlignItems="AlignItems.Start">
+        <MudText Style="@Style" Typo="Typo" Class="px-4">@_viewedUser?.DisplayName</MudText>
+        @if (ShowEmail)
+        {
+            <MudText Typo="Typo.body2" Class="px-4 mud-text-secondary">@_viewedUser?.Email</MudText>
+        }
+        @if (ShowLoginTime)
+        {
+            <MudText Typo="Typo.body2" Class="px-4 mud-text-secondary">
+                @if (_lastLogin != null)
+                {
+                    @Localizer["Last login: {0} {1}", $"{_lastLogin!.Value:yyyy-MM-dd HH:mm}", _timezone]
+                }
+            </MudText>
+        }
+    </MudStack>
+    @if (RightAvatar)
+    {
+        <UserAvatar ViewedUser="@_viewedUser" Size="@Size"/>
+    }
+    <MudSpacer/>
+    @if (ShowProfileLink)
+    {
+        <UserViewProfileIconButton ViewedUser="@ViewedUser" />
+    }
+</MudStack>
+
+@code {
+
+  // [Parameter] public string ViewedUserGraphId { get; set; }
+
+  [Parameter] public PortalUser ViewedUser { get; set; }
+
+  [Parameter] public Size Size { get; set; } = Size.Large;
+
+  [Parameter] public bool ShowProfileLink { get; set; } = false;
+
+  [Parameter] public bool ShowEmail { get; set; } = true;
+
+  [Parameter] public bool ShowLoginTime { get; set; } = false;
+
+  [Parameter] public bool RightAvatar { get; set; } = false;
+
+  [Parameter] public Typo Typo { get; set; } = Typo.h6;
+
+  [Parameter] public string Style { get; set; } = string.Empty;
+
+  private PortalUser _viewedUser;
+  private DateTime? _lastLogin;
+  private IJSObjectReference _module;
+  private string _timezone;
+
+  protected override void OnParametersSet()
+  {
+    _viewedUser = ViewedUser;
+  }
+
+  protected override async Task OnInitializedAsync()
+  {
+    _userInformationService.PortalUserUpdated += OnViewedUserUpdated;
+    DateTime? lastLoginDt = null;
+    if ((lastLoginDt ??= await _telemetryService.GetUserLastLoginAsync()) is not null)
+    {
+      var localTz = await _localTz.GetLocalTimeZoneAsync(null);
+      _timezone = LocalizeTimeZone(GetTimeZoneShortCode(localTz));
+      _lastLogin = TimeZoneInfo.ConvertTime(lastLoginDt.Value, localTz);
+    }
+  }
+
+  private string GetTimeZoneShortCode(TimeZoneInfo timeZoneInfo)
+  {
+    // Use StandardName or DaylightName to derive the short code
+    var name = timeZoneInfo.IsDaylightSavingTime(DateTime.UtcNow)
+        ? timeZoneInfo.DaylightName
+        : timeZoneInfo.StandardName;
+
+    // Extract the first letter of each word
+    return string.Concat(name.Split(' ').Select(word => word[0])).ToUpperInvariant();
+  }
+
+  private string LocalizeTimeZone(string engTimeZone)
+  {
+    if (CultureService.IsFrench)
+    {
+      switch (engTimeZone)
+      {
+        case("UTC"): // Universal time zone
+          return "UTC";
+        case ("PST"):
+          return "HNP";
+        case ("MST"):
+          return "HNR";
+        case ("CST"):
+          return "HNC";
+        case ("EST"):
+          return "HNE";
+        case ("AST"):
+          return "HNA";
+        case ("NST"):
+          return "HNT";
+        case ("PDT"): // Daylight timezones
+          return "HAP";
+        case ("MDT"):
+          return "HAR";
+        case ("CDT"):
+          return "HAC";
+        case ("EDT"):
+          return "HAE";
+        case ("ADT"):
+          return "HAA";
+        case ("NDT"):
+          return "HAT";
+        default:
+          return String.Empty;
+      }
+    }
+    return engTimeZone;
+  }
+
+  private void OnViewedUserUpdated(object sender, PortalUserUpdatedEventArgs e)
+  {
+    if (_viewedUser.Id != e.UpdatedUser.Id)
+    {
+      return;
+    }
+
+    _viewedUser = e.UpdatedUser;
+    InvokeAsync(StateHasChanged);
+  }
+
+  public void Dispose()
+  {
+    _userInformationService.PortalUserUpdated -= OnViewedUserUpdated;
+  }
+
+}

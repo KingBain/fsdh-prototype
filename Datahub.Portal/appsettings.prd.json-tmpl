@@ -1,0 +1,69 @@
+{
+  "AzureAd": {
+    "Instance": "https://login.microsoftonline.com/",
+    "Domain": "",
+    "TenantId": "",
+    "ClientId": "",
+    "ClientSecret": "",
+    "CallbackPath": "/signin-oidc",
+    "SignedOutCallbackPath ": "/signout-callback-oidc",
+    "AppIDURL": ""
+  },
+  "DbDriver": "azure",
+  "Graph": {
+    "BaseUrl": "https://graph.microsoft.com/v1.0",
+    "Scopes": "user.read"
+  },
+  "APITargets": {
+    "StorageURL": "",
+    "SearchServiceName": "",
+    "StorageAccountName": "",
+    "KeyVaultName": "",
+    "FileSystemName": "datahub",
+    "FileIndexName": "filemetadata-index",
+    "FileIndexerName": "datahub-file-indexer",
+    "LogoutURL": ""
+  },
+  "ApplicationInsights": {
+    "InstrumentationKey": ""
+  },
+  "Logging": {
+    "LogLevel": {
+      "Default": "Warning",
+      "Microsoft": "Warning",
+      "Microsoft.Hosting.Lifetime": "Information"
+    },
+    "ApplicationInsights": {
+      "LogLevel": {
+        "Default": "Warning",
+        "NRCan": "Information",
+        "Microsoft": "Warning",
+        "Microsoft.Hosting.Lifetime": "Information"
+      }
+    }
+  },
+  "EmailNotification": {
+    "SmtpHost": "",
+    "SmtpPort": 587,
+    "SmtpUsername": "",
+    "SmtpPassword": "",
+    "SenderName": "NRCan DataHub RNCan",
+    "SenderAddress": "",
+    "DevTestMode": false
+  },
+  "PublicFileSharing": {
+    "OpenDataApprovalPdfBaseUrl": "",
+    "OpenDataApprovalPdfFormIdParam": "rp:p_approval_form_id",
+    "PublicFileSharingDomain": ""
+  },
+  "Azure:SignalR:StickyServerMode": "Required",
+  "AllowedHosts": "*",
+  "DataCatalog": "enabled"
+}
+
+
+
+
+
+
+

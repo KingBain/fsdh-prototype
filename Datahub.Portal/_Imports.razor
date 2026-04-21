@@ -1,0 +1,65 @@
+@using System.Net.Http
+@using System.IO
+@using System.Threading
+@using System.Globalization
+
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.Components.Forms
+@using Microsoft.AspNetCore.Components.Routing
+@using Microsoft.AspNetCore.Components.Web
+@using Microsoft.AspNetCore.Components.Sections
+@using Microsoft.JSInterop
+
+@using Microsoft.Extensions.Localization
+@using Microsoft.AspNetCore.Mvc.Localization
+
+@using Microsoft.EntityFrameworkCore;
+@using Microsoft.Extensions.Configuration
+
+
+@using Tewr.Blazor.FileReader
+@using Microsoft.Extensions.Hosting
+
+@using Datahub.Application.Configuration
+@using Datahub.Application.Services
+@using Datahub.Application.Services.Achievements
+@using Datahub.Application.Services.Security
+@using Datahub.Application.Services.UserManagement
+@using Datahub.Application.Attributes
+
+@using Datahub.Core.Data
+@using Datahub.Core.Model.Context
+@using Datahub.Core.Services
+@using Datahub.Core.Components
+@using Datahub.Core.Components.Buttons
+@using Datahub.Core.Utils
+@using Datahub.Core.Configuration
+@using Datahub.Portal.Layout
+@using Datahub.Core.Services.UserManagement
+@using Datahub.Core.Services.Search
+@using Datahub.Core.Model.Datahub;
+
+@using Datahub.Portal.Layout.Topbar
+
+@using Datahub.Portal.Services
+@using Datahub.Portal.Components
+@using Datahub.Portal.Components.TZ
+@using Datahub.Portal.Components.Projects
+@using Datahub.Portal.Components.Buttons
+@using Datahub.Core.Components.AuthViews
+@using Datahub.Portal.Components.Announcements
+@using Datahub.Portal.Metadata.Components
+@using Datahub.Portal.Views
+@using Datahub.Portal.Data;
+@using Datahub.Portal.Pages;
+
+@using Blazored.LocalStorage;
+@using MudBlazor;
+
+@using Datahub.Portal.Components.Markdown;
+
+@using PSC.Blazor.Components.MarkdownEditor
+@using PSC.Blazor.Components.MarkdownEditor.EventsArgs
+
+@inject IStringLocalizer Localizer

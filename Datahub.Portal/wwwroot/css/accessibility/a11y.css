@@ -1,0 +1,77 @@
+﻿*:focus {
+    outline: 2px black !important;
+    outline-offset: -2px !important;
+}
+
+.mud-stepper-content:focus {
+    outline: none !important;
+}
+
+.mud-checkbox-input:hover {
+    outline: 2px solid black !important;
+    outline-offset: -2px !important;
+}
+
+.mud-button:hover {
+    outline: 2px solid black !important;
+    outline-offset: -2px !important;
+}
+
+
+.mud-nav-link:hover {
+    outline: 2px solid black !important;
+    outline-offset: -2px !important;
+}
+
+.mud-link {
+    text-decoration: underline !important;
+}
+
+.skip-link:not(:focus-within):not(:focus):not(:active) {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    padding: 0 !important;
+    margin: -1px !important;
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+    white-space: nowrap !important;
+    border: 0 !important;
+}
+
+.skip-link:focus-within {
+    position: absolute !important;
+    z-index: 999;
+    text-align: center;
+    top: 10px;
+    left: -12px;
+    padding-top: 6px;
+    padding-left: 6px;
+}
+
+.no-margin-textarea textarea.mud-input-root-outlined {
+    margin: 0px !important;
+    padding: 10px !important;
+    border: none !important;
+    font-size: 90% !important;
+}
+
+.no-margin-textarea ::placeholder {
+    font-size: 0.85em !important;
+    opacity: 0.7 !important;
+}
+
+.no-margin-textarea input::placeholder {
+    font-size: 0.85em !important;
+    opacity: 0.7 !important;
+}
+
+.no-margin-textarea textarea::placeholder {
+    font-size: 0.85em !important;
+    opacity: 0.7 !important;
+}
+
+.multiselect-textarea .mud-input-root {
+    font-size: 90% !important;
+}
+

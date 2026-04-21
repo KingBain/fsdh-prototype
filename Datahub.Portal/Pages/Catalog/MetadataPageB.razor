@@ -1,0 +1,78 @@
+﻿@page "/metadatab"
+@using Datahub.Application.Services.Metadata
+
+<div style="margin: 2rem">
+    <DatahubAuthView AuthLevel="DatahubAuthView.AuthLevels.DatahubSupport">
+        <Authorized>
+            <MudCard>
+                <MudCardHeader>
+                    <MudText Typo="Typo.h2">Metadata</MudText>
+                </MudCardHeader>
+                <MudCardContent>
+                    <MudTextField T="string"
+                                  @bind-Value="BoundValue"
+                                  Placeholder="Enter text..."
+                                  FullWidth="true" />
+
+                    <div>
+                        <ul>
+                            @foreach (var kw in _keywords)
+                            {
+                                <li>@kw</li>
+                            }
+                        </ul>
+                    </div>
+
+                    <div>
+                        <MudText Typo="Typo.body1">Queries: @_queryCount</MudText>
+                    </div>
+
+                    <div>
+                        <MudButton OnClick="ErrorClick" Color="Color.Error">Error Now!</MudButton>
+                    </div>
+                </MudCardContent>
+            </MudCard>
+        </Authorized>
+    </DatahubAuthView>
+</div>
+
+@code {
+
+    [Inject]
+    public IMetadataBrokerService MetadataBrokerService { get; set; }
+
+    protected override void OnInitialized()
+    {
+        _suggestionThrottler = new QueryThrottler<string>(TimeSpan.FromSeconds(0.5), TriggerAutoCompleteAsync);
+    }
+
+    private string _keyword;
+    private List<string> _keywords = new();
+    private QueryThrottler<string> _suggestionThrottler;
+    private int _queryCount;
+
+    private string BoundValue
+    {
+        get => _keyword;
+        set
+        {
+            if (value != _keyword)
+            {
+                _keyword = value;
+                _ = _suggestionThrottler.SetQuery(value);
+            }
+        }
+    }
+
+    private async Task TriggerAutoCompleteAsync(string text)
+    {
+        _keywords = await MetadataBrokerService.GetSuggestedEnglishKeywords(text, 10);
+        _queryCount++;
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private void ErrorClick()
+    {
+        throw new Exception("Click Error!!");
+    }
+}
