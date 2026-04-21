@@ -1,47 +1,276 @@
 @namespace Datahub.Portal.Scaffold.Pages.Account
 @using System.Security.Claims
+@using Datahub.Portal.Scaffold.Services
 @attribute [Authorize]
 @page "/account"
 @page "/compte"
 @page "/account/{Section}"
 @page "/compte/{Section}"
 @inject AuthenticationStateProvider AuthenticationStateProvider
+@inject AccountProfileStateService AccountProfileStateService
+@inject NavigationManager NavigationManager
+@inject ISnackbar Snackbar
 
-<PageTitle>Account</PageTitle>
+<PageTitle>@($"{Profile.DisplayName} - Account")</PageTitle>
 
-<MudStack Spacing="3">
-    <MudText Typo="Typo.h2">Account</MudText>
-    <MudPaper Class="scaffold-card" Elevation="0">
-        <MudGrid Spacing="3">
-            <MudItem xs="12" md="8">
-                <MudText Typo="Typo.h5" GutterBottom="true">Signed in locally</MudText>
-                <MudText Typo="Typo.body1">Email: @Email</MudText>
-                <MudText Typo="Typo.body1">Display name: @DisplayName</MudText>
-                @if (!string.IsNullOrWhiteSpace(Section))
+<MudGrid Spacing="3">
+    <MudItem xs="12" md="4" lg="3">
+        <MudPaper Class="scaffold-card scaffold-account-sidebar" Elevation="0">
+            <MudImage Src="@Profile.BannerImagePath" Alt="Profile banner" Class="scaffold-account-banner" />
+            <MudStack AlignItems="AlignItems.Center" Class="scaffold-account-summary">
+                <MudAvatar Size="Size.Large" Class="scaffold-account-avatar">
+                    <MudImage Src="@Profile.ProfileImagePath" Alt="Profile image" />
+                </MudAvatar>
+                <MudText Typo="Typo.h5">@Profile.DisplayName</MudText>
+                <MudText Typo="Typo.body2">@Profile.Email</MudText>
+                <MudChip T="string" Color="Color.Primary" Variant="Variant.Outlined" Size="Size.Small">@CurrentSection.Label</MudChip>
+            </MudStack>
+
+            <MudNavMenu Class="mt-4">
+                @foreach (var sectionOption in AccountSectionCatalog.Sections)
                 {
-                    <MudText Typo="Typo.body1">Requested section: @Section</MudText>
+                    <MudNavLink Href="@SectionHref(sectionOption.Slug)"
+                                Match="NavLinkMatch.All"
+                                Icon="@sectionOption.Icon"
+                                ActiveClass="scaffold-account-nav-active">
+                        @sectionOption.Label
+                    </MudNavLink>
                 }
-            </MudItem>
-            <MudItem xs="12" md="4">
-                <MudAlert Severity="Severity.Info" Variant="Variant.Outlined">
-                    TODO: Restore profile settings, preferences, notifications, and achievements when the original services return.
-                </MudAlert>
-            </MudItem>
-        </MudGrid>
-    </MudPaper>
-</MudStack>
+            </MudNavMenu>
+        </MudPaper>
+    </MudItem>
+
+    <MudItem xs="12" md="8" lg="9">
+        @switch (CurrentSection.Slug)
+        {
+            case "profile":
+                <MudPaper Class="scaffold-card" Elevation="0">
+                    <MudText Typo="Typo.h4" GutterBottom="true">Profile overview</MudText>
+                    <MudText Typo="Typo.body1" Class="mb-4">
+                        A lightweight local version of the original account landing page. It keeps the profile summary and account structure available while deeper user services are still offline.
+                    </MudText>
+                    <MudGrid Spacing="3">
+                        <MudItem xs="12" md="7">
+                            <MudText Typo="Typo.h6">Headline</MudText>
+                            <MudText Typo="Typo.body1" Class="mb-3">@Profile.Headline</MudText>
+                            <MudText Typo="Typo.h6">Bio</MudText>
+                            <MudText Typo="Typo.body1">@Profile.Bio</MudText>
+                        </MudItem>
+                        <MudItem xs="12" md="5">
+                            <MudAlert Severity="Severity.Info" Variant="Variant.Outlined" Dense="true">
+                                TODO: Reconnect the real public profile card, project list, and user achievements when the original account services come back.
+                            </MudAlert>
+                        </MudItem>
+                    </MudGrid>
+                </MudPaper>
+                break;
+
+            case "customization":
+                <MudPaper Class="scaffold-card" Elevation="0">
+                    <MudText Typo="Typo.h4" GutterBottom="true">Public profile customization</MudText>
+                    <MudText Typo="Typo.body1" Class="mb-4">
+                        These fields are stored in the scaffold service for the current local user so the account page is interactive again.
+                    </MudText>
+                    <MudGrid Spacing="3">
+                        <MudItem xs="12" md="6">
+                            <MudTextField T="string" Label="Display name" Variant="Variant.Outlined" @bind-Value="EditableDisplayName" FullWidth="true" />
+                        </MudItem>
+                        <MudItem xs="12" md="6">
+                            <MudTextField T="string" Label="Headline" Variant="Variant.Outlined" @bind-Value="EditableHeadline" FullWidth="true" />
+                        </MudItem>
+                        <MudItem xs="12">
+                            <MudTextField T="string" Label="Bio" Variant="Variant.Outlined" @bind-Value="EditableBio" FullWidth="true" Lines="4" />
+                        </MudItem>
+                    </MudGrid>
+                    <MudStack Row Spacing="2" Class="mt-4">
+                        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="SaveCustomization">Save profile details</MudButton>
+                        <MudButton Variant="Variant.Text" Color="Color.Primary" OnClick="ResetCustomization">Reset</MudButton>
+                    </MudStack>
+                </MudPaper>
+                break;
+
+            case "appearance":
+                <MudPaper Class="scaffold-card" Elevation="0">
+                    <MudText Typo="Typo.h4" GutterBottom="true">Appearance</MudText>
+                    <MudGrid Spacing="3">
+                        <MudItem xs="12" md="6">
+                            <MudSelect T="string" Label="Theme" Variant="Variant.Outlined" Value="@Profile.Theme" ValueChanged="SaveTheme">
+                                <MudSelectItem T="string" Value="@("Light mode")">Light mode</MudSelectItem>
+                                <MudSelectItem T="string" Value="@("Dark mode")">Dark mode</MudSelectItem>
+                            </MudSelect>
+                        </MudItem>
+                        <MudItem xs="12" md="6">
+                            <MudSelect T="string" Label="Language" Variant="Variant.Outlined" Value="@Profile.Language" ValueChanged="SaveLanguage">
+                                <MudSelectItem T="string" Value="@("en-CA")">English</MudSelectItem>
+                                <MudSelectItem T="string" Value="@("fr-CA")">Français</MudSelectItem>
+                            </MudSelect>
+                        </MudItem>
+                        <MudItem xs="12">
+                            <MudAlert Severity="Severity.Info" Variant="Variant.Outlined" Dense="true">
+                                TODO: Reconnect theme persistence and localization plumbing across the full portal shell. The scaffold stores these choices locally for now.
+                            </MudAlert>
+                        </MudItem>
+                    </MudGrid>
+                </MudPaper>
+                break;
+
+            case "notifications":
+                <MudPaper Class="scaffold-card" Elevation="0">
+                    <MudText Typo="Typo.h4" GutterBottom="true">Notifications and guidance</MudText>
+                    <MudStack Spacing="3">
+                        <MudRadioGroup T="string" Value="@Profile.NotificationLevel" ValueChanged="SaveNotificationLevel">
+                            <MudRadio T="string" Value="@("all")" Color="Color.Primary">Receive all scaffold notifications</MudRadio>
+                            <MudRadio T="string" Value="@("important")" Color="Color.Primary">Receive only important updates</MudRadio>
+                            <MudRadio T="string" Value="@("critical")" Color="Color.Primary">Receive only critical notices</MudRadio>
+                        </MudRadioGroup>
+                        <MudSwitch T="bool"
+                                   Value="@Profile.ShowAlertsAndTutorials"
+                                   ValueChanged="SaveAlertsPreference"
+                                   Color="Color.Primary"
+                                   Label="Show alerts and tutorials" />
+                        <MudAlert Severity="Severity.Info" Variant="Variant.Outlined" Dense="true">
+                            TODO: Wire these preferences back into real email and in-app notification services later.
+                        </MudAlert>
+                    </MudStack>
+                </MudPaper>
+                break;
+
+            case "achievements":
+                <MudPaper Class="scaffold-card" Elevation="0">
+                    <MudStack Spacing="3">
+                        <MudStack Row AlignItems="AlignItems.Center">
+                            <MudText Typo="Typo.h4">Achievements</MudText>
+                            <MudSpacer />
+                            <MudSwitch T="bool"
+                                       Value="@Profile.ShowAchievements"
+                                       ValueChanged="SaveAchievementsPreference"
+                                       Color="Color.Primary"
+                                       Label="Show achievements" />
+                        </MudStack>
+
+                        @if (Profile.ShowAchievements)
+                        {
+                            <MudGrid Spacing="2">
+                                @foreach (var achievement in Achievements)
+                                {
+                                    <MudItem xs="12" md="6">
+                                        <MudPaper Class="scaffold-achievement-card" Elevation="0">
+                                            <MudStack Row AlignItems="AlignItems.Center" Spacing="2">
+                                                <MudAvatar Color="Color.Primary" Variant="Variant.Filled">
+                                                    <MudIcon Icon="@achievement.Icon" />
+                                                </MudAvatar>
+                                                <div>
+                                                    <MudText Typo="Typo.h6">@achievement.Title</MudText>
+                                                    <MudText Typo="Typo.body2">@achievement.Description</MudText>
+                                                </div>
+                                            </MudStack>
+                                        </MudPaper>
+                                    </MudItem>
+                                }
+                            </MudGrid>
+                        }
+                        else
+                        {
+                            <MudAlert Severity="Severity.Info" Variant="Variant.Outlined">
+                                Achievements are hidden for this scaffold profile.
+                            </MudAlert>
+                        }
+
+                        <MudText Typo="Typo.caption">
+                            TODO: Replace these mock achievements with the real achievement and user-history services from the original portal.
+                        </MudText>
+                    </MudStack>
+                </MudPaper>
+                break;
+        }
+    </MudItem>
+</MudGrid>
 
 @code {
     [Parameter] public string? Section { get; set; }
 
-    private string Email { get; set; } = string.Empty;
-    private string DisplayName { get; set; } = string.Empty;
+    private static readonly (string Title, string Description, string Icon)[] Achievements =
+    [
+        ("Local Explorer", "Signed into the scaffolded portal and restored the account hub.", Icons.Material.Outlined.Explore),
+        ("Profile Builder", "Saved editable profile fields without backend user services.", Icons.Material.Outlined.Edit),
+        ("Scaffold Operator", "Confirmed the account experience works in a local-only startup path.", Icons.Material.Outlined.Construction)
+    ];
 
-    protected override async Task OnInitializedAsync()
+    private AccountProfileState Profile { get; set; } = new();
+    private string EditableDisplayName { get; set; } = string.Empty;
+    private string EditableHeadline { get; set; } = string.Empty;
+    private string EditableBio { get; set; } = string.Empty;
+
+    private AccountSectionOption CurrentSection => AccountSectionCatalog.Current(Section);
+
+    protected override async Task OnParametersSetAsync()
     {
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         var user = authState.User;
-        Email = user.FindFirst(ClaimTypes.Email)?.Value ?? user.Identity?.Name ?? "scaffold@example.gc.ca";
-        DisplayName = user.FindFirst(ClaimTypes.GivenName)?.Value ?? Email;
+        var email = user.FindFirst(ClaimTypes.Email)?.Value ?? user.Identity?.Name ?? "scaffold@example.gc.ca";
+        var displayName = user.FindFirst(ClaimTypes.GivenName)?.Value ?? email.Split('@')[0];
+
+        Profile = AccountProfileStateService.GetOrCreate(email, displayName);
+        EditableDisplayName = Profile.DisplayName;
+        EditableHeadline = Profile.Headline;
+        EditableBio = Profile.Bio;
+    }
+
+    private string SectionHref(string slug) => slug == "profile" ? PageRoutes.Account : $"{PageRoutes.Account}/{slug}";
+
+    private void SaveCustomization()
+    {
+        Profile.DisplayName = string.IsNullOrWhiteSpace(EditableDisplayName) ? Profile.Email.Split('@')[0] : EditableDisplayName.Trim();
+        Profile.Headline = string.IsNullOrWhiteSpace(EditableHeadline) ? "Federal Science DataHub member" : EditableHeadline.Trim();
+        Profile.Bio = string.IsNullOrWhiteSpace(EditableBio) ? Profile.Bio : EditableBio.Trim();
+        AccountProfileStateService.Save(Profile);
+        Snackbar.Add("Local account details saved for this scaffold session.", Severity.Success);
+    }
+
+    private void ResetCustomization()
+    {
+        EditableDisplayName = Profile.DisplayName;
+        EditableHeadline = Profile.Headline;
+        EditableBio = Profile.Bio;
+    }
+
+    private Task SaveTheme(string value)
+    {
+        Profile.Theme = value;
+        AccountProfileStateService.Save(Profile);
+        Snackbar.Add($"Theme preference set to {value}.", Severity.Success);
+        return Task.CompletedTask;
+    }
+
+    private Task SaveLanguage(string value)
+    {
+        Profile.Language = value;
+        AccountProfileStateService.Save(Profile);
+        Snackbar.Add($"Language preference set to {value}.", Severity.Success);
+        return Task.CompletedTask;
+    }
+
+    private Task SaveNotificationLevel(string value)
+    {
+        Profile.NotificationLevel = value;
+        AccountProfileStateService.Save(Profile);
+        Snackbar.Add("Notification preference updated.", Severity.Success);
+        return Task.CompletedTask;
+    }
+
+    private Task SaveAlertsPreference(bool value)
+    {
+        Profile.ShowAlertsAndTutorials = value;
+        AccountProfileStateService.Save(Profile);
+        Snackbar.Add("Alerts and tutorial preference updated.", Severity.Success);
+        return Task.CompletedTask;
+    }
+
+    private Task SaveAchievementsPreference(bool value)
+    {
+        Profile.ShowAchievements = value;
+        AccountProfileStateService.Save(Profile);
+        Snackbar.Add("Achievement visibility updated.", Severity.Success);
+        return Task.CompletedTask;
     }
 }

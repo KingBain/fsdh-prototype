@@ -1,6 +1,7 @@
 
 using System.Security.Claims;
 using Datahub.Portal.Scaffold;
+using Datahub.Portal.Scaffold.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using MudBlazor.Services;
@@ -11,6 +12,7 @@ builder.Services.AddRazorComponents();
 builder.Services.AddCascadingAuthenticationState();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddMudServices();
+builder.Services.AddSingleton<AccountProfileStateService>();
 
 builder.Services
     .AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
